@@ -1,10 +1,6 @@
 import request from '../../lib/request';
 
-export const fetchList = async () => {
-  const data = {
-    pageIndex: 1,
-    pageNum: 10,
-  };
+export const fetchList = async (data) => {
   return request({
     url: '/getAnnouncements',
     data,

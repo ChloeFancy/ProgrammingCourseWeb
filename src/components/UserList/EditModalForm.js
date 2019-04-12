@@ -13,7 +13,7 @@ class EditModalForm extends Component {
     };
 
     render() {
-        const { getFieldDecorator } = this.props.form;
+        const { getFieldDecorator, getFieldsValue } = this.props.form;
         const { info } = this.props;
         const RowConfig = {
             type: 'flex',
@@ -90,7 +90,7 @@ class EditModalForm extends Component {
 }
 
 export default Form.create({
-    mapPropsToFields,
+    mapPropsToFields: (props) => mapPropsToFields(props.info),
     onFieldsChange: (props, fields) => {
         props.onChange(fields);
     },

@@ -5,6 +5,8 @@ import 'braft-editor/dist/index.css';
 import styles from './braft-editor.less';
 
 export default class BraftEditorWrapped extends PureComponent {
+  static createEditorState = BraftEditor.createEditorState;
+
   render() {
     const { testCaseList, value, onChange } = this.props;
     const RowConfig = {

@@ -1,10 +1,11 @@
 
 import React, { Component } from 'react';
 import { connect } from 'dva';
-import { Table, Modal, Form, Input, message, Button, Row, Col, Popconfirm } from 'antd';
+import { Table, Modal, Form, Input, message, Button, Row, Col, Popconfirm, Spin } from 'antd';
 import AnnounceEditForm from '../../components/Manage/AnnounceEditForm';
 import { getUserInfoByID, submitUserInfo, getUserInfoByKeyword } from '../../services/userList';
 import config from '../../configs/announce';
+import { formatTimeFromTimeStamp } from '../../lib/common';
 
 const getColumns = (onEdit, onDelete) => {
     return [
@@ -12,31 +13,28 @@ const getColumns = (onEdit, onDelete) => {
             title: '编号',
             dataIndex: config.ID,
             key: 'ID',
-            width: '20%',
         },
         {
             title: '标题',
             dataIndex: config.title,
             key: 'nickname',
-            width: '10%',
         },
         {
             title: '创建时间',
             dataIndex: config.create_time,
             key: 'registerTime',
-            width: '16%',
+            render: formatTimeFromTimeStamp,
         },
         {
             title: '更新时间',
             dataIndex: config.last_update_time,
             key: 'name',
-            width: '20%',
+            render: formatTimeFromTimeStamp,
         },
         {
             title: '创建者',
             dataIndex: config.publisher,
             key: 'email',
-            width: '10%',
         },
         {
             title: '管理',
@@ -63,15 +61,6 @@ const getColumns = (onEdit, onDelete) => {
     ...announce,
 }))
 export default class AnnounceList extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            pageIndex: 1,
-            pageSize: 10,
-            keyword: '',
-        };
-    }
-
     async componentDidMount() {
         this.fetchList();
     }
@@ -121,14 +110,21 @@ export default class AnnounceList extends Component {
     };
 
     fetchList = async(data = {}) => {
-        const { pageIndex, pageSize } = this.state;
         const { dispatch } = this.props;
         await dispatch({
             type: 'announce/fetchList',
             payload: {
-                pageIndex,
-                pageSize,
                 ...data,
+            },
+        });
+    };
+
+    handleModalFormChange = (fields) => {
+        const { dispatch } = this.props;
+        dispatch({
+            type: 'announce/changeModalForm',
+            payload: {
+                ...fields,
             },
         });
     };
@@ -142,20 +138,11 @@ export default class AnnounceList extends Component {
         await dispatch({
             type: `announce/${operation ? 'saveEdit' : 'saveAdd'}`,
             payload: {
-                announcement: {
-                    ...editingInfo,
-                    ...values,
-                },
+                ...editingInfo,
+                ...values,
             },
         });
         this.fetchList();
-    };
-
-    handleSearch = async() => {
-        const {
-            keyowrd,
-        } = this.state;
-        this.fetchList({ keyowrd });
     };
 
     handleOk = () => {
@@ -164,8 +151,6 @@ export default class AnnounceList extends Component {
 
     handleCancel = async() => {
         const {
-            editingInfo,
-            operation,
             dispatch,
         } = this.props;
         await dispatch({
@@ -173,10 +158,19 @@ export default class AnnounceList extends Component {
         });
     };
 
-    handleInputChange = (ev) => {
-        this.setState({
-            keyword: ev.target.value,
+    handleShowSizeChange = (current, size) => {
+        const {
+            dispatch,
+            pageSize,
+        } = this.props;
+        dispatch({
+            type: 'announce/changeTablePage',
+            payload: {
+                pageIndex: current,
+                pageSize: size || pageSize,
+            },
         });
+        this.fetchList();
     };
 
     render() {
@@ -187,19 +181,16 @@ export default class AnnounceList extends Component {
         } = this.props;
 
         const {
-            pageIndex,
-            pageSize,
-            keyword,
-        } = this.state;
-
-        const {
             visible,
             editingInfo,
             operation,
+            loading,
+            pageIndex,
+            pageSize,
         } = this.props;
 
         return (
-            <div style={{ width: '1000px', margin: '20px auto' }}>
+            <div>
                 <Row type="flex" justify="end">
                     <Col><Button type="primary" onClick={this.handleAddClick}>新增</Button></Col>
                 </Row>
@@ -214,27 +205,8 @@ export default class AnnounceList extends Component {
                         current: pageIndex,
                         showSizeChanger: true,
                         showTotal: (t) => `共 ${t} 条`,
-                        onShowSizeChange: (current, size) => {
-                            this.setState(
-                                {
-                                    pageIndex: current,
-                                    pageSize: size,
-                                },
-                                () => {
-                                    this.fetchList();
-                                },
-                            );
-                        },
-                        onChange: (current) => {
-                            this.setState(
-                                {
-                                    pageIndex: current,
-                                },
-                                () => {
-                                    this.fetchList();
-                                },
-                            );
-                        },
+                        onShowSizeChange: this.handleShowSizeChange,
+                        onChange: this.handleShowSizeChange,
                     }}
                 />
                 <Modal
@@ -243,12 +215,17 @@ export default class AnnounceList extends Component {
                     width="700px"
                     onOk={this.handleOk}
                     onCancel={this.handleCancel}
+                    destroyOnClose
+                    maskClosable={false}
                 >
-                    <AnnounceEditForm
-                        wrappedComponentRef={(ref) => { this.formRef = ref; }}
-                        info={editingInfo}
-                        onSubmit={this.handleSubmit}
-                    />
+                    <Spin spinning={loading}>
+                        <AnnounceEditForm
+                            wrappedComponentRef={(ref) => { this.formRef = ref; }}
+                            info={editingInfo}
+                            onSubmit={this.handleSubmit}
+                            onChange={this.handleModalFormChange}
+                        />
+                    </Spin>
                 </Modal>
             </div>
         );

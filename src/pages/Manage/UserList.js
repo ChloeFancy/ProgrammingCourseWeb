@@ -2,11 +2,11 @@
 import React, { Component } from 'react';
 import { connect } from 'dva';
 import { Table, Modal, Form, Input, message, Button, Select, Row, Col } from 'antd';
-import moment from 'moment';
 import EditModalForm from '../../components/UserList/EditModalForm';
 import SearchForm from '../../components/UserList/SearchForm';
 import { getUserInfoByID, submitUserInfo, getUserInfoByKeyword } from '../../services/userList';
 import config, { userTypeOptions } from '../../configs/UserList';
+import { formatTimeFromTimeStamp } from '../../lib/common';
 
 const Option = Select.Option;
 const getColumns = (onEdit) => {
@@ -26,13 +26,13 @@ const getColumns = (onEdit) => {
             title: '注册时间',
             dataIndex: config.registerTime,
             key: 'registerTime',
-            render: (text) => moment.unix(text).format('YYYY-MM-DD'),
+            render: formatTimeFromTimeStamp,
         },
         {
             title: '最后登录时间',
             dataIndex: config.lastLoginTime,
             key: config.lastLoginTime,
-            render: (text) => moment.unix(text).format('YYYY-MM-DD'),
+            render: formatTimeFromTimeStamp,
         },
         {
             title: '真实姓名',
@@ -72,18 +72,6 @@ const getColumns = (onEdit) => {
     ...userList,
 }))
 export default class UserList extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            pageIndex: 1,
-            pageSize: 10,
-            keyword: '',
-
-            visible: false,
-            editingInfo: {},
-        };
-    }
-
     async componentDidMount() {
         this.fetchList();
     }
@@ -175,12 +163,6 @@ export default class UserList extends Component {
         });
     };
 
-    handleInputChange = (ev) => {
-        this.setState({
-            keyword: ev.target.value,
-        });
-    };
-
     render() {
         const {
             total,
@@ -191,10 +173,6 @@ export default class UserList extends Component {
             pageIndex,
             pageSize,
         } = this.props;
-
-        const {
-            keyword,
-        } = this.state;
 
         return (
             <div>
