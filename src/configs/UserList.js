@@ -1,8 +1,9 @@
 export default {
     ID: 'id',
-    nickname: 'name',
+    account: 'account', // 登录名
     registerTime: 'create',
-    name: 'name',
+    lastLoginTime: 'lastLogin',
+    name: 'name', // 真实姓名
     email: 'email',
     type: 'role',
     password: 'password',
@@ -22,3 +23,8 @@ export const userTypeOptions = [
         value: 2,
     },
 ];
+
+export const searchFormDataConfig = {
+    role: 'role',
+    keyword: 'keyword',
+};

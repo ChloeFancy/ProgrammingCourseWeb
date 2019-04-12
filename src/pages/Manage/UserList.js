@@ -1,48 +1,54 @@
 
 import React, { Component } from 'react';
 import { connect } from 'dva';
-import { Table, Modal, Form, Input, message, Button } from 'antd';
+import { Table, Modal, Form, Input, message, Button, Select, Row, Col } from 'antd';
+import moment from 'moment';
 import EditModalForm from '../../components/UserList/EditModalForm';
+import SearchForm from '../../components/UserList/SearchForm';
 import { getUserInfoByID, submitUserInfo, getUserInfoByKeyword } from '../../services/userList';
 import config, { userTypeOptions } from '../../configs/UserList';
 
+const Option = Select.Option;
 const getColumns = (onEdit) => {
     return [
         {
             title: 'ID',
             dataIndex: config.ID,
-            key: 'ID',
-            width: '20%',
+            key: config.ID,
         },
         {
-            title: '用户名',
-            dataIndex: config.nickname,
-            key: 'nickname',
+            title: '登录名',
+            dataIndex: config.account,
+            key: config.account,
             width: '10%',
         },
         {
             title: '注册时间',
             dataIndex: config.registerTime,
             key: 'registerTime',
-            width: '16%',
+            render: (text) => moment.unix(text).format('YYYY-MM-DD'),
+        },
+        {
+            title: '最后登录时间',
+            dataIndex: config.lastLoginTime,
+            key: config.lastLoginTime,
+            render: (text) => moment.unix(text).format('YYYY-MM-DD'),
         },
         {
             title: '真实姓名',
             dataIndex: config.name,
             key: 'name',
-            width: '20%',
         },
         {
             title: '电子邮箱',
             dataIndex: config.email,
             key: 'email',
-            width: '10%',
         },
         {
             title: '用户类型',
             dataIndex: config.type,
             key: 'type',
-            width: '16%',
+            width: '10%',
             render: (text) => userTypeOptions.find(({ value }) => value === text).key,
         },
         {
@@ -84,58 +90,88 @@ export default class UserList extends Component {
 
     onEdit = (record) => {
         return async() => {
-            const {
-                id,
-            } = record;
-
-            try {
-                const editingInfo = await getUserInfoByID({ id });
-                this.setState({
-                    editingInfo,
-                    visible: true,
-                });
-            } catch (e) {
-                message.error(e);
-            }
+            const { dispatch } = this.props;
+            dispatch({
+                type: 'userList/handleEdit',
+                payload: {
+                    edtingUser: record,
+                },
+            });
         };
     };
 
     fetchList = async(data = {}) => {
-        const { pageIndex, pageSize } = this.state;
         const { dispatch } = this.props;
         await dispatch({
             type: 'userList/fetchList',
             payload: {
-                pageIndex,
-                pageSize,
                 ...data,
             },
         });
     };
 
-    handleSubmit = async(values) => {
-        await submitUserInfo(values);
+    handleModalFormChange = (fields) => {
+        const { dispatch } = this.props;
+        dispatch({
+            type: 'userList/changeModalForm',
+            payload: {
+                ...fields,
+            },
+        });
+    };
 
-        this.setState({
-            visible: false,
+    handleSubmit = async(values) => {
+        const { dispatch } = this.props;
+        await dispatch({
+            type: 'userList/handleSubmit',
+            payload: values,
+        });
+        dispatch({
+            type: 'userList/closeEdit',
         });
         this.fetchList();
     };
 
-    handleSearch = async() => {
-        const {
-            keyowrd,
-        } = this.state;
-        this.fetchList({ keyowrd });
+    handleSearch = async(data) => {
+        this.fetchList(data);
     };
 
     handleOk = () => {
         this.formRef.handleSubmit();
     };
 
-    handleCancel = async() => {
-        this.setState({
-            visible: false,
+    handlePageChange = (current) => {
+        const { dispatch } = this.props;
+        dispatch({
+            type: 'userList/changeTablePage',
+            payload: {
+                pageIndex: current,
+            },
+        });
+        this.fetchList({
+            pageIndex: current,
+        });    
+    };
+
+    handleShowSizeChange = (current, size) => {
+        const { dispatch } = this.props;
+        dispatch({
+            type: 'userList/changeTablePage',
+            payload: {
+                pageIndex: current,
+                pageSize: size,
+            },
+        });
+        this.fetchList({
+            pageIndex: current,
+            pageSize: size,
+        });        
+    };
+
+    handleCancel = () => {
+        const { dispatch } = this.props;
+        dispatch({
+            type: 'userList/closeEdit',
         });
     };
 
@@ -149,67 +185,46 @@ export default class UserList extends Component {
         const {
             total,
             list: dataSource,
-            loadingList,
+            tableLoading,
+            editingInfo,
+            modalVisible,
+            pageIndex,
+            pageSize,
         } = this.props;
 
         const {
-            pageIndex,
-            pageSize,
-            visible,
             keyword,
-            editingInfo,
         } = this.state;
 
         return (
-            <div style={{ width: '1000px', margin: '20px auto' }}>
-                <div style={{ textAlign: 'right' }}>
-                    <Input style={{ width: '200px' }} placeholder="请输入关键词" value={keyword} onChange={this.handleInputChange} />
-                    <Button onClick={this.handleSearch}>搜索</Button>
-                </div>
+            <div>
+                <SearchForm onSubmit={this.handleSearch} />
                 <Table
                     dataSource={dataSource}
                     columns={getColumns(this.onEdit)}
                     rowKey="ID"
-                    loading={loadingList}
+                    loading={tableLoading}
                     pagination={{
                         total,
                         pageSize,
                         current: pageIndex,
                         showSizeChanger: true,
                         showTotal: (t) => `共 ${t} 条`,
-                        onShowSizeChange: (current, size) => {
-                            this.setState(
-                                {
-                                    pageIndex: current,
-                                    pageSize: size,
-                                },
-                                () => {
-                                    this.fetchList();
-                                },
-                            );
-                        },
-                        onChange: (current) => {
-                            this.setState(
-                                {
-                                    pageIndex: current,
-                                },
-                                () => {
-                                    this.fetchList();
-                                },
-                            );
-                        },
+                        onShowSizeChange: this.handleShowSizeChange,
+                        onChange: this.handlePageChange,
                     }}
                 />
                 <Modal
-                    visible={visible}
+                    visible={modalVisible}
                     title="修改用户信息"
-                    width="700px"
+                    width="800px"
                     onOk={this.handleOk}
                     onCancel={this.handleCancel}
                 >
                     <EditModalForm
                         wrappedComponentRef={(ref) => { this.formRef = ref; }}
                         info={editingInfo}
+                        onChange={this.handleModalFormChange}
                         onSubmit={this.handleSubmit}
                     />
                 </Modal>

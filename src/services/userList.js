@@ -1,12 +1,12 @@
 import request from '../lib/request';
 
-export const fetchList = async () => {
-  const data = {
-    role: 1,
-    get_all: true,
-    page_index: 1,
-    page_num: 10,
-  };
+export const fetchList = async (data) => {
+  // const data = {
+  //   role: 1,
+  //   get_all: true,
+  //   page_index: 1,
+  //   page_num: 10,
+  // };
   return request({
     url: '/getUsers', 
     data, 
@@ -31,18 +31,12 @@ export const getUserInfoByID = async () => {
   });
 };
 
-export const submitUserInfo = async () => {
-  const data = {
-    role: 1,
-    get_all: true,
-    page_index: 1,
-    page_num: 10,
-  };
+export const submitUserInfo = async (data) => {
   return request({
-    url: '/getUsers', 
+    url: '/updateUsers', 
     data, 
-    reqProto: 'GetUsersReq', 
-    resProto: 'GetUsersResp', 
+    reqProto: 'UpdateUsersReq', 
+    resProto: 'UpdateUsersResp', 
   });
 };
 

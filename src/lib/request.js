@@ -42,8 +42,8 @@ const request = ({ url, data, reqProto, resProto, method = 'post' }) => {
   // 这里用到axios的配置项：transformRequest和transformResponse
   // transformRequest 发起请求时，调用transformRequest方法，目的是将req转换成二进制
   // transformResponse 对返回的数据进行处理，目的是将二进制转换成真正的json数据
-  console.log(`请求url: ${url}, data: `, data);
   const requestBody = createReqMsg(reqProto, data);
+  console.log(`请求url: ${url}, 请求参数协议: ${reqProto}, data: `, data, '编码后: ', requestBody);
   const requestConfig = {
     transformResponse: transformResponseFactory(resProto),
   };

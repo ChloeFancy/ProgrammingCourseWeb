@@ -2,6 +2,7 @@
 import React, { Component } from 'react';
 import { Card, Form, Input, Select, Row, Col } from 'antd';
 import dataConfig, { userTypeOptions } from '../../configs/UserList';
+import { mapPropsToFields } from '../../lib/form';
 
 const { Item: FormItem } = Form;
 const Option = Select.Option;
@@ -14,62 +15,61 @@ class EditModalForm extends Component {
     render() {
         const { getFieldDecorator } = this.props.form;
         const { info } = this.props;
+        const RowConfig = {
+            type: 'flex',
+            justify: 'space-between',
+          };
+        const colSpan = 7;
         return (
             <div>
                 <Form onSubmit={this.handleSubmit}>
-                    <Row>
-                        <Col span={8}>
+                    <Row {...RowConfig}>
+                        <Col span={colSpan}>
                             <FormItem label="ID">
                                 {
                                     getFieldDecorator(dataConfig.ID, {
-                                        initialValue: info[dataConfig.ID],
-                                    })(<Input />)
+                                    })(<Input disabled />)
                                 }
                             </FormItem>
                         </Col>
-                        <Col span={8}>
+                        <Col span={colSpan}>
                             <FormItem label="用户名">
                                 {
-                                    getFieldDecorator(dataConfig.nickname, {
-                                        initialValue: info[dataConfig.nickname],
+                                    getFieldDecorator(dataConfig.account, {
                                     })(<Input />)
                                 }
                             </FormItem>
                         </Col>
-                        <Col span={8}>
+                        <Col span={colSpan}>
                             <FormItem label="真实姓名">
                                 {
                                     getFieldDecorator(dataConfig.name, {
-                                        initialValue: info[dataConfig.name],
                                     })(<Input />)
                                 }
                             </FormItem>
                         </Col>
                     </Row>
-                    <Row>
-                        <Col span={8}>
+                    <Row {...RowConfig}>
+                        <Col span={colSpan}>
                             <FormItem label="新密码（留空则保留原密码）">
                                 {
                                     getFieldDecorator(dataConfig.password, {
-                                        initialValue: info[dataConfig.password],
                                     })(<Input />)
                                 }
                             </FormItem>
                         </Col>
-                        <Col span={8}>
+                        <Col span={colSpan}>
                             <FormItem label="电子邮箱">
                                 {
                                     getFieldDecorator(dataConfig.email, {
-                                        initialValue: info[dataConfig.email],
                                     })(<Input />)
                                 }
                             </FormItem>
                         </Col>
-                        <Col span={8}>
+                        <Col span={colSpan}>
                             <FormItem label="用户类型">
                                 {
                                     getFieldDecorator(dataConfig.type, {
-                                        initialValue: info[dataConfig.type],
                                     })(
                                         <Select>
                                             {
@@ -89,4 +89,9 @@ class EditModalForm extends Component {
     }
 }
 
-export default Form.create()(EditModalForm);
+export default Form.create({
+    mapPropsToFields,
+    onFieldsChange: (props, fields) => {
+        props.onChange(fields);
+    },
+})(EditModalForm);
