@@ -4,19 +4,11 @@ package protocol;
 
 option go_package = "protocol;protocol";
 
-// Role : 用户角色（学生/老师...）
-enum Role
-{
-    STUDENT = 0;
-    TEACHER = 1;
-    MANAGER = 2;
-}
-
 // UserInfo : 用户基本信息
 message UserInfo 
 {
     int64 id = 1;
-    Role role = 4;
+    int64 role = 4;
     string name = 5;
     bool sex = 6;
     string phone = 7;
@@ -50,10 +42,12 @@ message Problem
     int64 judge_limit_time = 8;                     // 判题时间限制 
     int64 judge_limit_mem = 9;                      // 判题内存限制   
     repeated int64 tags = 10;                       // 题目标签
-    int64 difficulty = 11;                            // 难度
-    int64 cognition = 12;                             // 认知程度
+    int64 difficulty = 11;                          // 难度
+    int64 cognition = 12;                           // 认知程度
     int64 submit_time = 13;                         // 提交次数
     int64 accept_time = 14;                         // 通过次数
+    int64 create_time = 15;                         // 创建时间
+    string publisher = 16;                          // 发布人
 }
 
 // SubmitRecord : 提交情况
@@ -104,9 +98,9 @@ message Paper
     int64 id = 1;
     repeated Problem problems = 2;  // 题目
     // 组卷的参数
-    map<int64,int64>  difficulty = 3;
-    map<int64,int64>  knowledge_points = 4;
-    map<int64,int64>  cognition = 5;
+    int64 difficulty = 3;
+    int64 problem_num = 4;
+    repeated int64 tags = 5;
 }
 
 // Match : 比赛
@@ -115,9 +109,9 @@ message Match
     int64 id = 1;
     bool is_public = 2;         // 是否是公开比赛
     int64 start_time = 3;       // 开始时间
-    int64 duration = 4;         // 时间长度
+    int64 end_time = 4;         // 结束长度
     bool is_over = 5;           // 是否结束
     string name = 6;            // 比赛名称
-    string intriduction = 7;    // 比赛简介
+    string introduction = 7;    // 比赛简介
     int64 paper_id = 8;         // 试卷id
 }

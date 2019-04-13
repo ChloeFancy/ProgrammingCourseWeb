@@ -1,7 +1,7 @@
 
 import React, { Component } from 'react';
 import { Card, Form, Input, Select, Row, Col, Button } from 'antd';
-import dataConfig, { userTypeOptions, searchFormDataConfig } from '../../configs/UserList';
+import dataConfig, { searchFormDataConfig } from '../../configs/UserList';
 import { mapPropsToFields } from '../../lib/form';
 
 const { Item: FormItem } = Form;
@@ -15,7 +15,7 @@ class SearchForm extends Component {
 
     render() {
         const { getFieldDecorator } = this.props.form;
-        const { info } = this.props;
+        const { userTypeOptions } = this.props;
         const RowConfig = {
             type: 'flex',
             justify: 'start',

@@ -2,11 +2,11 @@
 import React, { Component } from 'react';
 import { connect } from 'dva';
 import { Table, Modal, Form, Input, message, Button } from 'antd';
-import config, { userTypeOptions } from '../../configs/UserList';
+import config from '../../configs/UserList';
 
 const TextArea = Input.TextArea;
 
-const getColumns = () => {
+const getColumns = (userTypeOptions) => {
     return [
         {
             title: 'ID',
@@ -53,6 +53,13 @@ export default class UserAdd extends Component {
         };
     }
 
+    componentDidMount() {
+        const { dispatch } = this.props;
+        dispatch({
+            type: 'userAdd/getUserRoleOptions',
+        });
+    }
+
     handleFormChange = (key) => {
         return (value) => {
             this.setState({
@@ -85,6 +92,7 @@ export default class UserAdd extends Component {
             batchValue,
             dataSource,
         } = this.state;
+        const { userTypeOptions } = this.props;
         return (
             <div>
                 <Form layout="inline">
@@ -101,7 +109,7 @@ export default class UserAdd extends Component {
                 </Form>
                 <Table
                     dataSource={dataSource}
-                    columns={getColumns()}
+                    columns={getColumns(userTypeOptions)}
                     rowKey="ID"
                     // loading={loadingList}
                     // pagination={{

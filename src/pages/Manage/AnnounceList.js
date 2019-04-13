@@ -3,7 +3,6 @@ import React, { Component } from 'react';
 import { connect } from 'dva';
 import { Table, Modal, Form, Input, message, Button, Row, Col, Popconfirm, Spin } from 'antd';
 import AnnounceEditForm from '../../components/Manage/AnnounceEditForm';
-import { getUserInfoByID, submitUserInfo, getUserInfoByKeyword } from '../../services/userList';
 import config from '../../configs/announce';
 import { formatTimeFromTimeStamp } from '../../lib/common';
 

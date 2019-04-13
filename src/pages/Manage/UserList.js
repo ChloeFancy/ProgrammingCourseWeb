@@ -4,12 +4,11 @@ import { connect } from 'dva';
 import { Table, Modal, Form, Input, message, Button, Select, Row, Col } from 'antd';
 import EditModalForm from '../../components/UserList/EditModalForm';
 import SearchForm from '../../components/UserList/SearchForm';
-import { getUserInfoByID, submitUserInfo, getUserInfoByKeyword } from '../../services/userList';
-import config, { userTypeOptions } from '../../configs/UserList';
 import { formatTimeFromTimeStamp } from '../../lib/common';
+import config from '../../configs/UserList';
 
 const Option = Select.Option;
-const getColumns = (onEdit) => {
+const getColumns = (userTypeOptions, onEdit) => {
     return [
         {
             title: 'ID',
@@ -73,7 +72,13 @@ const getColumns = (onEdit) => {
 }))
 export default class UserList extends Component {
     async componentDidMount() {
-        this.fetchList();
+        const { dispatch } = this.props;
+        Promise.all([
+            this.fetchList(),
+            dispatch({
+                type: 'userList/getUserRoleOptions',
+            }),
+        ]);
     }
 
     onEdit = (record) => {
@@ -172,14 +177,15 @@ export default class UserList extends Component {
             modalVisible,
             pageIndex,
             pageSize,
+            userTypeOptions,
         } = this.props;
 
         return (
             <div>
-                <SearchForm onSubmit={this.handleSearch} />
+                <SearchForm userTypeOptions={userTypeOptions} onSubmit={this.handleSearch} />
                 <Table
                     dataSource={dataSource}
-                    columns={getColumns(this.onEdit)}
+                    columns={getColumns(userTypeOptions, this.onEdit)}
                     rowKey="ID"
                     loading={tableLoading}
                     pagination={{
@@ -202,6 +208,7 @@ export default class UserList extends Component {
                     <EditModalForm
                         wrappedComponentRef={(ref) => { this.formRef = ref; }}
                         info={editingInfo}
+                        userTypeOptions={userTypeOptions}
                         onChange={this.handleModalFormChange}
                         onSubmit={this.handleSubmit}
                     />

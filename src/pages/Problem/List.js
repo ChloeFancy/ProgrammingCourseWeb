@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'dva';
 import { Table, Icon, Menu, Button, Row, Col, Input, Form, Divider, Select } from 'antd';
+import { formatTimeFromTimeStamp } from '../../lib/common';
 
 const SubMenu = Menu.SubMenu;
 const MenuItemGroup = Menu.ItemGroup;
@@ -49,11 +50,12 @@ class ProblemList extends Component {
         title: '创建时间',
         dataIndex: 'createTime',
         key: 'createTime',
+        render: formatTimeFromTimeStamp,
       },
       {
         title: '作者',
-        dataIndex: 'author',
-        key: 'author',
+        dataIndex: 'publisher',
+        key: 'publisher',
       },
       {
         title: '通过次数/提交总数',

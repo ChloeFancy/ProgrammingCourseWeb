@@ -261,13 +261,6 @@ var $root = ($protobuf.roots["default"] || ($protobuf.roots["default"] = new $pr
           }
         }
       },
-      Role: {
-        values: {
-          STUDENT: 0,
-          TEACHER: 1,
-          MANAGER: 2
-        }
-      },
       UserInfo: {
         fields: {
           id: {
@@ -275,7 +268,7 @@ var $root = ($protobuf.roots["default"] || ($protobuf.roots["default"] = new $pr
             id: 1
           },
           role: {
-            type: "Role",
+            type: "int64",
             id: 4
           },
           name: {
@@ -387,6 +380,14 @@ var $root = ($protobuf.roots["default"] || ($protobuf.roots["default"] = new $pr
           acceptTime: {
             type: "int64",
             id: 14
+          },
+          createTime: {
+            type: "int64",
+            id: 15
+          },
+          publisher: {
+            type: "string",
+            id: 16
           }
         }
       },
@@ -507,17 +508,15 @@ var $root = ($protobuf.roots["default"] || ($protobuf.roots["default"] = new $pr
             id: 2
           },
           difficulty: {
-            keyType: "int64",
             type: "int64",
             id: 3
           },
-          knowledgePoints: {
-            keyType: "int64",
+          problemNum: {
             type: "int64",
             id: 4
           },
-          cognition: {
-            keyType: "int64",
+          tags: {
+            rule: "repeated",
             type: "int64",
             id: 5
           }
@@ -537,7 +536,7 @@ var $root = ($protobuf.roots["default"] || ($protobuf.roots["default"] = new $pr
             type: "int64",
             id: 3
           },
-          duration: {
+          endTime: {
             type: "int64",
             id: 4
           },
@@ -549,7 +548,7 @@ var $root = ($protobuf.roots["default"] || ($protobuf.roots["default"] = new $pr
             type: "string",
             id: 6
           },
-          intriduction: {
+          introduction: {
             type: "string",
             id: 7
           },
@@ -565,20 +564,28 @@ var $root = ($protobuf.roots["default"] || ($protobuf.roots["default"] = new $pr
             type: "Status",
             id: 1
           },
-          cognition: {
+          tags: {
             keyType: "int64",
             type: "string",
             id: 2
           },
-          tags: {
-            keyType: "int64",
-            type: "string",
-            id: 3
-          },
           difficulty: {
             keyType: "int64",
             type: "string",
-            id: 4
+            id: 3
+          }
+        }
+      },
+      UserRole: {
+        fields: {
+          status: {
+            type: "Status",
+            id: 1
+          },
+          role: {
+            keyType: "int64",
+            type: "string",
+            id: 2
           }
         }
       },
@@ -829,17 +836,13 @@ var $root = ($protobuf.roots["default"] || ($protobuf.roots["default"] = new $pr
             type: "int64",
             id: 1
           },
-          getAll: {
-            type: "bool",
-            id: 2
-          },
           pageIndex: {
             type: "int64",
-            id: 3
+            id: 2
           },
           pageNum: {
             type: "int64",
-            id: 4
+            id: 3
           }
         }
       },
@@ -994,20 +997,16 @@ var $root = ($protobuf.roots["default"] || ($protobuf.roots["default"] = new $pr
       GetUsersReq: {
         fields: {
           role: {
-            type: "Role",
+            type: "int64",
             id: 1
-          },
-          getAll: {
-            type: "bool",
-            id: 2
           },
           pageIndex: {
             type: "int64",
-            id: 3
+            id: 2
           },
           pageNum: {
             type: "int64",
-            id: 4
+            id: 3
           }
         }
       },

@@ -3,7 +3,6 @@ import React, { Component } from 'react';
 import { connect } from 'dva';
 import { Table, Modal, Form, Input, message, Button, Row, Col, Popconfirm } from 'antd';
 import AnnounceEditForm from '../../components/Manage/AnnounceEditForm';
-import { getUserInfoByID, submitUserInfo, getUserInfoByKeyword } from '../../services/userList';
 import config from '../../configs/contest';
 
 const FormItem = Form.Item;

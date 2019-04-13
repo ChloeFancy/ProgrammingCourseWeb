@@ -1,7 +1,7 @@
 
 import React, { Component } from 'react';
 import { Card, Form, Input, Select, Row, Col } from 'antd';
-import dataConfig, { userTypeOptions } from '../../configs/UserList';
+import dataConfig from '../../configs/UserList';
 import { mapPropsToFields } from '../../lib/form';
 
 const { Item: FormItem } = Form;
@@ -14,7 +14,7 @@ class EditModalForm extends Component {
 
     render() {
         const { getFieldDecorator, getFieldsValue } = this.props.form;
-        const { info } = this.props;
+        const { info, userTypeOptions } = this.props;
         const RowConfig = {
             type: 'flex',
             justify: 'space-between',

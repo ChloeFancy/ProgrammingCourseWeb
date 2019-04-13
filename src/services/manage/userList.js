@@ -1,12 +1,6 @@
-import request from '../lib/request';
+import request from '../../lib/request';
 
 export const fetchList = async (data) => {
-  // const data = {
-  //   role: 1,
-  //   get_all: true,
-  //   page_index: 1,
-  //   page_num: 10,
-  // };
   return request({
     url: '/getUsers', 
     data, 
@@ -53,6 +47,15 @@ export const getUserInfoByKeyword = async () => {
     data, 
     reqProto: 'GetUsersReq', 
     resProto: 'GetUsersResp', 
+  });
+};
+
+export const getUserRoleOptions = async () => {
+  return request({
+    url: '/userRole', 
+    method: 'get',
+    data: null,
+    resProto: 'UserRole', 
   });
 };
 

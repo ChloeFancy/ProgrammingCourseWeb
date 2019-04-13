@@ -1,13 +1,18 @@
 import {
   fetchList,
   submitUserInfo,
-} from '@/services/userList';
+  getUserRoleOptions,
+} from '@/services/manage/userList';
 import { formatObejctToFields } from '../../lib/form';
+import { object } from 'prop-types';
 
 export default {
   namespace: 'userList',
 
   state: {
+    // 角色选项
+    userTypeOptions: [],
+    
     // 表格数据
     tableLoading: false,
     list: [], // 題目列表
@@ -24,6 +29,21 @@ export default {
   },
 
   effects: {
+    *getUserRoleOptions(_, { call, put }) {
+      const { role } = yield call(getUserRoleOptions);
+      const userTypeOptions = Object.entries(role).map(([number, text]) => {
+        return {
+          key: text,
+          value: number,
+        };
+      });
+      yield put({
+        type: 'setUserRoleOptions',
+        payload: {
+          userTypeOptions,
+        },
+      });
+    },
     *changeTablePage({ payload }, { call, put }) {
       const { pageSize, pageIndex } = payload;
       yield put({
@@ -107,6 +127,12 @@ export default {
   },
 
   reducers: {
+    setUserRoleOptions(state, action) {
+      return {
+        ...state,
+        ...action.payload,
+      };
+    },
     setSearchParams(state, action) {
       return {
         ...state,
