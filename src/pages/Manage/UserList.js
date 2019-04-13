@@ -48,7 +48,7 @@ const getColumns = (userTypeOptions, onEdit) => {
             dataIndex: config.type,
             key: 'type',
             width: '10%',
-            render: (text) => userTypeOptions.find(({ value }) => value === text).key,
+            render: (text) => userTypeOptions.find(({ value }) => `${value}` === `${text}`).key,
         },
         {
             title: '管理',
@@ -73,12 +73,10 @@ const getColumns = (userTypeOptions, onEdit) => {
 export default class UserList extends Component {
     async componentDidMount() {
         const { dispatch } = this.props;
-        Promise.all([
-            this.fetchList(),
-            dispatch({
-                type: 'userList/getUserRoleOptions',
-            }),
-        ]);
+        await dispatch({
+            type: 'userList/getUserRoleOptions',
+        }),
+        this.fetchList(); 
     }
 
     onEdit = (record) => {

@@ -16,6 +16,7 @@ export default {
     // 表格数据
     tableLoading: false,
     list: [], // 題目列表
+    total: 0,
 
     // 搜索参数
     keyword: undefined, // 题目搜索关键字
@@ -163,7 +164,7 @@ export default {
     setTableLoading(state, action) {
       return {
         ...state,
-        tableLoading: action.loading,
+        tableLoading: action.payload.loading,
       };
     },
     queryList(state, action) {

@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
 import { connect } from 'dva';
+import router from 'umi/router';
 import { Table, Icon, Menu, Button, Row, Col, Input, Form, Divider, Select } from 'antd';
 import { formatTimeFromTimeStamp } from '../../lib/common';
+import SearchForm from '../../components/Problem/ProblemSearchForm';
 
 const SubMenu = Menu.SubMenu;
 const MenuItemGroup = Menu.ItemGroup;
@@ -27,9 +29,14 @@ class ProblemList extends Component {
   async componentDidMount() {
     document.title = '题库';
     const { dispatch } = this.props;
-    await dispatch({
-      type: 'problem/fetchList',
-    });
+    Promise.all([
+      dispatch({
+        type: 'problem/getTagOptions',
+      }),
+      dispatch({
+        type: 'problem/fetchList',
+      }),
+    ]);
   }
 
   getColumns = () => {
@@ -86,62 +93,78 @@ class ProblemList extends Component {
     ];
   };
 
-  handleEdit = record => {
-    return () => {
-      window.location = `/html/problem-edit.html?id=${record.id}`;
-    };
-  };
-
-  handleSubmit = record => {};
-
-  handleSearch = () => {};
-
-  handleKeywordChange = ev => {
-    const val = ev.target.value;
+  fetchList = async() => {
     const { dispatch } = this.props;
-    dispatch({
-      type: 'problem/setSearchKeyword',
-      payload: {
-        keyword: val,
-      },
+    await dispatch({
+        type: 'problem/fetchList',
     });
   };
 
+  // 跳转到题目编辑页面
+  handleEdit = record => {
+    return () => {
+      router.push(`/problem/edit/${record.id}`);
+    };
+  };
+
+  // todo 跳转到题目提交记录页面
+  handleSubmit = record => {};
+
+  handleSearch = (values) => {
+    const {
+        dispatch,
+    } = this.props;
+    this.handleSearchParamsChange(values);
+  };
+
+  handleShowSizeChange = (current, size) => {
+    const {
+        dispatch,
+        pageSize,
+    } = this.props;
+    this.handleSearchParamsChange({
+        pageIndex: current,
+        pageSize: size || pageSize,
+    });
+  };
+
+  handleSearchParamsChange = (params) => {
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'problem/changeSearchParams',
+      payload: params,
+    });
+    this.fetchList();
+  };
+
   render() {
-    const { list, keyword } = this.props;
+    const {
+      total,
+      list,
+      keyword,
+      tableLoading,
+      pageSize,
+      pageIndex,
+      tagOptions,
+    } = this.props;
     return (
       <div>
-        <Form>
-          <Row type="flex" justify="center">
-            <Col span={12}>
-              <FormItem label="关键词" {...formItemLayout}>
-                <Input
-                  value={keyword}
-                  onChange={this.handleKeywordChange}
-                  placeholder="请输入关键词"
-                />
-              </FormItem>
-            </Col>
-            <Col span={12}>
-              <FormItem label="标签" {...formItemLayout}>
-                <Select>
-                  {[].map(({ key, value }) => {
-                    return <Option value={value}>{key}</Option>;
-                  })}
-                </Select>
-              </FormItem>
-            </Col>
-          </Row>
-          <Row type="flex" justify="center">
-            <Col>
-              <Button type="primary" onClick={this.handleSearch}>
-                搜索
-              </Button>
-            </Col>
-          </Row>
-        </Form>
+        <SearchForm tagOptions={tagOptions} onSubmit={this.handleSearch} />
         <Divider dashed />
-        <Table columns={this.getColumns()} dataSource={list} />
+        <Table
+          loading={tableLoading}
+          columns={this.getColumns()}
+          dataSource={list}
+          pagination={{
+            total,
+            pageSize,
+            current: pageIndex,
+            showSizeChanger: true,
+            showTotal: (t) => `共 ${t} 条`,
+            onShowSizeChange: this.handleShowSizeChange,
+            onChange: this.handleShowSizeChange,
+        }}
+        />
       </div>
     );
   }

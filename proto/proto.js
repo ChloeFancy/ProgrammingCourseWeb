@@ -836,13 +836,17 @@ var $root = ($protobuf.roots["default"] || ($protobuf.roots["default"] = new $pr
             type: "int64",
             id: 1
           },
+          keyword: {
+            type: "string",
+            id: 2
+          },
           pageIndex: {
             type: "int64",
-            id: 2
+            id: 3
           },
           pageNum: {
             type: "int64",
-            id: 3
+            id: 4
           }
         }
       },

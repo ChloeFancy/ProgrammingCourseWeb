@@ -56,9 +56,15 @@ export default [
             component: './Problem/List',
           },
           {
-            path: '/problem/edit',
-            name: 'edit',
+            path: '/problem/add',
+            name: 'add',
             component: './Problem/Edit',
+          },
+          { 
+            path: '/problem/edit/:id',
+            hideInMenu: true,
+            name: 'edit',
+            component: './Problem/Edit', 
           },
         ],
       },

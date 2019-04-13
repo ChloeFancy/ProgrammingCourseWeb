@@ -25,7 +25,7 @@ const getColumns = (userTypeOptions) => {
             dataIndex: config.type,
             key: 'type',
             width: '16%',
-            render: (text) => userTypeOptions.find(({ value }) => value === text).key,
+            render: (text) => userTypeOptions.find(({ value }) => `${value}` === `${text}`).key,
         },
         {
             title: '电子邮箱',
