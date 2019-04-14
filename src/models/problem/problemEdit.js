@@ -2,8 +2,10 @@ import {
   getProblemById,
   getTagOptions,
 } from '@/services/manage/problem';
-import { validate } from '@babel/types';
-import { formatOptionsFromMap } from '../../lib/common';
+import { formatOptionsFromMap, transformFromByteToM } from '../../lib/common';
+import { formatObjectToFields } from '../../lib/form';
+import config from '../../configs/problemEdit';
+import BraftEditor from '../../components/common/BraftEditor';
 
 export default {
   namespace: 'problemEdit',
@@ -28,18 +30,25 @@ export default {
         payload,
       });
     },
-    *getInfo({ payload: { id } }, { call, put, all }) {
+    *getInfo({ payload }, { call, put }) {
+      const { id } = payload;
       yield put({
         type: 'setPageLoading',
         payload: {
           loading: true,
         },
       });
-      // todo 
-      const [ { problem }, { tags, difficulty } ] = yield all([
-        id && call(getProblemById, payload),
-        call(getTagOptions),
-      ]);
+      const { tags, difficulty } = yield call(getTagOptions);
+      if (id) {
+        const { problem } = yield call(getProblemById, { id });
+        yield put({
+          type: 'setProblemInfo',
+          payload: formatObjectToFields({
+            ...problem,
+            [config.judgeLimitMem.dataIndex]: transformFromByteToM(problem[config.judgeLimitMem.dataIndex]),
+          }),
+        });
+      }
       yield put({
         type: 'setTagOptions',
         payload: {
@@ -48,10 +57,6 @@ export default {
             difficulty: formatOptionsFromMap(difficulty),
           },
         },
-      });
-      yield put({
-        type: 'setProblemInfo',
-        payload: formatObejctToFields(problem),
       });
       yield put({
         type: 'setPageLoading',

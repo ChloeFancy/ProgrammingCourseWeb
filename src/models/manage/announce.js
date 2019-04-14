@@ -5,7 +5,7 @@ import {
   AddAnnounceSubmit,
   getAnnouncementDetail,
 } from '@/services/manage/announce';
-import { formatObejctToFields, formatRequestFromFields } from '../../lib/form';
+import { formatObjectToFields, formatRequestFromFields } from '../../lib/form';
 
 export default {
   namespace: 'announce',
@@ -46,7 +46,7 @@ export default {
         pageIndex,
         pageNum,
       });
-      
+
       yield put({
         type: 'queryList',
         payload: {
@@ -91,7 +91,7 @@ export default {
       yield put({
         type: 'setModalInfo',
         payload: {
-          editingInfo: formatObejctToFields(announcement),
+          editingInfo: formatObjectToFields(announcement),
           loading: false,
         },
       });

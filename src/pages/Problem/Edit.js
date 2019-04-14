@@ -24,7 +24,7 @@ class ProblemEdit extends Component {
       },
       dispatch,
     } = this.props;
-    dispatch({
+    await dispatch({
       type: 'problemEdit/getInfo',
       payload: { id },
     });

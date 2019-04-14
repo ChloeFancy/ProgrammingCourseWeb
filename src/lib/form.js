@@ -1,7 +1,6 @@
 import { Form } from 'antd';
-import { type } from 'os';
 
-export const formatObejctToFields = (obj) => {
+export const formatObjectToFields = (obj) => {
     return Object.entries(obj).reduce((prev, [key, value]) => {
         return {
             ...prev,

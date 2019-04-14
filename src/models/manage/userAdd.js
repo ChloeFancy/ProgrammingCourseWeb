@@ -3,7 +3,7 @@ import {
   submitUserInfo,
   getUserRoleOptions,
 } from '@/services/manage/userList';
-import { formatObejctToFields } from '../../lib/form';
+import { formatObjectToFields } from '../../lib/form';
 import { object } from 'prop-types';
 
 export default {
@@ -12,7 +12,7 @@ export default {
   state: {
     // 角色选项
     userTypeOptions: [],
-    
+
     // // 表格数据
     // tableLoading: false,
     // list: [], // 題目列表
@@ -71,7 +71,7 @@ export default {
     //     type: 'changeModalStatus',
     //     payload: {
     //       modalVisible: true,
-    //       editingInfo: formatObejctToFields(payload.edtingUser),
+    //       editingInfo: formatObjectToFields(payload.edtingUser),
     //     },
     //   });
     // },
@@ -92,14 +92,14 @@ export default {
     //     },
     //   });
     //   const {
-    //     keyword, 
-    //     role, 
+    //     keyword,
+    //     role,
     //     pageSize,
     //     pageIndex,
     //   } = yield select(state => state.userList);
     //   const { users: list, total } = yield call(fetchList, {
-    //     keyword, 
-    //     role, 
+    //     keyword,
+    //     role,
     //     pageSize,
     //     pageNum: pageIndex,
     //     ...payload,

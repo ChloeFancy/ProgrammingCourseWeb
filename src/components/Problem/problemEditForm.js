@@ -5,6 +5,8 @@ import { mapPropsToFields } from '../../lib/form';
 import config from '../../configs/problemEdit';
 
 import styles from './problemEditForm.less';
+import dataConfig from '../../configs/announce';
+import InOutExamples from './InOutExamples';
 
 const FormItem = Form.Item;
 const { Option } = Select;
@@ -29,11 +31,32 @@ const testCaseColumns = [
 ];
 
 const getLabel = text => <span style={{ fontSize: 16, fontWeight: 700 }}>{text}</span>;
+const getOptions = (arr) => arr.map(({ key, value }) => (
+  <Option key={key} value={Number(value)}>
+    {key}
+  </Option>
+));
 
 class ProblemEditForm extends PureComponent {
+  componentDidMount () {
+    setTimeout(() => {
+      this.props.form.setFieldsValue({
+        [config.description.dataIndex]: BraftEditor.createEditorState(this.props.problemInfo[config.description.dataIndex].value),
+        [config.hint.dataIndex]: BraftEditor.createEditorState(this.props.problemInfo[config.hint.dataIndex].value),
+      });
+    }, 3000);
+  }
+
   handlePublishProblem = () => {
     const {  } = this.props;
     console.log(this.props.form.getFieldsValue());
+  };
+
+  handleAddInOutExamples = () => {
+    const { getFieldValue, setFieldsValue } = this.props.form;
+    setFieldsValue({
+      [config.inOutExamples.dataIndex]: [...(getFieldValue(config.inOutExamples.dataIndex) || []), {}],
+    });
   };
 
   render() {
@@ -43,6 +66,7 @@ class ProblemEditForm extends PureComponent {
       type: 'flex',
       justify: 'space-between',
     };
+
 
     return (
       <Form onSubmit={this.handlePublishProblem}>
@@ -91,31 +115,23 @@ class ProblemEditForm extends PureComponent {
               {
                 getFieldDecorator(config.difficulty.dataIndex)(
                   <Select>
-                    {options.difficulty.map(({ key, value }) => (
-                      <Option key={key} value={value}>
-                        {key}
-                      </Option>
-                    ))}
+                    {getOptions(options.difficulty)}
                   </Select>
                 )
               }
             </FormItem>
           </Col>
-          {/* <Col span={5}>
+          <Col span={5}>
             <FormItem label={getLabel('前台是否可见')}>
               <Checkbox>可见</Checkbox>
             </FormItem>
-          </Col> */}
+          </Col>
           <Col span={11}>
             <FormItem label={getLabel(config.tags.text)}>
             {
                 getFieldDecorator(config.tags.dataIndex)(
                   <Select mode="multiple">
-                    {options.tags.map(({ key, value }) => (
-                      <Option key={key} value={value}>
-                        {key}
-                      </Option>
-                    ))}
+                    {getOptions(options.tags)}
                   </Select>
                 )
               }
@@ -142,37 +158,13 @@ class ProblemEditForm extends PureComponent {
         </Row>
         <Row>
           <FormItem
-            label={getLabel(
-              <span>
-                样例&nbsp;&nbsp;<Button>添加</Button>
-              </span>
-            )}
+            label={<span>样例&nbsp;&nbsp;<Button onClick={this.handleAddInOutExamples}>添加</Button></span>}
           >
-            <div>
-              {[].map(item => {
-                return (
-                  <div>
-                    <div>
-                      {item.name}
-                      <Button>折叠</Button>
-                      <Button>删除</Button>
-                    </div>
-                    <Row>
-                      <Col span={12}>
-                        <FormItem label="样例输入">
-                          <TextArea>{item.input}</TextArea>
-                        </FormItem>
-                      </Col>
-                      <Col span={12}>
-                        <FormItem label="样例输出">
-                          <TextArea>{item.output}</TextArea>
-                        </FormItem>
-                      </Col>
-                    </Row>
-                  </div>
-                );
-              })}
-            </div>
+            {
+              getFieldDecorator(config.inOutExamples.dataIndex)(
+                <InOutExamples />
+              )
+            }
           </FormItem>
         </Row>
         <Row>
