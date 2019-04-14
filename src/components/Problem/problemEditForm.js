@@ -236,7 +236,6 @@ class ProblemEditForm extends PureComponent {
   }
 }
 
-// todo
 export default Form.create({
   mapPropsToFields: (props) => mapPropsToFields(props.problemInfo),
   onFieldsChange: (props, fields) => {

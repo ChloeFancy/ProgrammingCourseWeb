@@ -25,13 +25,13 @@ const getColumns = (userTypeOptions, onEdit) => {
             title: '注册时间',
             dataIndex: config.registerTime,
             key: 'registerTime',
-            render: formatTimeFromTimeStamp,
+            render: formatTimeFromTimeStamp(),
         },
         {
             title: '最后登录时间',
             dataIndex: config.lastLoginTime,
             key: config.lastLoginTime,
-            render: formatTimeFromTimeStamp,
+            render: formatTimeFromTimeStamp(),
         },
         {
             title: '真实姓名',
@@ -76,7 +76,7 @@ export default class UserList extends Component {
         await dispatch({
             type: 'userList/getUserRoleOptions',
         }),
-        this.fetchList(); 
+        this.fetchList();
     }
 
     onEdit = (record) => {
@@ -141,7 +141,7 @@ export default class UserList extends Component {
         });
         this.fetchList({
             pageIndex: current,
-        });    
+        });
     };
 
     handleShowSizeChange = (current, size) => {
@@ -156,7 +156,7 @@ export default class UserList extends Component {
         this.fetchList({
             pageIndex: current,
             pageSize: size,
-        });        
+        });
     };
 
     handleCancel = () => {

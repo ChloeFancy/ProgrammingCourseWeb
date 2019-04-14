@@ -12,4 +12,8 @@ export default {
     inOutExamples: { dataIndex: 'inOutExamples', text: (<span>样例&nbsp;&nbsp;<Button>添加</Button></span>) },
     hint: { dataIndex: 'hint', text: '提示' },
     source: { dataIndex: 'source', text: '来源' },
+    createTime: { dataIndex: 'createTime', text: '创建时间' },
+    id: { dataIndex: 'id', text: 'ID' },
+    submitTime: { dataIndex: 'submitTime', text: '提交总数' },
+    acceptTime: { dataIndex: 'acceptTime', text: '通过次数' },
 };

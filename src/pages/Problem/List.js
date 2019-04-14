@@ -57,7 +57,7 @@ class ProblemList extends Component {
         title: '创建时间',
         dataIndex: 'createTime',
         key: 'createTime',
-        render: formatTimeFromTimeStamp,
+        render: formatTimeFromTimeStamp(),
       },
       {
         title: '作者',

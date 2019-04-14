@@ -1,48 +1,50 @@
 
 import React, { Component } from 'react';
 import { connect } from 'dva';
-import { Table, Modal, Form, Input, message, Button, Row, Col, Popconfirm } from 'antd';
-import AnnounceEditForm from '../../components/Manage/AnnounceEditForm';
-import config from '../../configs/contest';
+import router from 'umi/router';
+import { Table, Form, Input, Button, Row, Col } from 'antd';
+import { contestConfig } from '../../configs/contest';
+import { formatTimeFromTimeStamp } from '../../lib/common';
 
 const FormItem = Form.Item;
 
 const getColumns = (onEdit, onDetail) => {
     return [
         {
-            title: 'ID',
-            dataIndex: config.id,
-            key: config.id,
+            title: contestConfig.id.text,
+            dataIndex: contestConfig.id.dataIndex,
+            key: contestConfig.id.dataIndex,
         },
         {
-            title: '名称',
-            dataIndex: config.name,
-            key: config.name,
+            title: contestConfig.name.text,
+            dataIndex: contestConfig.name.dataIndex,
+            key: contestConfig.name.dataIndex,
             width: '20%',
         },
         {
-            title: '时长',
-            dataIndex: config.duration,
-            key: config.duration,
+            title: contestConfig.duration.text,
+            dataIndex: contestConfig.duration.dataIndex,
+            key: contestConfig.duration.dataIndex,
             width: '15%',
         },
         {
-            title: '开始时间',
-            dataIndex: config.startTime,
-            key: config.startTime,
+            title: contestConfig.startTime.text,
+            dataIndex: contestConfig.startTime.dataIndex,
+            key: contestConfig.startTime.dataIndex,
             width: '15%',
-        }, 
+            render: formatTimeFromTimeStamp('YYYY-MM-DD HH:MM:SS'),
+        },
         {
-          title: '是否公开',
-          dataIndex: config.isPublic,
-          key: config.isPublic,
+          title: contestConfig.isPublic.text,
+          dataIndex: contestConfig.isPublic.dataIndex,
+          key: contestConfig.isPublic.dataIndex,
           render: (text) => text ? '公开' : '非公开',
         },
         {
-          title: '是否结束',
-          dataIndex: config.isOver,
-          key: config.isOver,
-          render: (text) => text ? '进行中' : '已结束',
+          title: contestConfig.isOver.text,
+          dataIndex: contestConfig.isOver.dataIndex,
+          key: contestConfig.isOver.dataIndex,
+          render: (text) => text ? '已结束' : '进行中',
         },
         {
             title: '管理',
@@ -92,17 +94,7 @@ export default class ContestList extends Component {
 
     onEdit = (record) => {
         return async() => {
-            const {
-                id,
-            } = record;
-
-            const { dispatch } = this.props;
-            await dispatch({
-                type: 'announce/onEdit',
-                payload: {
-                    id,
-                },
-            });
+            router.push(`/contest/edit/${record.id}`);
         };
     };
 
@@ -130,27 +122,6 @@ export default class ContestList extends Component {
         this.fetchList({ keyowrd });
     };
 
-    handleOk = () => {
-        this.formRef.handleSubmit();
-    };
-
-    handleCancel = async() => {
-        const {
-            editingInfo,
-            operation,
-            dispatch,
-        } = this.props;
-        await dispatch({
-            type: 'announce/onCancel',
-        });
-    };
-
-    handleInputChange = (ev) => {
-        this.setState({
-            keyword: ev.target.value,
-        });
-    };
-
     render() {
         const {
             total,
@@ -171,7 +142,7 @@ export default class ContestList extends Component {
                   <Col span={10}>
                     <FormItem label="关键词" {...formItemLayout}>
                       <Input
-                        value={keyword}     
+                        value={keyword}
                         onChange={this.handleKeywordChange}
                         placeholder="请输入关键词"
                       />
@@ -183,7 +154,7 @@ export default class ContestList extends Component {
                       搜索
                     </Button>
                   </Col>
-                  
+
                 </Row>
                 </Form>
                 <Table

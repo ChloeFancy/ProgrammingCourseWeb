@@ -1,16 +1,24 @@
 import React, { PureComponent } from 'react';
-import { Table, Icon, Upload, Button, Form, Input, Row, Col, Select, Checkbox } from 'antd';
+import { DatePicker, Form, Input, Row, Col } from 'antd';
 import BraftEditor from '../common/BraftEditor';
+import Checkbox from '../common/CheckBox';
+import { mapPropsToFields } from '../../lib/form';
+import { contestConfig } from '../../configs/contest';
 
 const FormItem = Form.Item;
-const { Option } = Select;
-const { TextArea } = Input;
-
 const getLabel = text => <span style={{ fontSize: 16, fontWeight: 700 }}>{text}</span>;
 
 class ContestDetailForm extends PureComponent {
+  componentDidMount() {
+    setTimeout(() => {
+      this.props.form.setFieldsValue({
+        [contestConfig.introduction.dataIndex]: BraftEditor.createEditorState(this.props.info[contestConfig.introduction.dataIndex].value),
+      });
+    }, 1000);
+  }
+
   render() {
-    const { testCaseList } = this.props;
+    const { form: { getFieldDecorator } } = this.props;
     const RowConfig = {
       type: 'flex',
       justify: 'space-between',
@@ -19,32 +27,52 @@ class ContestDetailForm extends PureComponent {
     return (
       <Form>
         <Row>
-          <FormItem label={getLabel('比赛名称')}>
-            <Input />
+          <FormItem label={getLabel(contestConfig.name.text)}>
+            {
+              getFieldDecorator(contestConfig.name.dataIndex)(
+                <Input />
+              )
+            }
           </FormItem>
         </Row>
         <Row>
           <FormItem label={getLabel('说明')}>
-            <BraftEditor />
+            {
+              getFieldDecorator(contestConfig.introduction.dataIndex)(
+                <BraftEditor />
+              )
+            }
           </FormItem>
         </Row>
         <Row {...RowConfig}>
           <Col span={10}>
-            <FormItem label={getLabel('开始时间')}>
-              <Input />
+            <FormItem label={getLabel(contestConfig.startTime.text)}>
+              {
+                getFieldDecorator(contestConfig.startTime.dataIndex)(
+                  <DatePicker showTime />
+                )
+              }
             </FormItem>
           </Col>
           <Col span={10}>
-            <FormItem label={getLabel('结束时间')}>
-              <Input />
+            <FormItem label={getLabel(contestConfig.endTime.text)}>
+              {
+                getFieldDecorator(contestConfig.endTime.dataIndex)(
+                  <DatePicker showTime />
+                )
+              }
             </FormItem>
           </Col>
         </Row>
 
         <Row {...RowConfig}>
           <Col>
-            <FormItem label={getLabel('是否公开')}>
-              <Checkbox>可见</Checkbox>
+            <FormItem label={getLabel(contestConfig.isPublic.text)}>
+              {
+                getFieldDecorator(contestConfig.isPublic.dataIndex)(
+                  <Checkbox>可见</Checkbox>
+                )
+              }
             </FormItem>
           </Col>
         </Row>
@@ -53,17 +81,9 @@ class ContestDetailForm extends PureComponent {
   }
 }
 
-// todo
 export default Form.create({
-  // mapPropsToFields: (props) => {
-  //     return {
-  //         username: Form.createFormField({
-  //             ...props.username,
-  //             value: props.username.value,
-  //         }),
-  //     };
-  // },
-  // onFieldsChange: (props, fields) => {
-  //     props.onChange(changedFields);
-  // },
+  mapPropsToFields: (props) => mapPropsToFields(props.info),
+  onFieldsChange: (props, fields) => {
+    props.onChange(fields);
+  },
 })(ContestDetailForm);

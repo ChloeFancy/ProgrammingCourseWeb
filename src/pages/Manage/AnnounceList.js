@@ -22,13 +22,13 @@ const getColumns = (onEdit, onDelete) => {
             title: '创建时间',
             dataIndex: config.create_time,
             key: 'registerTime',
-            render: formatTimeFromTimeStamp,
+            render: formatTimeFromTimeStamp(),
         },
         {
             title: '更新时间',
             dataIndex: config.last_update_time,
             key: 'name',
-            render: formatTimeFromTimeStamp,
+            render: formatTimeFromTimeStamp(),
         },
         {
             title: '创建者',

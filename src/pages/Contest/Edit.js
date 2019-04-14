@@ -1,45 +1,56 @@
 import React, { Component } from 'react';
 import { connect } from 'dva';
-import { Table, Icon, Upload, Button, Form, Input, Row, Col, Select, Checkbox } from 'antd';
+import { Button, Row, Spin } from 'antd';
+import router from 'umi/router';
 import ContestDetailForm from '../../components/Contest/ContestDetail';
 import ContestPaperDetailForm from '../../components/Contest/ContestPaperDetail';
 
-// todo 
-// 1. 题目数量
-
 @connect(({ contestDetail }) => ({
-  ...contestDetail, 
+  ...contestDetail,
 }))
 class ProblemEdit extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      testCaseList: [],
-    };
-  }
-
   async componentDidMount() {
-    const { dispatch } = this.props;
+    const { dispatch, match: { params: { id } } } = this.props;
     await dispatch({
-      type: 'contestDetail/getAllOptions'
+      type: 'contestDetail/getInfo',
+      payload: {
+        id,
+      },
     });
   }
 
+  handleBackToContestList = () => {
+    router.push(`/contest/list`);
+  };
+
+  handleContestChange = () => {
+
+  };
+
+  handlePaperChange = () => {
+
+  };
+
   render() {
-    const { testCaseList } = this.state;
-    const { options } = this.props;
+    const { loading, options, contestInfo, paperInfo, match: { params: { id } } } = this.props;
     return (
       <div>
-        <Row>
-          <Button>返回</Button>
-        </Row>
-        <div>
-          <ContestDetailForm />
-          <ContestPaperDetailForm options={options} />
-          <Row>
-            <Button type="primary">发布比赛</Button>
-          </Row>
-        </div>
+        {
+          id && (
+            <Row>
+              <Button onClick={this.handleBackToContestList}>返回</Button>
+            </Row>
+          )
+        }
+        <Spin spinning={loading}>
+          <div>
+            <ContestDetailForm info={contestInfo} onChange={this.handleContestChange} />
+            <ContestPaperDetailForm info={paperInfo} options={options} onChange={this.handlePaperChange} />
+            <Row>
+              <Button type="primary">发布比赛</Button>
+            </Row>
+          </div>
+        </Spin>
       </div>
     );
   }

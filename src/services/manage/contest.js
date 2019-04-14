@@ -22,3 +22,21 @@ export const getAllOptions = async () => {
     method: 'get',
   });
 };
+
+export const getMatchByID = async (data) => {
+  return request({
+    url: '/getMatchByID',
+    data,
+    reqProto: 'GetMatchByIDReq',
+    resProto: 'GetMatchByIDResp',
+  });
+};
+
+export const getPaperByID = async (data) => {
+  return request({
+    url: '/getPaperByID',
+    data,
+    reqProto: 'GetPaperByIDReq',
+    resProto: 'GetPaperByIDResp',
+  });
+};

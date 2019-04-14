@@ -60,11 +60,11 @@ export default [
             name: 'add',
             component: './Problem/Edit',
           },
-          { 
+          {
             path: '/problem/edit/:id',
             hideInMenu: true,
             name: 'edit',
-            component: './Problem/Edit', 
+            component: './Problem/Edit',
           },
         ],
       },
@@ -79,7 +79,13 @@ export default [
             component: './Contest/List',
           },
           {
-            path: '/contest/edit',
+            path: '/contest/add',
+            name: 'add',
+            component: './Contest/Edit',
+          },
+          {
+            path: '/contest/edit/:id',
+            hideInMenu: true,
             name: 'edit',
             component: './Contest/Edit',
           },
