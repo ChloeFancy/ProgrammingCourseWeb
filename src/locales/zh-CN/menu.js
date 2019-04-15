@@ -52,7 +52,7 @@ export default {
   'menu.contest.edit': '编辑比赛',
   'menu.class': '班级管理',
   'menu.class.list': '班级列表',
-  'menu.class.edit': '加入班级请求',
+  'menu.class.addRequest': '加入班级请求',
   'menu.manage': '公共管理',
   'menu.student': '學生頁面',
   'menu.manage.user': '用户管理',

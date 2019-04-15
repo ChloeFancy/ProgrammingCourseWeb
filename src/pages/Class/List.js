@@ -1,192 +1,231 @@
-import React, { PureComponent } from 'react';
-import numeral from 'numeral';
+
+import React, { Component } from 'react';
 import { connect } from 'dva';
-import { FormattedMessage } from 'umi-plugin-react/locale';
-import { Row, Col, Form, Card, Select, Icon, Avatar, List, Tooltip, Dropdown, Menu } from 'antd';
-import TagSelect from '@/components/TagSelect';
-import StandardFormRow from '@/components/StandardFormRow';
+import router from 'umi/router';
+import { Table, Form, Input, Button, Row, Col, Modal, Spin } from 'antd';
+import { classConfig } from '../../configs/class';
+import { formatTimeFromTimeStamp } from '../../lib/common';
+import ClassInfoForm from '../../components/Class/ClassInfoForm'; 
 
-import { formatWan } from '@/utils/utils';
-
-import styles from './Applications.less';
-
-const { Option } = Select;
 const FormItem = Form.Item;
 
-@connect(({ list, loading }) => ({
-  list,
-  loading: loading.models.list,
-}))
-@Form.create({
-  onValuesChange({ dispatch }, changedValues, allValues) {
-    // 表单项变化时请求数据
-    // eslint-disable-next-line
-    console.log(changedValues, allValues);
-    // 模拟查询表单生效
-    dispatch({
-      type: 'list/fetch',
-      payload: {
-        count: 8,
-      },
-    });
+const getColumns = (onDetail, onMemberManage) => {
+    return [
+        {
+            title: classConfig.id.text,
+            dataIndex: classConfig.id.dataIndex,
+            key: classConfig.id.dataIndex,
+        },
+        {
+            title: classConfig.name.text,
+            dataIndex: classConfig.name.dataIndex,
+            key: classConfig.name.dataIndex,
+            width: '20%',
+        },
+        {
+            title: classConfig.createTime.text,
+            dataIndex: classConfig.createTime.dataIndex,
+            key: classConfig.createTime.dataIndex,
+            width: '15%',
+            render: formatTimeFromTimeStamp('YYYY-MM-DD HH:MM:SS'),
+        },
+        {
+            title: classConfig.isCheck.text,
+            dataIndex: classConfig.isCheck.dataIndex,
+            key: classConfig.isCheck.dataIndex,
+            width: '15%',
+            render: (isCheck) => isCheck ? '需要导师审核' : '无需审核',
+        },
+        {
+            title: '管理',
+            dataIndex: 'action',
+            key: 'action',
+            width: '20%',
+            render: (text, record) => {
+                return (
+                    <div>
+                      <Button type="primary" onClick={onDetail(record)}>编辑班级</Button>
+                      &nbsp;&nbsp;
+                      <Button type="primary" onClick={onMemberManage(record)}>班级成员管理</Button>
+                    </div>
+                );
+            },
+        },
+    ];
+};
+
+const formItemLayout = {
+  labelCol: {
+    xs: { span: 24 },
+    sm: { span: 8 },
   },
-})
-class FilterCardList extends PureComponent {
-  componentDidMount() {
-    const { dispatch } = this.props;
-    dispatch({
-      type: 'list/fetch',
-      payload: {
-        count: 8,
-      },
-    });
-  }
+  wrapperCol: {
+    xs: { span: 24 },
+    sm: { span: 16 },
+  },
+};
 
-  render() {
-    const {
-      list: { list },
-      loading,
-      form,
-    } = this.props;
-    const { getFieldDecorator } = form;
+@connect(({ classList }) => ({
+    ...classList,
+}))
+export default class ClassList extends Component {
+    async componentDidMount() {
+        this.fetchList();
+    }
 
-    const CardInfo = ({ activeUser, newUser }) => (
-      <div className={styles.cardInfo}>
-        <div>
-          <p>活跃用户</p>
-          <p>{activeUser}</p>
-        </div>
-        <div>
-          <p>新增用户</p>
-          <p>{newUser}</p>
-        </div>
-      </div>
-    );
-
-    const formItemLayout = {
-      wrapperCol: {
-        xs: { span: 24 },
-        sm: { span: 16 },
-      },
+    onDetail = ({ id }) => {
+      return () => {
+        const { dispatch } = this.props;
+        dispatch({
+          type: 'classList/openModal',
+          payload: {
+            id,
+            operation: 1,
+          },
+        });
+      };
     };
 
-    const actionsTextMap = {
-      expandText: <FormattedMessage id="component.tagSelect.expand" defaultMessage="Expand" />,
-      collapseText: (
-        <FormattedMessage id="component.tagSelect.collapse" defaultMessage="Collapse" />
-      ),
-      selectAllText: <FormattedMessage id="component.tagSelect.all" defaultMessage="All" />,
+    onMemberManage = () => {
+      // todo 查看编辑班级成员
     };
 
-    const itemMenu = (
-      <Menu>
-        <Menu.Item>
-          <a target="_blank" rel="noopener noreferrer" href="https://www.alipay.com/">
-            1st menu item
-          </a>
-        </Menu.Item>
-        <Menu.Item>
-          <a target="_blank" rel="noopener noreferrer" href="https://www.taobao.com/">
-            2nd menu item
-          </a>
-        </Menu.Item>
-        <Menu.Item>
-          <a target="_blank" rel="noopener noreferrer" href="https://www.tmall.com/">
-            3d menu item
-          </a>
-        </Menu.Item>
-      </Menu>
-    );
+    handleOk = () => {
+      this.formRef.handleSubmit();
+    };
 
-    return (
-      <div className={styles.filterCardList}>
-        <Card bordered={false}>
-          <Form layout="inline">
-            <StandardFormRow title="所属类目" block style={{ paddingBottom: 11 }}>
-              <FormItem>
-                {getFieldDecorator('category')(
-                  <TagSelect expandable actionsText={actionsTextMap}>
-                    <TagSelect.Option value="cat1">类目一</TagSelect.Option>
-                    <TagSelect.Option value="cat2">类目二</TagSelect.Option>
-                    <TagSelect.Option value="cat3">类目三</TagSelect.Option>
-                    <TagSelect.Option value="cat4">类目四</TagSelect.Option>
-                    <TagSelect.Option value="cat5">类目五</TagSelect.Option>
-                    <TagSelect.Option value="cat6">类目六</TagSelect.Option>
-                    <TagSelect.Option value="cat7">类目七</TagSelect.Option>
-                    <TagSelect.Option value="cat8">类目八</TagSelect.Option>
-                    <TagSelect.Option value="cat9">类目九</TagSelect.Option>
-                    <TagSelect.Option value="cat10">类目十</TagSelect.Option>
-                    <TagSelect.Option value="cat11">类目十一</TagSelect.Option>
-                    <TagSelect.Option value="cat12">类目十二</TagSelect.Option>
-                  </TagSelect>
-                )}
-              </FormItem>
-            </StandardFormRow>
-            <StandardFormRow title="其它选项" grid last>
-              <Row gutter={16}>
-                <Col lg={8} md={10} sm={10} xs={24}>
-                  <FormItem {...formItemLayout} label="作者">
-                    {getFieldDecorator('author', {})(
-                      <Select placeholder="不限" style={{ maxWidth: 200, width: '100%' }}>
-                        <Option value="lisa">王昭君</Option>
-                      </Select>
-                    )}
-                  </FormItem>
-                </Col>
-                <Col lg={8} md={10} sm={10} xs={24}>
-                  <FormItem {...formItemLayout} label="好评度">
-                    {getFieldDecorator('rate', {})(
-                      <Select placeholder="不限" style={{ maxWidth: 200, width: '100%' }}>
-                        <Option value="good">优秀</Option>
-                        <Option value="normal">普通</Option>
-                      </Select>
-                    )}
-                  </FormItem>
-                </Col>
-              </Row>
-            </StandardFormRow>
-          </Form>
-        </Card>
-        <List
-          rowKey="id"
-          style={{ marginTop: 24 }}
-          grid={{ gutter: 24, xl: 4, lg: 3, md: 3, sm: 2, xs: 1 }}
-          loading={loading}
-          dataSource={list}
-          renderItem={item => (
-            <List.Item key={item.id}>
-              <Card
-                hoverable
-                bodyStyle={{ paddingBottom: 20 }}
-                actions={[
-                  <Tooltip title="下载">
-                    <Icon type="download" />
-                  </Tooltip>,
-                  <Tooltip title="编辑">
-                    <Icon type="edit" />
-                  </Tooltip>,
-                  <Tooltip title="分享">
-                    <Icon type="share-alt" />
-                  </Tooltip>,
-                  <Dropdown overlay={itemMenu}>
-                    <Icon type="ellipsis" />
-                  </Dropdown>,
-                ]}
-              >
-                <Card.Meta avatar={<Avatar size="small" src={item.avatar} />} title={item.title} />
-                <div className={styles.cardItemContent}>
-                  <CardInfo
-                    activeUser={formatWan(item.activeUser)}
-                    newUser={numeral(item.newUser).format('0,0')}
-                  />
-                </div>
-              </Card>
-            </List.Item>
-          )}
-        />
-      </div>
-    );
-  }
+    handleCancel = () => {
+      const { dispatch } = this.props;
+      dispatch({
+        type: 'classList/closeModal',
+      });
+    };
+
+    handleSubmit = (values) => {
+      const { dispatch } = this.props;
+      dispatch({
+        type: 'classList/classSubmit',
+      });
+      dispatch({
+        type: 'classList/closeModal',
+      });
+    };
+
+    handleModalFormChange = (fields) => {
+      const { dispatch } = this.props;
+      dispatch({
+        type: 'classList/changeModalForm',
+        payload: {
+            ...fields,
+        },
+      });
+    };
+
+    fetchList = async() => {
+        const { dispatch } = this.props;
+        await dispatch({
+            type: 'classList/fetchList',
+        });
+    };
+
+    handleKeywordChange = (ev) => {
+      const keyword = ev.target.value;
+      const { dispatch } = this.props;
+      dispatch({
+        type: 'classList/setSearchParams',
+        payload: {
+          keyword,
+        },
+      });
+    }
+
+    handleShowSizeChange = (current, size) => {
+      const {
+          dispatch,
+          pageSize,
+      } = this.props;
+      dispatch({
+          type: 'classList/setSearchParams',
+          payload: {
+              pageIndex: current,
+              pageSize: size || pageSize,
+          },
+      });
+      this.fetchList();
+    };
+
+    render() {
+        const {
+            total,
+            list: dataSource,
+            tableLoading,
+            pageIndex,
+            pageSize,
+            keyword,
+            modalVisible,
+            info,
+            operation,
+            modalLoading,
+        } = this.props;
+
+        return (
+            <div>
+              <Form>
+                <Row type="flex" justify="end">
+                  <Col span={10}>
+                    <FormItem label="关键词" {...formItemLayout}>
+                      <Input
+                        value={keyword}
+                        onChange={this.handleKeywordChange}
+                        placeholder="请输入关键词"
+                      />
+                    </FormItem>
+                  </Col>
+
+                  <Col>
+                    <FormItem>
+                      <Button type="primary" onClick={this.fetchList}>
+                        搜索
+                      </Button>
+                    </FormItem>
+                  </Col>
+
+                </Row>
+                </Form>
+                <Table
+                    dataSource={dataSource}
+                    columns={getColumns(this.onDetail, this.onMemberManage)}
+                    rowKey="ID"
+                    loading={tableLoading}
+                    pagination={{
+                        total,
+                        pageSize,
+                        current: pageIndex,
+                        showSizeChanger: true,
+                        showTotal: (t) => `共 ${t} 条`,
+                        onShowSizeChange: this.handleShowSizeChange,
+                        onChange: this.handleShowSizeChange,
+                    }}
+                />
+                <Modal
+                    visible={modalVisible}
+                    title={operation ? '编辑班级' : '新增班级'}
+                    width="700px"
+                    onOk={this.handleOk}
+                    onCancel={this.handleCancel}
+                    destroyOnClose
+                    maskClosable={false}
+                >
+                    <Spin spinning={modalLoading}>
+                        <ClassInfoForm
+                            wrappedComponentRef={(ref) => { this.formRef = ref; }}
+                            info={info}
+                            onSubmit={this.handleSubmit}
+                            onChange={this.handleModalFormChange}
+                        />
+                    </Spin>
+                </Modal>
+            </div>
+        );
+    }
 }
-
-export default FilterCardList;

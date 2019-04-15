@@ -52,9 +52,7 @@ export default {
           payload: {
             contestInfo: formatObjectToFields({
               ...contestInfo,
-              [contestConfig.endTime.dataIndex]: moment(),
-              // todo 结束时间
-              // [contestConfig.endTime.dataIndex]: moment.unix(contestInfo[contestConfig.endTime.dataIndex]),
+              [contestConfig.endTime.dataIndex]: moment.unix(contestInfo[contestConfig.endTime.dataIndex]),
               [contestConfig.startTime.dataIndex]: moment.unix(contestInfo[contestConfig.startTime.dataIndex]),
             }),
             paperInfo: formatObjectToFields(paperInfo),

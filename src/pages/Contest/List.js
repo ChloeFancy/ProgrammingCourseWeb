@@ -22,15 +22,16 @@ const getColumns = (onEdit, onDetail) => {
             width: '20%',
         },
         {
-            title: contestConfig.duration.text,
-            dataIndex: contestConfig.duration.dataIndex,
-            key: contestConfig.duration.dataIndex,
-            width: '15%',
-        },
-        {
             title: contestConfig.startTime.text,
             dataIndex: contestConfig.startTime.dataIndex,
             key: contestConfig.startTime.dataIndex,
+            width: '15%',
+            render: formatTimeFromTimeStamp('YYYY-MM-DD HH:MM:SS'),
+        },
+        {
+            title: contestConfig.endTime.text,
+            dataIndex: contestConfig.endTime.dataIndex,
+            key: contestConfig.endTime.dataIndex,
             width: '15%',
             render: formatTimeFromTimeStamp('YYYY-MM-DD HH:MM:SS'),
         },

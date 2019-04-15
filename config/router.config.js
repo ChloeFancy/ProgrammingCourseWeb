@@ -102,9 +102,16 @@ export default [
             component: './Class/List',
           },
           {
-            path: '/class/edit',
-            name: 'edit',
+            path: '/class/addRequest',
+            name: 'addRequest',
             component: './Class/Edit',
+            // todo 加入班級請求也
+          },
+          {
+            path: '/class/detail/:id',
+            name: 'detail',
+            component: './Class/Edit',
+            hideInMenu: true,
           },
         ],
       },

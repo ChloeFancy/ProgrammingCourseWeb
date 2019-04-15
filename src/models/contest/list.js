@@ -21,7 +21,6 @@ export default {
       });
     },
     *saveAdd({ payload }, { call }) {
-      console.log(payload);
       const { status, isSuccess } = yield call(AddAnnounceSubmit, payload);
       yield put({
         type: 'setModalInfo',
@@ -31,9 +30,7 @@ export default {
       });
     },
     *saveEdit({ payload }, { call, put }) {
-      // console.log(payload);
       const { status, isSuccess } = yield call(editAnnounceSubmit, payload);
-      // console.log(payload, status, isSuccess);
       yield put({
         type: 'setModalInfo',
         payload: {
@@ -43,7 +40,6 @@ export default {
     },
     *deleteItem({ payload }, { call }) {
       const { status } = yield call(deleteAnnounce, payload);
-      console.log('deleteAnnounce', status);
     },
     *onEdit({ payload }, { call, put }) {
       yield put({
