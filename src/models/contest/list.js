@@ -6,18 +6,49 @@ export default {
   namespace: 'contestList',
 
   state: {
+    // 表格相关
+    tableLoading: false, // 加载中
     list: [], // 比赛列表
+    total: 0, // 总数
+
+    // 搜索参数
     keyword: undefined, // 题目搜索关键字
     pageSize: 10,
     pageIndex: 1,
   },
 
   effects: {
-    *fetchList({ payload }, { call, put }) {
-      const { matches } = yield call(fetchList, payload);
+    *setSearchParams({ payload }, { put }) {
+      yield put({
+        type: 'changeSearchParams',
+        payload,
+      });
+    },
+    *fetchList(_, { select, call, put }) {
+      yield put({
+        type: 'setLoading',
+        payload: {
+          tableLoading: true,
+        },
+      });
+      const { keyword, pageIndex, pageSize } = yield select(state => state.contestList); 
+      const { matches, total } = yield call(fetchList, {
+        keyword,
+        pageIndex,
+        pageNum: pageSize,
+      });
       yield put({
         type: 'queryList',
-        payload: Array.isArray(matches) ? matches : [],
+        payload: {
+          list: Array.isArray(matches) ? matches : [],
+          total,
+        },
+      });
+      yield put({
+        type: 'setLoading',
+        payload: {
+          tableLoading: false,
+        },
       });
     },
     *saveAdd({ payload }, { call }) {
@@ -82,10 +113,22 @@ export default {
   },
 
   reducers: {
+    changeSearchParams(state, action) {
+      return {
+        ...state,
+        ...action.payload,
+      };
+    },
+    setLoading(state, action) {
+      return {
+        ...state,
+        ...action.payload,
+      };
+    },
     queryList(state, action) {
       return {
         ...state,
-        list: action.payload,
+        ...action.payload,
       };
     },
     setSearchKeyword(state, action) {

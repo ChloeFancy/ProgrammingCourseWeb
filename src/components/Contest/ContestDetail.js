@@ -10,11 +10,13 @@ const getLabel = text => <span style={{ fontSize: 16, fontWeight: 700 }}>{text}<
 
 class ContestDetailForm extends PureComponent {
   componentDidMount() {
-    setTimeout(() => {
-      this.props.form.setFieldsValue({
-        [contestConfig.introduction.dataIndex]: BraftEditor.createEditorState(this.props.info[contestConfig.introduction.dataIndex].value),
-      });
-    }, 1000);
+      setTimeout(() => {
+        if (Object.keys(this.props.info).length) {
+          this.props.form.setFieldsValue({
+            [contestConfig.introduction.dataIndex]: BraftEditor.createEditorState(this.props.info[contestConfig.introduction.dataIndex].value),
+          });
+        }
+      }, 1000);
   }
 
   render() {

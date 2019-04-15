@@ -31,7 +31,7 @@ export default {
         },
       });
       const { id } = payload;
-      const [options, { match: contestInfo } ] = yield all([
+      const [options, matchRes] = yield all([
         call(getAllOptions, payload),
         id && call(getMatchByID, { id }),
       ]);
@@ -45,6 +45,7 @@ export default {
         }, {}),
       });
       if (id) {
+        const { match: contestInfo } = matchRes;
         const { paperId } = contestInfo;
         const { paper: paperInfo } = yield call(getPaperByID, { id: paperId });
         yield put({

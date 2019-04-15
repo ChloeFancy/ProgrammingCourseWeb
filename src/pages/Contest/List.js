@@ -103,16 +103,37 @@ export default class ContestList extends Component {
       // 跳转到详情页
     };
 
-    fetchList = async(data = {}) => {
-        const { pageIndex, pageSize } = this.state;
+    handleShowSizeChange = (current, size) => {
+        const {
+            dispatch,
+            pageSize,
+        } = this.props;
+        dispatch({
+            type: 'contestList/setSearchParams',
+            payload: {
+                pageIndex: current,
+                pageSize: size || pageSize,
+            },
+        });
+        this.fetchList();
+    };
+
+    
+    handleKeywordChange = (ev) => {
+        const keyword = ev.target.value;
+        const { dispatch } = this.props;
+        dispatch({
+            type: 'contestList/setSearchParams',
+            payload: {
+                keyword,
+            },
+        });
+    };
+
+    fetchList = async() => {
         const { dispatch } = this.props;
         await dispatch({
             type: 'contestList/fetchList',
-            payload: {
-                pageIndex,
-                pageSize,
-                ...data,
-            },
         });
     };
 
@@ -127,14 +148,11 @@ export default class ContestList extends Component {
         const {
             total,
             list: dataSource,
-            loadingList,
-        } = this.props;
-
-        const {
+            tableLoading,
             pageIndex,
             pageSize,
             keyword,
-        } = this.state;
+        } = this.props;
 
         return (
             <div>
@@ -143,7 +161,6 @@ export default class ContestList extends Component {
                   <Col span={10}>
                     <FormItem label="关键词" {...formItemLayout}>
                       <Input
-                        value={keyword}
                         onChange={this.handleKeywordChange}
                         placeholder="请输入关键词"
                       />
@@ -151,45 +168,27 @@ export default class ContestList extends Component {
                   </Col>
 
                   <Col>
-                    <Button type="primary" onClick={this.handleSearch}>
-                      搜索
-                    </Button>
+                    <FormItem>
+                        <Button type="primary" onClick={this.handleSearch}>
+                        搜索
+                        </Button>
+                    </FormItem>
                   </Col>
-
                 </Row>
                 </Form>
                 <Table
                     dataSource={dataSource}
                     columns={getColumns(this.onEdit, this.onDetail)}
                     rowKey="ID"
-                    loading={loadingList}
+                    loading={tableLoading}
                     pagination={{
                         total,
                         pageSize,
                         current: pageIndex,
                         showSizeChanger: true,
                         showTotal: (t) => `共 ${t} 条`,
-                        onShowSizeChange: (current, size) => {
-                            this.setState(
-                                {
-                                    pageIndex: current,
-                                    pageSize: size,
-                                },
-                                () => {
-                                    this.fetchList();
-                                },
-                            );
-                        },
-                        onChange: (current) => {
-                            this.setState(
-                                {
-                                    pageIndex: current,
-                                },
-                                () => {
-                                    this.fetchList();
-                                },
-                            );
-                        },
+                        onShowSizeChange: this.handleShowSizeChange,
+                        onChange: this.handleShowSizeChange,
                     }}
                 />
             </div>

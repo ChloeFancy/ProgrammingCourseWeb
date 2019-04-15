@@ -1,11 +1,6 @@
 import request from '../../lib/request';
 
-export const fetchList = async () => {
-  // TODO 删除mock数据
-  const data = {
-    pageIndex: 1,
-    pageNum: 10,
-  };
+export const fetchList = async (data) => {
   return request({
     url: '/getMatches',
     data,
