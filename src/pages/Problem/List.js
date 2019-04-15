@@ -163,7 +163,7 @@ class ProblemList extends Component {
             showTotal: (t) => `共 ${t} 条`,
             onShowSizeChange: this.handleShowSizeChange,
             onChange: this.handleShowSizeChange,
-        }}
+          }}
         />
       </div>
     );
