@@ -2,6 +2,7 @@ import {
   getProblemById,
   getOptions,
   submitCodeByStudent,
+  getLanguageOptions,
 } from '@/services/manage/problem';
 import { formatOptionsFromMap, transformFromByteToM } from '../../lib/common';
 import { formatObjectToFields } from '../../lib/form';
@@ -28,9 +29,21 @@ export default {
       language: undefined,
       code: '',
     },
+
+    // 语言选项
+    languageOptions: [],
   },
 
   effects: {
+    *getLanguageOptions(_, { put, call }) {
+      const { language } = yield call(getLanguageOptions);
+      yield put({
+        type: 'setLanguageOptions',
+        payload: {
+          languageOptions: formatOptionsFromMap(language),
+        },
+      });
+    },
     *changeStudentSubmitInfo({ payload }, { put }) {
       yield put({
         type: 'updateStudentSubmitInfo',
@@ -99,6 +112,12 @@ export default {
           ...state.studentSubmitInfo,
           ...action.payload,
         },
+      };
+    },
+    setLanguageOptions(state, action) {
+      return {
+        ...state,
+        ...action.payload,
       };
     },
     setTagOptions(state, action) {

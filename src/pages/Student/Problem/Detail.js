@@ -16,19 +16,9 @@ const TextArea = Input.TextArea;
     studentSubmitInfo: problemDetail.studentSubmitInfo,
     problemInfo: problemDetail.problemInfo,
     loading: problemDetail.loading,
+    languageOptions: problemDetail.languageOptions,
 }))
 export default class ProblemDetail extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            detail: {},
-            lang: 1,
-            code: '',
-            logs: [],
-            loading: false,
-        };
-    }
-
     async componentDidMount() {
         const {
             match: {
@@ -38,13 +28,18 @@ export default class ProblemDetail extends Component {
             },
             dispatch,
         } = this.props;
-        await dispatch({
-            type: 'problemDetail/getInfo',
-            payload: { 
-                id,
-                mode: modeConfig.STUDENT,
-            },
-        });
+        await Promise.all([
+            dispatch({
+                type: 'problemDetail/getLanguageOptions',
+            }),
+            dispatch({
+                type: 'problemDetail/getInfo',
+                payload: { 
+                    id,
+                    mode: modeConfig.STUDENT,
+                },
+            }),
+        ]);
     }
 
     handleStudentSubmitInfoChange = (field) => {
@@ -143,6 +138,7 @@ export default class ProblemDetail extends Component {
                 language,
                 code,
             },
+            languageOptions,
         } = this.props;
         return (
             <Fragment>
@@ -183,9 +179,9 @@ export default class ProblemDetail extends Component {
                     </h5>
                     <div>
                         <RadioGroup onChange={this.handleStudentSubmitInfoChange('language')} value={language}>
-                            <Radio value={1}>C (GCC 4.8)</Radio>
-                            <Radio value={2}>C++ (G++ 4.3)</Radio>
-                            <Radio value={3}>Java (Oracle JDK 1.7)</Radio>
+                            {
+                                languageOptions.map(({ key, value }) => <Radio key={value} value={value}>{key}</Radio>)
+                            }
                         </RadioGroup>
                     </div>
                     <h5>

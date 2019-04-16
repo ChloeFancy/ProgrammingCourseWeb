@@ -37,3 +37,12 @@ export const submitCodeByStudent = async (data) => {
     method: 'get',
   });
 };
+
+export const getLanguageOptions = async () => {
+  return request({
+    url: '/getAllLanguage',
+    data: null,
+    resProto: 'JudgeLanguage',
+    method: 'get',
+  });
+};

@@ -261,6 +261,67 @@ var $root = ($protobuf.roots["default"] || ($protobuf.roots["default"] = new $pr
           }
         }
       },
+      GetMemberReq: {
+        fields: {
+          classId: {
+            type: "int64",
+            id: 1
+          },
+          pageIndex: {
+            type: "int64",
+            id: 2
+          },
+          pageNum: {
+            type: "int64",
+            id: 3
+          }
+        }
+      },
+      GetMemberResp: {
+        fields: {
+          status: {
+            type: "Status",
+            id: 1
+          },
+          menbers: {
+            rule: "repeated",
+            type: "ClassMember",
+            id: 2
+          },
+          pageIndex: {
+            type: "int64",
+            id: 3
+          },
+          pageNum: {
+            type: "int64",
+            id: 4
+          },
+          total: {
+            type: "int64",
+            id: 5
+          }
+        }
+      },
+      EnterClassReq: {
+        fields: {
+          classId: {
+            type: "int64",
+            id: 1
+          }
+        }
+      },
+      EnterClassResp: {
+        fields: {
+          status: {
+            type: "Status",
+            id: 1
+          },
+          isSuccess: {
+            type: "bool",
+            id: 2
+          }
+        }
+      },
       UserInfo: {
         fields: {
           id: {
@@ -393,17 +454,33 @@ var $root = ($protobuf.roots["default"] || ($protobuf.roots["default"] = new $pr
       },
       SubmitRecord: {
         fields: {
-          problem: {
-            type: "Problem",
+          problemId: {
+            type: "int64",
             id: 1
           },
-          submitTime: {
+          userId: {
             type: "int64",
             id: 2
           },
+          submitTime: {
+            type: "int64",
+            id: 3
+          },
           isPass: {
             type: "bool",
-            id: 3
+            id: 4
+          },
+          runningTime: {
+            type: "int64",
+            id: 5
+          },
+          runningMem: {
+            type: "int64",
+            id: 6
+          },
+          code: {
+            type: "string",
+            id: 7
           }
         }
       },
@@ -558,6 +635,26 @@ var $root = ($protobuf.roots["default"] || ($protobuf.roots["default"] = new $pr
           }
         }
       },
+      ClassMember: {
+        fields: {
+          userId: {
+            type: "int64",
+            id: 1
+          },
+          name: {
+            type: "string",
+            id: 2
+          },
+          isAdministrator: {
+            type: "bool",
+            id: 3
+          },
+          isChecked: {
+            type: "bool",
+            id: 4
+          }
+        }
+      },
       Config: {
         fields: {
           status: {
@@ -589,13 +686,17 @@ var $root = ($protobuf.roots["default"] || ($protobuf.roots["default"] = new $pr
           }
         }
       },
-      Language: {
-        values: {
-          C: 0,
-          C_PLUS: 1,
-          JAVA: 2,
-          PYTHON2: 3,
-          PYTHON3: 4
+      JudgeLanguage: {
+        fields: {
+          status: {
+            type: "Status",
+            id: 1
+          },
+          language: {
+            keyType: "int64",
+            type: "string",
+            id: 2
+          }
         }
       },
       JudgeResult: {
@@ -650,7 +751,7 @@ var $root = ($protobuf.roots["default"] || ($protobuf.roots["default"] = new $pr
             id: 2
           },
           language: {
-            type: "Language",
+            type: "int64",
             id: 3
           }
         }
@@ -693,11 +794,6 @@ var $root = ($protobuf.roots["default"] || ($protobuf.roots["default"] = new $pr
           user: {
             type: "UserInfo",
             id: 3
-          },
-          submitRecords: {
-            rule: "repeated",
-            type: "SubmitRecord",
-            id: 4
           }
         }
       },
@@ -1117,6 +1213,43 @@ var $root = ($protobuf.roots["default"] || ($protobuf.roots["default"] = new $pr
             rule: "repeated",
             type: "int64",
             id: 3
+          }
+        }
+      },
+      GetSubmitRecordReq: {
+        fields: {
+          pageIndex: {
+            type: "int64",
+            id: 1
+          },
+          pageNum: {
+            type: "int64",
+            id: 2
+          }
+        }
+      },
+      GetSubmitRecordResp: {
+        fields: {
+          status: {
+            type: "Status",
+            id: 1
+          },
+          submitRecords: {
+            rule: "repeated",
+            type: "SubmitRecord",
+            id: 2
+          },
+          pageIndex: {
+            type: "int64",
+            id: 3
+          },
+          pageNum: {
+            type: "int64",
+            id: 4
+          },
+          total: {
+            type: "int64",
+            id: 5
           }
         }
       }
