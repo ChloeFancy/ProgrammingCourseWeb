@@ -7,7 +7,7 @@ import {
   addContest,
 } from '@/services/manage/contest';
 import { formatOptionsFromMap } from '../../lib/common';
-import { formatObjectToFields, formatRequestFromFields } from '../../lib/form';
+import { formatObjectToFields, formatRequestFromFields, formatBraftEditorField } from '../../lib/form';
 import { contestConfig, paperConfig } from '../../configs/contest';
 
 export default {
@@ -41,7 +41,8 @@ export default {
           ...paper,
         },
       };
-      yield call(contestInfo.id ? editContest : addContest, data);
+      const { isSuccess } = yield call(contestInfo.id ? editContest : addContest, data);
+      return isSuccess;
     },
     *changeContestInfo({ payload }, { put }) {
       yield put({
@@ -85,6 +86,7 @@ export default {
           payload: {
             contestInfo: formatObjectToFields({
               ...contestInfo,
+              ...formatBraftEditorField(contestInfo, [contestConfig.introduction.dataIndex]),
               [contestConfig.endTime.dataIndex]: moment.unix(contestInfo[contestConfig.endTime.dataIndex]),
               [contestConfig.startTime.dataIndex]: moment.unix(contestInfo[contestConfig.startTime.dataIndex]),
             }),
@@ -95,7 +97,9 @@ export default {
         yield put({
           type: 'setContestAndPaperInfo',
           payload: {
-            contestInfo:{},
+            contestInfo: formatObjectToFields({
+              ...formatBraftEditorField({}, [contestConfig.introduction.dataIndex]),
+            }),
             paperInfo: {},
           },
         });

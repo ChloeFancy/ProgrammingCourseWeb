@@ -7,7 +7,7 @@ import {
   addProblem,
 } from '@/services/manage/problem';
 import { formatOptionsFromMap, transformFromByteToM } from '../../lib/common';
-import { formatObjectToFields, formatRequestFromFields } from '../../lib/form';
+import { formatObjectToFields, formatRequestFromFields, formatBraftEditorField } from '../../lib/form';
 import config, { modeConfig } from '../../configs/problemEdit';
 import BraftEditor from '../../components/common/BraftEditor';
 
@@ -45,6 +45,10 @@ export default {
           ...payload,
         }),
       });
+      console.log( formatRequestFromFields({
+        ...problemInfo,
+        ...payload,
+      }));
       return isSuccess;
     },
     *getLanguageOptions(_, { put, call }) {
@@ -92,12 +96,19 @@ export default {
         const { problem } = yield call(getProblemById, { id });
         yield put({
           type: 'setProblemInfo',
-          payload: mode === modeConfig.STUDENT ? problem : formatObjectToFields(problem),
+          payload: mode === modeConfig.STUDENT ? problem : {
+            ...formatObjectToFields({
+              ...problem,
+              ...formatBraftEditorField(problem, [config.description.dataIndex, config.hint.dataIndex]),              
+            }),
+          },
         });
       } else {
         yield put({
           type: 'setProblemInfo',
-          payload: {},
+          payload: formatObjectToFields({
+            ...formatBraftEditorField({}, [config.description.dataIndex, config.hint.dataIndex]),                          
+          }),
         });
       }
       yield put({

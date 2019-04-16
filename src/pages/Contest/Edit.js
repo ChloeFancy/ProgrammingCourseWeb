@@ -10,14 +10,24 @@ import ContestPaperDetailForm from '../../components/Contest/ContestPaperDetail'
 }))
 class ProblemEdit extends Component {
   async componentDidMount() {
-    const { dispatch, match: { params: { id } } } = this.props;
+    this.init(this.props);
+  }
+
+  async componentWillReceiveProps(nextProps) {
+    const { match } = this.props;
+    if(match.params.id !== nextProps.match.params.id){
+      this.init(nextProps);
+    }
+  }
+
+  init = async ({ dispatch, match: { params: { id } } }) => {
     await dispatch({
       type: 'contestDetail/getInfo',
       payload: {
         id,
       },
     });
-  }
+  };
 
   handleBackToContestList = () => {
     router.push(`/admin/contest/list`);
@@ -39,11 +49,18 @@ class ProblemEdit extends Component {
     });
   };
 
-  handleSubmitContestAndPaper = () => {
+  handleSubmitContestAndPaper = async () => {
     const { dispatch } = this.props;
-    dispatch({
+    const isSuccess = await dispatch({
       type: 'contestDetail/submitContestWithPaper',
     });
+    if (isSuccess) {
+      message.success('编辑成功，即将返回', 3, () => {
+        router.go(-1);
+      });
+    } else {
+      message.error('编辑失败，请重试');
+    }
   };
 
   render() {
@@ -63,7 +80,7 @@ class ProblemEdit extends Component {
               wrappedComponentRef={(ref) => { this.contestForm = ref; }}
               info={contestInfo}
               onChange={this.handleContestChange}
-              />
+            />
             <ContestPaperDetailForm
               wrappedComponentRef={(ref) => { this.paperForm = ref; }}
               info={paperInfo}

@@ -9,16 +9,6 @@ const { Item: FormItem } = Form;
 const Option = Select.Option;
 
 class AnnounceEditForm extends Component {
-    componentDidMount () {
-        // 这里必须且只能异步设置
-        // 详见: https://braft.margox.cn/demos/antd-form
-        setTimeout(() => {
-          this.props.form.setFieldsValue({
-            [dataConfig.detail]: BraftEditor.createEditorState(this.props.info.detail.value),
-          });
-        }, 500);
-    }
-
     handleSubmit = () => {
         const values = this.props.form.getFieldsValue();
         this.props.onSubmit({

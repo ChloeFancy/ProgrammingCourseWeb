@@ -38,15 +38,6 @@ const getOptions = (arr) => arr.map(({ key, value }) => (
 ));
 
 class ProblemEditForm extends PureComponent {
-  componentDidMount () {
-    setTimeout(() => {
-      this.props.form.setFieldsValue({
-        [config.description.dataIndex]: BraftEditor.createEditorState(this.props.problemInfo[config.description.dataIndex].value),
-        [config.hint.dataIndex]: BraftEditor.createEditorState(this.props.problemInfo[config.hint.dataIndex].value),
-      });
-    }, 3000);
-  }
-
   handlePublishProblem = (ev) => {
     ev.preventDefault();
     const { onSuccess, onSubmit, form: { getFieldsValue } } = this.props;

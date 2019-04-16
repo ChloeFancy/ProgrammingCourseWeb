@@ -9,16 +9,6 @@ const FormItem = Form.Item;
 const getLabel = text => <span style={{ fontSize: 16, fontWeight: 700 }}>{text}</span>;
 
 class ContestDetailForm extends PureComponent {
-  componentDidMount() {
-      setTimeout(() => {
-        if (Object.keys(this.props.info).length) {
-          this.props.form.setFieldsValue({
-            [contestConfig.introduction.dataIndex]: BraftEditor.createEditorState(this.props.info[contestConfig.introduction.dataIndex].value),
-          });
-        }
-      }, 1000);
-  }
-
   render() {
     const { form: { getFieldDecorator } } = this.props;
     const RowConfig = {

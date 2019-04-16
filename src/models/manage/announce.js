@@ -5,7 +5,12 @@ import {
   AddAnnounceSubmit,
   getAnnouncementDetail,
 } from '@/services/manage/announce';
-import { formatObjectToFields, formatRequestFromFields } from '../../lib/form';
+import { formatObjectToFields, formatRequestFromFields, formatBraftEditorField } from '../../lib/form';
+import dataConfig from '../../configs/announce';
+
+const defaultEditingInfo = {
+  ...formatBraftEditorField({}, [dataConfig.detail]),
+};
 
 export default {
   namespace: 'announce',
@@ -20,7 +25,7 @@ export default {
     operation: 0, // 0 - 新增，1 - 编辑
     visible: false, // modal是否可见
     loading: false, // modal内容加载中
-    editingInfo: {}, // modal表单内容
+    editingInfo: defaultEditingInfo, // modal表单内容
   },
 
   effects: {
@@ -61,7 +66,7 @@ export default {
         type: 'setModalInfo',
         payload: {
           visible: false,
-          editingInfo: {},
+          editingInfo: defaultEditingInfo,
         },
       });
     },
@@ -71,7 +76,7 @@ export default {
         type: 'setModalInfo',
         payload: {
           visible: false,
-          editingInfo: {},
+          editingInfo: defaultEditingInfo,
         },
       });
     },
@@ -91,7 +96,12 @@ export default {
       yield put({
         type: 'setModalInfo',
         payload: {
-          editingInfo: formatObjectToFields(announcement),
+          editingInfo: {
+            ...formatObjectToFields({
+              ...announcement,
+              ...formatBraftEditorField(announcement, [dataConfig.detail]),
+            }),
+          },
           loading: false,
         },
       });
@@ -103,7 +113,7 @@ export default {
           visible: true,
           operation: 0,
           loading: false,
-          editingInfo: {},
+          editingInfo: defaultEditingInfo,
         },
       });
     },
@@ -113,7 +123,7 @@ export default {
         payload: {
           visible: false,
           loading: false,
-          editingInfo: {},
+          editingInfo: defaultEditingInfo,
         },
       });
     },
