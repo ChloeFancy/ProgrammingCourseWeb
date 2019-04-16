@@ -22,43 +22,55 @@ const formItemLayout = {
 class SubmitRecordsList extends Component {
   async componentDidMount() {
     document.title = '提交列表';
-    const { dispatch } = this.props;
-    await dispatch({
-      type: 'submitRecords/fetchList',
+    const { dispatch, match: { params: { id } } } = this.props;
+    dispatch({
+      type: 'submitRecords/setId',
+      payload: {
+        problemId: id,
+      },
     });
+    await Promise.all([
+      dispatch({
+        type: 'submitRecords/getLanguageMap',
+      }),
+      dispatch({
+        type: 'submitRecords/fetchList',
+      })
+    ]);
   }
 
   getColumns = () => {
+    const {
+      languageMap,
+    } = this.props;
     return [
         {
-            title: '#',
+            title: submitRecordConfig.id.text,
             dataIndex: submitRecordConfig.id.dataIndex,
             key: submitRecordConfig.id.dataIndex,
-            width: '20%',
+            
         },
         {
             title: submitRecordConfig.submitTime.text,
             dataIndex: submitRecordConfig.submitTime.dataIndex,
             key: submitRecordConfig.submitTime.dataIndex,
-            width: '10%',
+            render: formatTimeFromTimeStamp('YYYY-MM-DD HH:MM:SS'),
         },
         {
             title: submitRecordConfig.language.text,
             dataIndex: submitRecordConfig.language.dataIndex,
             key: submitRecordConfig.language.dataIndex,
-            width: '16%',
+            render: (text) => languageMap[text],
         },
         {
             title: submitRecordConfig.runningTime.text,
             dataIndex: submitRecordConfig.runningTime.dataIndex,
             key: submitRecordConfig.runningTime.dataIndex,
-            width: '20%',
         },
         {
             title: submitRecordConfig.isPass.text,
             dataIndex: submitRecordConfig.isPass.dataIndex,
             key: submitRecordConfig.isPass.dataIndex,
-            width: '10%',
             render: (isPass) => isPass ? '通过' : '未通过', 
         },
     ];

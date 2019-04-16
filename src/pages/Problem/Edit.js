@@ -1,20 +1,13 @@
 import React, { Component } from 'react';
 import { connect } from 'dva';
 import router from 'umi/router';
-import { Spin, Table, Icon, Upload, Button, Form, Input, Row, Col, Select, Checkbox } from 'antd';
+import { Spin, Table, Icon, Upload, Button, Form, Input, Row, Col, Select, Checkbox, message } from 'antd';
 import ProbelmForm from '../../components/Problem/problemEditForm';
 
 @connect(({ problemDetail }) => ({
   ...problemDetail,
 }))
 class ProblemEdit extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      testCaseList: [],
-    };
-  }
-
   async componentDidMount() {
     const {
       match: {
@@ -43,6 +36,21 @@ class ProblemEdit extends Component {
     });
   };
 
+  handleSubmit = (values) => {
+    const { dispatch } = this.props;
+    const isSuccess = dispatch({
+      type: 'problemDetail/submitEditProblem',
+      payload: values,
+    });
+    if (isSuccess) {
+      message.success('编辑成功，即将返回', 3, () => {
+        router.go(-1);
+      });
+    } else {
+      message.error('编辑失败，请重试');
+    }
+  };
+
   render() {
     const {
       match: {
@@ -61,9 +69,11 @@ class ProblemEdit extends Component {
         <Row>
           <Spin spinning={loading}>
             <ProbelmForm 
+              wrappedComponentRef={(ref) => { this.formRef = ref; }}
               options={ options } 
               onChange={this.handleProblemInfoChange} 
               problemInfo={problemInfo} 
+              onSubmit={this.handleSubmit}
             />
           </Spin>
         </Row>

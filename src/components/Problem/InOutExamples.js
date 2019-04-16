@@ -9,19 +9,6 @@ const Option = Select.Option;
 const { TextArea } = Input;
 
 class InOutExamples extends Component {
-  // constructor(props) {
-  //   super(props);
-  //   this.state = {
-  //     examples: props.value,
-  //   };
-  // }
-
-  // componentWillReceiveProps(nextProps) {
-  //   this.setState({
-  //     examples: nextProps.value,
-  //   });
-  // }
-
   handleDelete = (index) => {
     return () => {
       const { value: examples } = this.props;
@@ -61,7 +48,7 @@ class InOutExamples extends Component {
             <div>
               <div>
                 {index + 1}.&nbsp;&nbsp;
-                <Button>折叠</Button>
+                {/* <Button>折叠</Button> */}
                 &nbsp;&nbsp;
                 <Button onClick={this.handleDelete(index)}>删除</Button>
               </div>

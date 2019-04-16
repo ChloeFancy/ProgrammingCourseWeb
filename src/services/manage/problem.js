@@ -27,6 +27,23 @@ export const getProblemById = async (data) => {
   });
 };
 
+export const editProblem = async (data) => {
+  return request({ 
+    url: '/editProblem',
+    data,
+    reqProto: 'EditProblemReq',
+    resProto: 'EditProblemResp',
+  });
+};
+
+export const addProblem = async (data) => {
+  return request({ 
+    url: '/addProblem',
+    data,
+    reqProto: 'AddProblemReq',
+    resProto: 'AddProblemResp',
+  });
+};
 
 // todo 
 export const submitCodeByStudent = async (data) => {

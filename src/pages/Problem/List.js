@@ -33,6 +33,7 @@ class ProblemList extends Component {
   }
 
   getColumns = () => {
+    const { difficultyOptions } = this.props;
     return [
       {
         title: 'ID',
@@ -69,6 +70,7 @@ class ProblemList extends Component {
         key: 'difficulty',
         defaultSortOrder: 'descend',
         sorter: (a, b) => a.difficulty - b.difficulty,
+        render: text => difficultyOptions.find(({ value }) => value === text).key,
       },
       {
         title: '操作',

@@ -33,6 +33,7 @@ class SearchForm extends Component {
                             <FormItem {...formItemLayout} label="角色">
                                 {
                                     getFieldDecorator(searchFormDataConfig.role, {
+                                        initialValue: 1,
                                     })(
                                         <Select>
                                             {

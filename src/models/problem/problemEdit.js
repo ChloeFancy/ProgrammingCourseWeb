@@ -3,9 +3,11 @@ import {
   getOptions,
   submitCodeByStudent,
   getLanguageOptions,
+  editProblem,
+  addProblem,
 } from '@/services/manage/problem';
 import { formatOptionsFromMap, transformFromByteToM } from '../../lib/common';
-import { formatObjectToFields } from '../../lib/form';
+import { formatObjectToFields, formatRequestFromFields } from '../../lib/form';
 import config, { modeConfig } from '../../configs/problemEdit';
 import BraftEditor from '../../components/common/BraftEditor';
 
@@ -35,6 +37,16 @@ export default {
   },
 
   effects: {
+    *submitEditProblem({ payload }, { call, select }) {
+      const { problemInfo } = yield select(state => state.problemDetail);
+      const { isSuccess } = yield call(problemInfo.id ? editProblem : addProblem, {
+        problem: formatRequestFromFields({
+          ...problemInfo,
+          ...payload,
+        }),
+      });
+      return isSuccess;
+    },
     *getLanguageOptions(_, { put, call }) {
       const { language } = yield call(getLanguageOptions);
       yield put({
@@ -80,10 +92,7 @@ export default {
         const { problem } = yield call(getProblemById, { id });
         yield put({
           type: 'setProblemInfo',
-          payload: mode === modeConfig.STUDENT ? problem : formatObjectToFields({
-            ...problem,
-            [config.judgeLimitMem.dataIndex]: transformFromByteToM(problem[config.judgeLimitMem.dataIndex]),
-          }),
+          payload: mode === modeConfig.STUDENT ? problem : formatObjectToFields(problem),
         });
       }
       yield put({

@@ -67,6 +67,7 @@ export default [
                 path: '/admin/manage/user-add',
                 name: 'user-add',
                 component: './manage/UserAdd',
+                hideInMenu: true,
               },
               {
                 path: '/admin/manage/announce',

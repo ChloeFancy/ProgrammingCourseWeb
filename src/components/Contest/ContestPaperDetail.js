@@ -78,7 +78,7 @@ class ContestPaperDetailForm extends PureComponent {
 
   handleEdit = (record) => {
     return () => {
-      router.push(`/problem/edit/${record.id}`);
+      router.push(`/admin/problem/edit/${record.id}`);
     };
   };
 

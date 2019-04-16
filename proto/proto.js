@@ -283,7 +283,7 @@ var $root = ($protobuf.roots["default"] || ($protobuf.roots["default"] = new $pr
             type: "Status",
             id: 1
           },
-          menbers: {
+          members: {
             rule: "repeated",
             type: "ClassMember",
             id: 2
@@ -481,6 +481,10 @@ var $root = ($protobuf.roots["default"] || ($protobuf.roots["default"] = new $pr
           code: {
             type: "string",
             id: 7
+          },
+          runningLan: {
+            type: "int64",
+            id: 8
           }
         }
       },
@@ -1225,6 +1229,14 @@ var $root = ($protobuf.roots["default"] || ($protobuf.roots["default"] = new $pr
           pageNum: {
             type: "int64",
             id: 2
+          },
+          problemId: {
+            type: "int64",
+            id: 3
+          },
+          userId: {
+            type: "int64",
+            id: 4
           }
         }
       },

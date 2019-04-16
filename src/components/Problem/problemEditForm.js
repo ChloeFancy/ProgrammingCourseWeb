@@ -47,9 +47,15 @@ class ProblemEditForm extends PureComponent {
     }, 3000);
   }
 
-  handlePublishProblem = () => {
-    const {  } = this.props;
-    console.log(this.props.form.getFieldsValue());
+  handlePublishProblem = (ev) => {
+    ev.preventDefault();
+    const { onSuccess, onSubmit, form: { getFieldsValue } } = this.props;
+    const values = getFieldsValue();
+    onSubmit({ 
+      ...values,
+      [config.description.dataIndex]: values[config.description.dataIndex].toHTML(),
+      [config.hint.dataIndex]: values[config.hint.dataIndex].toHTML(),
+    });
   };
 
   handleAddInOutExamples = () => {
@@ -66,7 +72,6 @@ class ProblemEditForm extends PureComponent {
       type: 'flex',
       justify: 'space-between',
     };
-
 
     return (
       <Form onSubmit={this.handlePublishProblem}>
@@ -121,11 +126,11 @@ class ProblemEditForm extends PureComponent {
               }
             </FormItem>
           </Col>
-          <Col span={5}>
+          {/* <Col span={5}>
             <FormItem label={getLabel('前台是否可见')}>
               <Checkbox>可见</Checkbox>
             </FormItem>
-          </Col>
+          </Col> */}
           <Col span={11}>
             <FormItem label={getLabel(config.tags.text)}>
             {
@@ -167,7 +172,7 @@ class ProblemEditForm extends PureComponent {
             }
           </FormItem>
         </Row>
-        <Row>
+        {/* <Row>
           <FormItem label={getLabel('Special Judge')}>
             <Checkbox>
               Special Judge用于答案不唯一的情况,需要自己上传判题代码。上传测试用后如需要修改,
@@ -181,7 +186,7 @@ class ProblemEditForm extends PureComponent {
               </a>
             </Checkbox>
           </FormItem>
-        </Row>
+        </Row> */}
         <Row>
           <FormItem
             label={getLabel(
@@ -215,15 +220,6 @@ class ProblemEditForm extends PureComponent {
             {
               getFieldDecorator(config.hint.dataIndex)(
                 <BraftEditor />
-              )
-            }
-          </FormItem>
-        </Row>
-        <Row>
-          <FormItem label={getLabel(config.source.text)}>
-            {
-              getFieldDecorator(config.source.dataIndex)(
-                <Input />
               )
             }
           </FormItem>

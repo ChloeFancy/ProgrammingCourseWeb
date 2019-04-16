@@ -5,6 +5,7 @@ import {
 } from '@/services/manage/userList';
 import { formatObjectToFields } from '../../lib/form';
 import { object } from 'prop-types';
+import { formatOptionsFromMap } from '../../lib/common';
 
 export default {
   namespace: 'userList',
@@ -32,12 +33,7 @@ export default {
   effects: {
     *getUserRoleOptions(_, { call, put }) {
       const { role } = yield call(getUserRoleOptions);
-      const userTypeOptions = Object.entries(role).map(([number, text]) => {
-        return {
-          key: text,
-          value: number,
-        };
-      });
+      const userTypeOptions = formatOptionsFromMap(role);
       yield put({
         type: 'setUserRoleOptions',
         payload: {
@@ -101,8 +97,8 @@ export default {
       const { users: list, total } = yield call(fetchList, {
         keyword,
         role,
-        pageSize,
-        pageNum: pageIndex,
+        pageIndex,
+        pageNum: pageSize,
         ...payload,
       });
       yield put({

@@ -23,8 +23,8 @@ export const submitRecordConfig = {
     submitTime: { dataIndex: 'submitTime', text: '提交时间' },
     isPass: { dataIndex: 'isPass', text: '是否通过' },
     runningMem: { dataIndex: 'runningMem', text: '运行内存' },
-    runningTime: { dataIndex: 'runningTime', text: '运行时间' },
-    language: { dataIndex: 'language', text: '语言' },
+    runningTime: { dataIndex: 'runningTime', text: '运行时间(ms)' },
+    language: { dataIndex: 'runningLan', text: '语言' },
     // int64 problem_id = 1;        // 题目
     // int64 user_id = 2;          // 用户id
     // int64 submit_time = 3;      // 提交时间戳
