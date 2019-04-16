@@ -20,7 +20,7 @@ class ProblemEdit extends Component {
   }
 
   handleBackToContestList = () => {
-    router.push(`/contest/list`);
+    router.push(`/admin/contest/list`);
   };
 
   handleContestChange = () => {

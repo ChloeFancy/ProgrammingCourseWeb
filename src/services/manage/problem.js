@@ -46,3 +46,12 @@ export const getLanguageOptions = async () => {
     method: 'get',
   });
 };
+
+export const getSubmitRecords = async (data) => {
+  return request({
+    url: '/submitRecord',
+    data,
+    reqProto: 'GetSubmitRecordReq',
+    resProto: 'GetSubmitRecordResp',
+  });
+};

@@ -10,13 +10,6 @@ const MenuItemGroup = Menu.ItemGroup;
 const FormItem = Form.Item;
 const Option = Select.Option;
 
-// todo
-// 1. getProblems 返回结果字段中difficulty打错了
-// 2. 确定table的列字段有哪些
-// 3. tags 接口确认
-// 4. 题目搜索维度：tag/keyword
-// 5. 题目提交列表页
-
 const formItemLayout = {
   labelCol: { span: 8 },
   wrapperCol: { span: 16 },
@@ -103,12 +96,16 @@ class ProblemList extends Component {
   // 跳转到题目编辑页面
   handleEdit = record => {
     return () => {
-      router.push(`/problem/edit/${record.id}`);
+      router.push(`/admin/problem/edit/${record.id}`);
     };
   };
 
-  // todo 跳转到题目提交记录页面
-  handleSubmit = record => {};
+  // 跳转到题目提交记录页面
+  handleSubmit = record => {
+    return () => {
+      router.push(`/admin/problem/submit/${record.id}`);
+    };
+  };
 
   handleSearch = (values) => {
     const {
@@ -145,11 +142,11 @@ class ProblemList extends Component {
       tableLoading,
       pageSize,
       pageIndex,
-      tagOptions,
+      tagsOptions,
     } = this.props;
     return (
       <div>
-        <SearchForm tagOptions={tagOptions} onSubmit={this.handleSearch} />
+        <SearchForm tagOptions={tagsOptions} onSubmit={this.handleSearch} />
         <Divider dashed />
         <Table
           loading={tableLoading}

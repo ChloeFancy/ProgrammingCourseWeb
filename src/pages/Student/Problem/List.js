@@ -62,7 +62,7 @@ class ProblemList extends Component {
         defaultSortOrder: 'descend',
         sorter: (a, b) => a.difficulty - b.difficulty,
         render: (text) => {
-          return difficultyOptions.find(({ value }) => value === text).key;
+          return (difficultyOptions || []).find(({ value }) => value === text).key;
         },
       },
     ];

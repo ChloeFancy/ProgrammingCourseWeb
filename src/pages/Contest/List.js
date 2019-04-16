@@ -95,7 +95,7 @@ export default class ContestList extends Component {
 
     onEdit = (record) => {
         return async() => {
-            router.push(`/contest/edit/${record.id}`);
+            router.push(`/admin/contest/edit/${record.id}`);
         };
     };
 

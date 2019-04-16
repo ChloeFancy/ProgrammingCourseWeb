@@ -96,6 +96,12 @@ export default [
                 name: 'edit',
                 component: './Problem/Edit',
               },
+              {
+                path: '/admin/problem/submit/:id',
+                hideInMenu: true,
+                name: 'edit',
+                component: './Problem/SubmitRecords',
+              },
             ],
           },
           {

@@ -45,7 +45,7 @@ class SearchForm extends Component {
                             {
                                 getFieldDecorator('tag')(
                                     <Select allowClear>
-                                        {tagOptions.map(({ key, value }) => {
+                                        {(tagOptions || []).map(({ key, value }) => {
                                             return <Option value={value}>{key}</Option>;
                                         })}
                                     </Select>
