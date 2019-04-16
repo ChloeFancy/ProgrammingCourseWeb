@@ -25,7 +25,7 @@
     "prettier": "node ./scripts/prettier.js",
     "start": "cross-env APP_TYPE=site umi dev",
     "start:no-mock": "cross-env MOCK=none umi dev",
-    "proto": "pbjs -t json-module -w commonjs -o proto/proto.js  proto/*.proto"
+    "proto": "pbjs -t json-module -w commonjs -o proto/proto.js  gp-server/proto/*.proto"
   },
   "husky": {
     "hooks": {}

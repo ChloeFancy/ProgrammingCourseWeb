@@ -372,13 +372,17 @@ var $root = ($protobuf.roots["default"] || ($protobuf.roots["default"] = new $pr
       },
       ProblemExample: {
         fields: {
+          index: {
+            type: "int64",
+            id: 1
+          },
           input: {
             type: "string",
-            id: 1
+            id: 2
           },
           output: {
             type: "string",
-            id: 2
+            id: 3
           }
         }
       },
