@@ -1,18 +1,19 @@
 import {
   getProblemById,
-  getTagOptions,
+  getOptions,
+  submitCodeByStudent,
 } from '@/services/manage/problem';
 import { formatOptionsFromMap, transformFromByteToM } from '../../lib/common';
 import { formatObjectToFields } from '../../lib/form';
-import config from '../../configs/problemEdit';
+import config, { modeConfig } from '../../configs/problemEdit';
 import BraftEditor from '../../components/common/BraftEditor';
 
 export default {
-  namespace: 'problemEdit',
+  namespace: 'problemDetail',
 
   state: {
     loading: false, // 加载中
-    // 当前正在编辑的题目信息
+    // 当前正在编辑(admin)/正在做(student)的题目信息
     problemInfo: {
 
     },
@@ -21,9 +22,32 @@ export default {
       tags: [],
       difficulty: [],
     },
+
+    // 学生提交信息
+    studentSubmitInfo: {
+      language: undefined,
+      code: '',
+    },
   },
 
   effects: {
+    *changeStudentSubmitInfo({ payload }, { put }) {
+      yield put({
+        type: 'updateStudentSubmitInfo',
+        payload,
+      });
+    },
+    *submitCodeByStudent(_, { select, call }) {
+      const { 
+        studentSubmitInfo: { language, code }, 
+        problemInfo: { id },
+      } = yield select(state => state.problemDetail);
+      yield call(submitCodeByStudent, {
+        language,
+        code,
+        id,
+      });
+    },
     *changeProblemInfo({ payload }, { put }) {
       yield put({
         type: 'updateProblemInfo',
@@ -31,19 +55,19 @@ export default {
       });
     },
     *getInfo({ payload }, { call, put }) {
-      const { id } = payload;
+      const { id, mode } = payload;
       yield put({
         type: 'setPageLoading',
         payload: {
           loading: true,
         },
       });
-      const { tags, difficulty } = yield call(getTagOptions);
+      const { tags, difficulty } = yield call(getOptions);
       if (id) {
         const { problem } = yield call(getProblemById, { id });
         yield put({
           type: 'setProblemInfo',
-          payload: formatObjectToFields({
+          payload: mode === modeConfig.STUDENT ? problem : formatObjectToFields({
             ...problem,
             [config.judgeLimitMem.dataIndex]: transformFromByteToM(problem[config.judgeLimitMem.dataIndex]),
           }),
@@ -68,6 +92,15 @@ export default {
   },
 
   reducers: {
+    updateStudentSubmitInfo(state, action) {
+      return {
+        ...state,
+        studentSubmitInfo: {
+          ...state.studentSubmitInfo,
+          ...action.payload,
+        },
+      };
+    },
     setTagOptions(state, action) {
       return {
         ...state,

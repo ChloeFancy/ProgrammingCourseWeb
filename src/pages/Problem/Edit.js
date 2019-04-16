@@ -4,8 +4,8 @@ import router from 'umi/router';
 import { Spin, Table, Icon, Upload, Button, Form, Input, Row, Col, Select, Checkbox } from 'antd';
 import ProbelmForm from '../../components/Problem/problemEditForm';
 
-@connect(({ problemEdit }) => ({
-  ...problemEdit,
+@connect(({ problemDetail }) => ({
+  ...problemDetail,
 }))
 class ProblemEdit extends Component {
   constructor(props) {
@@ -25,7 +25,7 @@ class ProblemEdit extends Component {
       dispatch,
     } = this.props;
     await dispatch({
-      type: 'problemEdit/getInfo',
+      type: 'problemDetail/getInfo',
       payload: { id },
     });
   }
@@ -38,7 +38,7 @@ class ProblemEdit extends Component {
   handleProblemInfoChange = (fields) => {
     const { dispatch } = this.props;
     dispatch({
-      type: 'problemEdit/changeProblemInfo',
+      type: 'problemDetail/changeProblemInfo',
       payload: fields,
     });
   };

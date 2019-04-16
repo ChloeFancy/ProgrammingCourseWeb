@@ -1,15 +1,16 @@
 import {
   fetchList,
-  getTagOptions,
+  getOptions,
 } from '@/services/manage/problem';
-import { validate } from '@babel/types';
+import { formatOptionsFromMap } from '../../lib/common';
 
 export default {
   namespace: 'problem',
 
   state: {
     // 搜索框
-    tagOptions: [],
+    tagsOptions: [],
+    difficultyOptions: [],
 
     // 表格数据
     tableLoading: false,
@@ -31,12 +32,17 @@ export default {
       });
     },
     *getTagOptions(_, { call, put }) {
-      const { tags } = yield call(getTagOptions);
-      const tagOptions = Object.entries(tags).map(([number, text]) => ({ key: text, value: number }));
+      const options = yield call(getOptions);
+      const formattedOptions = Object.entries(options).reduce((prev, [key, map]) => {
+        return {
+          ...prev,
+          [`${key}Options`]: formatOptionsFromMap(map),
+        };
+      }, {})
       yield put({
         type: 'setTagOptions',
         payload: {
-          tagOptions,
+          ...formattedOptions,
         },
       });
     },

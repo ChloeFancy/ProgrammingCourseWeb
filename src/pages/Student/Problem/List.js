@@ -33,29 +33,21 @@ class ProblemList extends Component {
   }
 
   getColumns = () => {
+    const { difficultyOptions } = this.props;
     return [
       {
         title: 'ID',
         dataIndex: 'id',
         key: 'id',
         defaultSortOrder: 'descend',
-        sorter: (a, b) => a.id - b.id,
+        sorter: (a, b) => - a.id + b.id,
+        render: (text, record) => <a onClick={this.handleDetail(record)}>{text}</a>,
       },
       {
         title: '题目',
         dataIndex: 'title',
         key: 'title',
-      },
-      {
-        title: '创建时间',
-        dataIndex: 'createTime',
-        key: 'createTime',
-        render: formatTimeFromTimeStamp(),
-      },
-      {
-        title: '作者',
-        dataIndex: 'publisher',
-        key: 'publisher',
+        render: (text, record) => <a onClick={this.handleDetail(record)}>{text}</a>,
       },
       {
         title: '通过次数/提交总数',
@@ -69,19 +61,9 @@ class ProblemList extends Component {
         key: 'difficulty',
         defaultSortOrder: 'descend',
         sorter: (a, b) => a.difficulty - b.difficulty,
-      },
-      {
-        title: '操作',
-        key: 'operation',
-        render: (_, record) => (
-          <div>
-            <Button onClick={this.handleEdit(record)} type="primary">
-              编辑
-            </Button>
-            &nbsp; &nbsp; &nbsp;
-            <Button onClick={this.handleSubmit(record)}>提交</Button>
-          </div>
-        ),
+        render: (text) => {
+          return difficultyOptions.find(({ value }) => value === text).key;
+        },
       },
     ];
   };
@@ -93,10 +75,10 @@ class ProblemList extends Component {
     });
   };
 
-  // 跳转到题目编辑页面
-  handleEdit = record => {
+  // 跳转到做题页面
+  handleDetail = record => {
     return () => {
-      router.push(`/problem/edit/${record.id}`);
+      router.push(`/student/problem/detail/${record.id}`);
     };
   };
 
@@ -138,11 +120,11 @@ class ProblemList extends Component {
       tableLoading,
       pageSize,
       pageIndex,
-      tagOptions,
+      tagsOptions,
     } = this.props;
     return (
       <div>
-        <SearchForm tagOptions={tagOptions} onSubmit={this.handleSearch} />
+        <SearchForm tagOptions={tagsOptions} onSubmit={this.handleSearch} />
         <Divider dashed />
         <Table
           loading={tableLoading}

@@ -9,7 +9,7 @@ export const fetchList = async (data) => {
   });
 };
 
-export const getTagOptions = async () => {
+export const getOptions = async () => {
   return request({
     url: '/conf',
     data: null,
@@ -24,5 +24,16 @@ export const getProblemById = async (data) => {
     data,
     reqProto: 'GetProblemByIDReq',
     resProto: 'GetProblemByIDResp',
+  });
+};
+
+
+// todo 
+export const submitCodeByStudent = async (data) => {
+  return request({
+    url: '/conf',
+    data: null,
+    resProto: 'Config',
+    method: 'get',
   });
 };

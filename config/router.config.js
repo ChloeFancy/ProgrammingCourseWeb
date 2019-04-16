@@ -26,7 +26,7 @@ export default [
             path: '/student/problem/detail/:id',
             name: 'problemDetail',
             component: './Student/Problem/Detail',
-            hideInMenu: true,
+            // hideInMenu: true,
           },
         ],
       },
