@@ -1,10 +1,10 @@
 import {
-getSubmitRecords,
-} from '@/services/manage/problem';
+    getClassMemberList,
+} from '@/services/manage/class';
 import { formatOptionsFromMap } from '../../lib/common';
 
 export default {
-namespace: 'submitRecords',
+namespace: 'memberList',
 
 state: {
     // 表格数据
@@ -15,25 +15,31 @@ state: {
     // 搜索参数
     pageSize: 10,
     pageIndex: 1,
-    problemId: -1, // todo
+    classId: -1,
 },
 
 effects: {
-    *changeSearchParams({ payload }, { call, put }) {
+    *setId({ payload }, { put }) {
+        yield put({
+            type: 'setClassId',
+            payload,
+        });
+    },
+    *changeSearchParams({ payload }, { put }) {
         yield put({
             type: 'changeSearchParamsConfig',
             payload,
         });
     },
-    *fetchList(_, { call, put, select }) {
+    *fetchList({ payload }, { call, put, select }) {
         yield put({
             type: 'setTableLoading',
             payload: {
                 loading: true,
             },
         });
-        const { pageIndex, pageSize } = yield select(state => state.submitRecords);
-        const { submitRecords: list, total } = yield call(getSubmitRecords, { pageIndex, pageNum: pageSize });
+        const { pageIndex, pageSize, classId } = yield select(state => state.memberList);
+        const { members: list, total } = yield call(getClassMemberList, { classId, pageIndex, pageNum: pageSize });
         yield put({
             type: 'queryList',
             payload: {
@@ -51,6 +57,12 @@ effects: {
 },
 
 reducers: {
+    setClassId(state, action) {
+        return {
+            ...state,
+            ...action.payload,
+        };
+    },
     changeSearchParamsConfig(state, action) {
     return {
         ...state,

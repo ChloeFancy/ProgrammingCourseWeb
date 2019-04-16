@@ -149,6 +149,12 @@ export default [
                 component: './Class/Edit',
                 hideInMenu: true,
               },
+              {
+                path: '/admin/class/member/:id',
+                name: 'detail',
+                component: './Class/MemberList',
+                hideInMenu: true,
+              },
             ],
           },
           {

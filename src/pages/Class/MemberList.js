@@ -4,7 +4,7 @@ import router from 'umi/router';
 import { Table, Icon, Menu, Button, Row, Col, Input, Form, Divider, Select } from 'antd';
 import { formatTimeFromTimeStamp } from '../../lib/common';
 import SearchForm from '../../components/Problem/ProblemSearchForm';
-import { submitRecordConfig } from '../../configs/problemEdit';
+import { classMemberConfig } from '../../configs/class';
 
 const SubMenu = Menu.SubMenu;
 const MenuItemGroup = Menu.ItemGroup;
@@ -16,15 +16,28 @@ const formItemLayout = {
   wrapperCol: { span: 16 },
 };
 
-@connect(({ submitRecords }) => ({
-  ...submitRecords,
+@connect(({ memberList }) => ({
+  ...memberList,
 }))
-class SubmitRecordsList extends Component {
+class MemberListList extends Component {
   async componentDidMount() {
     document.title = '提交列表';
-    const { dispatch } = this.props;
+    const {
+        dispatch,
+        match: {
+            params: {
+                id,
+            },
+        },
+    } = this.props;
+    dispatch({
+        type: 'memberList/setId',
+        payload: {
+            classId: id,
+        },
+    });
     await dispatch({
-      type: 'submitRecords/fetchList',
+      type: 'memberList/fetchList',
     });
   }
 
@@ -32,42 +45,42 @@ class SubmitRecordsList extends Component {
     return [
         {
             title: '#',
-            dataIndex: submitRecordConfig.id.dataIndex,
-            key: submitRecordConfig.id.dataIndex,
+            dataIndex: classMemberConfig.userId.dataIndex,
+            key: classMemberConfig.userId.dataIndex,
             width: '20%',
         },
         {
-            title: submitRecordConfig.submitTime.text,
-            dataIndex: submitRecordConfig.submitTime.dataIndex,
-            key: submitRecordConfig.submitTime.dataIndex,
+            title: classMemberConfig.name.text,
+            dataIndex: classMemberConfig.name.dataIndex,
+            key: classMemberConfig.name.dataIndex,
             width: '10%',
         },
-        {
-            title: submitRecordConfig.language.text,
-            dataIndex: submitRecordConfig.language.dataIndex,
-            key: submitRecordConfig.language.dataIndex,
-            width: '16%',
-        },
-        {
-            title: submitRecordConfig.runningTime.text,
-            dataIndex: submitRecordConfig.runningTime.dataIndex,
-            key: submitRecordConfig.runningTime.dataIndex,
-            width: '20%',
-        },
-        {
-            title: submitRecordConfig.isPass.text,
-            dataIndex: submitRecordConfig.isPass.dataIndex,
-            key: submitRecordConfig.isPass.dataIndex,
-            width: '10%',
-            render: (isPass) => isPass ? '通过' : '未通过', 
-        },
+        // {
+        //     title: classMemberConfig.language.text,
+        //     dataIndex: classMemberConfig.language.dataIndex,
+        //     key: classMemberConfig.language.dataIndex,
+        //     width: '16%',
+        // },
+        // {
+        //     title: classMemberConfig.runningTime.text,
+        //     dataIndex: classMemberConfig.runningTime.dataIndex,
+        //     key: classMemberConfig.runningTime.dataIndex,
+        //     width: '20%',
+        // },
+        // {
+        //     title: classMemberConfig.isPass.text,
+        //     dataIndex: classMemberConfig.isPass.dataIndex,
+        //     key: classMemberConfig.isPass.dataIndex,
+        //     width: '10%',
+        //     render: (isPass) => isPass ? '通过' : '未通过', 
+        // },
     ];
   };
 
   fetchList = async() => {
     const { dispatch } = this.props;
     await dispatch({
-        type: 'submitRecords/fetchList',
+        type: 'memberList/fetchList',
     });
   };
 
@@ -82,11 +95,10 @@ class SubmitRecordsList extends Component {
     });
   };
 
-  
   handleSearchParamsChange = (params) => {
     const { dispatch } = this.props;
     dispatch({
-      type: 'submitRecords/changeSearchParams',
+      type: 'memberList/changeSearchParams',
       payload: params,
     });
     this.fetchList();
@@ -104,7 +116,7 @@ class SubmitRecordsList extends Component {
     } = this.props;
     return (
       <div>
-        <h1 style={{ fontSize: '30px' }}>提交列表</h1>
+        <h1 style={{ fontSize: '30px' }}>班级成员</h1>
         <Table
           loading={tableLoading}
           columns={this.getColumns()}
@@ -124,4 +136,4 @@ class SubmitRecordsList extends Component {
   }
 }
 
-export default SubmitRecordsList;
+export default MemberListList;

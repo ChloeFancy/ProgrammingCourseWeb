@@ -35,3 +35,12 @@ export const addClass = async (data) => {
     resProto: 'AddClassResp',
   });
 };
+
+export const getClassMemberList = async (data) => {
+  return request({
+    url: '/getMembers',
+    data,
+    reqProto: 'GetMemberReq',
+    resProto: 'GetMemberResp',
+  });
+};

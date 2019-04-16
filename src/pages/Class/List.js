@@ -41,7 +41,7 @@ const getColumns = (onDetail, onMemberManage) => {
             dataIndex: 'action',
             key: 'action',
             width: '20%',
-            render: (text, record) => {
+            render: (_, record) => {
                 return (
                     <div>
                       <Button type="primary" onClick={onDetail(record)}>编辑班级</Button>
@@ -86,8 +86,11 @@ export default class ClassList extends Component {
       };
     };
 
-    onMemberManage = () => {
-      // todo 查看编辑班级成员
+    // 查看编辑班级成员
+    onMemberManage = (record) => {
+      return () => {
+        router.push(`/admin/class/member/${record.id}`);
+      };
     };
 
     handleOk = () => {
