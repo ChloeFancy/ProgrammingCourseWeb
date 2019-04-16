@@ -4,7 +4,6 @@ export default [
   {
     name: 'menu', // 学生相关页面
     icon: 'highlight',
-    // component: '../layouts/StudentLayout',
     path: '/',
     routes: [
       {

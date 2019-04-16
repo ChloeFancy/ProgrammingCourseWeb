@@ -15,7 +15,7 @@ export const formatRequestFromFields = (obj) => {
     return Object.entries(obj).reduce((prev, [key, value]) => {
         return {
             ...prev,
-            [key]: typeof value === 'object' ? value.value : value,
+            [key]: typeof value.value !== 'undefined' ? value.value : value,
         }
     }, {});
 };
