@@ -142,6 +142,7 @@ export default [
                 name: 'addRequest',
                 component: './Class/Edit',
                 // todo 加入班級請求也
+                hideInMenu: true,
               },
               {
                 path: '/admin/class/detail/:id',

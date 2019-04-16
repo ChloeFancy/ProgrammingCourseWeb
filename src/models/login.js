@@ -4,7 +4,7 @@ import { fakeAccountLogin, getFakeCaptcha } from '@/services/api';
 import { setAuthority } from '@/utils/authority';
 import { getPageQuery } from '@/utils/utils';
 import { reloadAuthorized } from '@/utils/Authorized';
-import { login } from '@/services/common/user';
+import { login, logout } from '@/services/common/user';
 
 export default {
   namespace: 'login',
@@ -49,7 +49,8 @@ export default {
       yield call(getFakeCaptcha, payload);
     },
 
-    *logout(_, { put }) {
+    *logout(_, { put, call }) {
+      yield call(logout);
       yield put({
         type: 'changeLoginStatus',
         payload: {

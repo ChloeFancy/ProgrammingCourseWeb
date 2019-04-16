@@ -52,12 +52,12 @@ const getColumns = (onEdit, onDetail) => {
             dataIndex: 'action',
             key: 'action',
             width: '20%',
-            render: (text, record) => {
+            render: (_, record) => {
                 return (
                     <div>
                         <Button type="primary" onClick={onEdit(record)}>编辑</Button>
-                        &nbsp;
-                        <Button type="primary" onClick={onDetail(record)}>题目</Button>
+                        {/* &nbsp; */}
+                        {/* <Button type="primary" onClick={onDetail(record)}>题目</Button> */}
                     </div>
                 );
             },

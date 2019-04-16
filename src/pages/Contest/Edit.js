@@ -23,12 +23,27 @@ class ProblemEdit extends Component {
     router.push(`/admin/contest/list`);
   };
 
-  handleContestChange = () => {
-
+  handleContestChange = (fields) => {
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'contestDetail/changeContestInfo',
+      payload: fields,
+    });
   };
 
-  handlePaperChange = () => {
+  handlePaperChange = (fields) => {
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'contestDetail/changePaperInfo',
+      payload: fields,
+    });
+  };
 
+  handleSubmitContestAndPaper = () => {
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'contestDetail/submitContestWithPaper',
+    });
   };
 
   render() {
@@ -44,10 +59,19 @@ class ProblemEdit extends Component {
         }
         <Spin spinning={loading}>
           <div>
-            <ContestDetailForm info={contestInfo} onChange={this.handleContestChange} />
-            <ContestPaperDetailForm info={paperInfo} options={options} onChange={this.handlePaperChange} />
+            <ContestDetailForm
+              wrappedComponentRef={(ref) => { this.contestForm = ref; }}
+              info={contestInfo}
+              onChange={this.handleContestChange}
+              />
+            <ContestPaperDetailForm
+              wrappedComponentRef={(ref) => { this.paperForm = ref; }}
+              info={paperInfo}
+              options={options}
+              onChange={this.handlePaperChange}
+            />
             <Row>
-              <Button type="primary">发布比赛</Button>
+              <Button onClick={this.handleSubmitContestAndPaper} type="primary">发布比赛</Button>
             </Row>
           </div>
         </Spin>

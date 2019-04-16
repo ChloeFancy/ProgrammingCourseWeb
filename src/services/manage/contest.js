@@ -35,3 +35,22 @@ export const getPaperByID = async (data) => {
     resProto: 'GetPaperByIDResp',
   });
 };
+
+
+export const editContest = async (data) => {
+  return request({
+    url: '/editMatch',
+    data,
+    reqProto: 'EditMatchReq',
+    resProto: 'EditMatchResp',
+  });
+};
+
+export const addContest = async (data) => {
+  return request({
+    url: '/newMatch',
+    data,
+    reqProto: 'NewMatchReq',
+    resProto: 'NewMatchResp',
+  });
+};

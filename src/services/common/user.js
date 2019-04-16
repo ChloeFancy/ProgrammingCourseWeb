@@ -8,3 +8,13 @@ export const login = ({ account, password }) => {
         resProto: 'LoginResp',
     });
 }
+
+
+export const logout = () => {
+    return request({
+        url: '/logout',
+        data: null,
+        method: 'get',
+        resProto: 'LogoutResp',
+    });
+}

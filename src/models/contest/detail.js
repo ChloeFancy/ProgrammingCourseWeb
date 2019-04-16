@@ -3,10 +3,12 @@ import {
   getAllOptions,
   getMatchByID,
   getPaperByID,
+  editContest,
+  addContest,
 } from '@/services/manage/contest';
 import { formatOptionsFromMap } from '../../lib/common';
-import { formatObjectToFields } from '../../lib/form';
-import { contestConfig } from '../../configs/contest';
+import { formatObjectToFields, formatRequestFromFields } from '../../lib/form';
+import { contestConfig, paperConfig } from '../../configs/contest';
 
 export default {
   namespace: 'contestDetail',
@@ -23,6 +25,36 @@ export default {
   },
 
   effects: {
+    *submitContestWithPaper(_, { call, select }) {
+      const { contestInfo, paperInfo } = yield select(state => state.contestDetail);
+      const match = formatRequestFromFields(contestInfo);
+      const paper = formatRequestFromFields(paperInfo);
+      
+      const data = {
+        match: {
+          ...match,
+          [contestConfig.startTime.dataIndex]: match[contestConfig.startTime.dataIndex].unix(),
+          [contestConfig.endTime.dataIndex]: match[contestConfig.endTime.dataIndex].unix(),
+          [contestConfig.introduction.dataIndex]: match[contestConfig.introduction.dataIndex].toHTML(),
+        },
+        paper: {
+          ...paper,
+        },
+      };
+      yield call(contestInfo.id ? editContest : addContest, data);
+    },
+    *changeContestInfo({ payload }, { put }) {
+      yield put({
+        type: 'updateContestInfo',
+        payload,
+      });
+    },
+    *changePaperInfo({ payload }, { put }) {
+      yield put({
+        type: 'updatePaperInfo',
+        payload,
+      });
+    },
     *getInfo({ payload }, { call, put, all }) {
       yield put({
         type: 'setPageLoading',
@@ -59,6 +91,14 @@ export default {
             paperInfo: formatObjectToFields(paperInfo),
           },
         });
+      } else {
+        yield put({
+          type: 'setContestAndPaperInfo',
+          payload: {
+            contestInfo:{},
+            paperInfo: {},
+          },
+        });
       }
       yield put({
         type: 'setPageLoading',
@@ -70,6 +110,24 @@ export default {
   },
 
   reducers: {
+    updateContestInfo(state, action) {
+      return {
+        ...state,
+        contestInfo: {
+          ...state.contestInfo,
+          ...action.payload,
+        },
+      };
+    },
+    updatePaperInfo(state, action) {
+      return {
+        ...state,
+        paperInfo: {
+          ...state.paperInfo,
+          ...action.payload,
+        },
+      };
+    },
     setContestAndPaperInfo(state, action) {
       return {
         ...state,

@@ -94,6 +94,11 @@ export default {
           type: 'setProblemInfo',
           payload: mode === modeConfig.STUDENT ? problem : formatObjectToFields(problem),
         });
+      } else {
+        yield put({
+          type: 'setProblemInfo',
+          payload: {},
+        });
       }
       yield put({
         type: 'setTagOptions',
