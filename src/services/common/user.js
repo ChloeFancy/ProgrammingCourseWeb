@@ -18,3 +18,12 @@ export const logout = () => {
         resProto: 'LogoutResp',
     });
 }
+
+export const register = (data) => {
+    return request({
+        url: '/register',
+        data,
+        reqProto: 'RegisterReq',
+        resProto: 'RegisterResp',
+    });
+}

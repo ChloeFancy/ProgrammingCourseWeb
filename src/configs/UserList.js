@@ -7,6 +7,8 @@ export default {
     email: 'email',
     type: 'role',
     password: 'password',
+    sex: 'sex',
+    phone: 'phone',
 };
 
 export const searchFormDataConfig = {

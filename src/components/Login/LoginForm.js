@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
 
 import {
-    Form, Icon, Input, Button, Checkbox,
+    Form, Icon, Input, Button, Checkbox, Row, Col,
 } from 'antd';
+import router from 'umi/router';
 
 class NormalLoginForm extends Component {
     handleSubmit = (e) => {
@@ -12,6 +13,11 @@ class NormalLoginForm extends Component {
                 this.props.onSubmit(values);
             }
         });
+    };
+
+    toRegister = (e) => {
+        e.preventDefault();
+        router.push('/user/register');
     };
 
     render() {
@@ -40,18 +46,23 @@ class NormalLoginForm extends Component {
                     )}
                 </Form.Item>
                 <Form.Item>
-                    {getFieldDecorator('remember', {
-                        valuePropName: 'checked',
-                        initialValue: true,
-                    })(
-                        <Checkbox>Remember me</Checkbox>,
-                    )}
-                    <a className="login-form-forgot" href="">Forgot password</a>
-                    <Button type="primary" htmlType="submit" className="login-form-button">
-                        Log in
-                    </Button>
-                    Or <a href="">register now!</a>
+                    <Row type="flex" justify="center">
+                        <Col>
+                            <Button type="primary" htmlType="submit" className="login-form-button">
+                                登陆
+                            </Button>
+                        </Col>
+                    </Row>
                 </Form.Item>
+                <Row type="flex" justify="center">
+                    <Col>
+                        <div>
+                            <a className="login-form-forgot" href="">忘记用户名/密码</a>
+                            <br />
+                            <a onClick={this.toRegister}>还没有帐号?点击注册</a>
+                        </div>
+                    </Col>
+                </Row>
             </Form>
         );
     }

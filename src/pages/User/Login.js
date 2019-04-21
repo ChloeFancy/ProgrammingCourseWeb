@@ -25,7 +25,7 @@ export default class LoginPage extends Component {
                     登录
                 </h1>
                 <Row type="flex" justify="center">
-                    <Col spen={10}>
+                    <Col span={10}>
                         <LoginForm
                             onSubmit={this.submitLoginInfo}
                         />
