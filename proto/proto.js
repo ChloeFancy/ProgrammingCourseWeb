@@ -707,6 +707,19 @@ var $root = ($protobuf.roots["default"] || ($protobuf.roots["default"] = new $pr
           }
         }
       },
+      JudgeResults: {
+        fields: {
+          status: {
+            type: "Status",
+            id: 1
+          },
+          judgeResults: {
+            keyType: "int64",
+            type: "string",
+            id: 2
+          }
+        }
+      },
       JudgeResult: {
         fields: {
           judgeResult: {
@@ -777,6 +790,26 @@ var $root = ($protobuf.roots["default"] || ($protobuf.roots["default"] = new $pr
           }
         }
       },
+      RegisterReq: {
+        fields: {
+          user: {
+            type: "UserInfo",
+            id: 1
+          }
+        }
+      },
+      RegisterResp: {
+        fields: {
+          status: {
+            type: "Status",
+            id: 1
+          },
+          isSuccess: {
+            type: "bool",
+            id: 2
+          }
+        }
+      },
       LoginReq: {
         fields: {
           account: {
@@ -831,7 +864,7 @@ var $root = ($protobuf.roots["default"] || ($protobuf.roots["default"] = new $pr
             type: "Status",
             id: 1
           },
-          result: {
+          isSuccess: {
             type: "bool",
             id: 2
           }
@@ -928,7 +961,7 @@ var $root = ($protobuf.roots["default"] || ($protobuf.roots["default"] = new $pr
             type: "Status",
             id: 1
           },
-          isOk: {
+          isSuccess: {
             type: "bool",
             id: 2
           }

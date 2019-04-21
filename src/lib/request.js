@@ -2,7 +2,7 @@ import axios from 'axios';
 import protoRoot from '../../proto/proto';
 
 const httpService = axios.create({
-  baseURL: 'http://47.102.117.222:8080',
+  baseURL: 'http://47.102.117.222:8081',
   timeout: 45000,
   headers: {
     'X-Requested-With': 'XMLHttpRequest',

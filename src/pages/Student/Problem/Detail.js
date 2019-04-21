@@ -1,7 +1,11 @@
 
 import React, { Component, Fragment } from 'react';
 import { connect } from 'dva';
-import { Tabs, Radio, Input, Button, Table, Spin } from 'antd';
+import CodeMirror from '@uiw/react-codemirror';
+import 'codemirror/keymap/sublime';
+import 'codemirror/theme/monokai.css';
+import 'codemirror/lib/codemirror.css';
+import { Tabs, Radio, Input, Button, Table, Spin, message } from 'antd';
 import { getProblemDetail, getProblemLogs } from '../../../services/student/problemDetail';
 import config from '../../../configs/ProblemDetail';
 import problemConfig, { modeConfig, submitRecordConfig } from '../../../configs/problemEdit';
@@ -17,6 +21,8 @@ const TextArea = Input.TextArea;
     problemInfo: problemDetail.problemInfo,
     loading: problemDetail.loading,
     languageOptions: problemDetail.languageOptions,
+    codeSubmitting: problemDetail.codeSubmitting,
+    judgeResults: problemDetail.judgeResults,
 }))
 export default class ProblemDetail extends Component {
     async componentDidMount() {
@@ -33,8 +39,11 @@ export default class ProblemDetail extends Component {
                 type: 'problemDetail/getLanguageOptions',
             }),
             dispatch({
+                type: 'problemDetail/getJudgeResultsMap',
+            }),
+            dispatch({
                 type: 'problemDetail/getInfo',
-                payload: { 
+                payload: {
                     id,
                     mode: modeConfig.STUDENT,
                 },
@@ -45,7 +54,7 @@ export default class ProblemDetail extends Component {
     handleStudentSubmitInfoChange = (field) => {
         return (ev) => {
             const { dispatch } = this.props;
-        
+
             dispatch({
                 type: 'problemDetail/changeStudentSubmitInfo',
                 payload: {
@@ -55,11 +64,44 @@ export default class ProblemDetail extends Component {
         };
     };
 
+    handleCodeChange = (instance) => {
+        const code = instance.getValue();
+        const { dispatch } = this.props;
+
+        dispatch({
+            type: 'problemDetail/changeStudentSubmitInfo',
+            payload: {
+                code,
+            },
+        });
+    };
+
+    checkBeforeSubmit = () => {
+        const {
+            studentSubmitInfo: {
+                language,
+                code,
+            },
+        } = this.props;
+        let msg = '';
+        if (!language) {
+            msg = '请选择语言';
+        } else if (!code) {
+            msg = '请填写代码';
+        }
+        return msg;
+    };
+
     handleSubmitCode = async() => {
         const { dispatch } = this.props;
-        dispatch({
-            type: 'problemDetail/submitCodeByStudent',
-        });
+        const error = this.checkBeforeSubmit();
+        if (!error) {
+            dispatch({
+                type: 'problemDetail/submitCodeByStudent',
+            });
+        } else {
+            message.error(error);
+        }
     };
 
     getColumns = () => {
@@ -93,7 +135,7 @@ export default class ProblemDetail extends Component {
                 dataIndex: submitRecordConfig.isPass.dataIndex,
                 key: submitRecordConfig.isPass.dataIndex,
                 width: '10%',
-                render: (isPass) => isPass ? '通过' : '未通过', 
+                render: (isPass) => isPass ? '通过' : '未通过',
             },
         ];
     };
@@ -139,6 +181,8 @@ export default class ProblemDetail extends Component {
                 code,
             },
             languageOptions,
+            codeSubmitting,
+            judgeResults,
         } = this.props;
         return (
             <Fragment>
@@ -165,7 +209,7 @@ export default class ProblemDetail extends Component {
                     {
                         problemInfo[problemConfig.inOutExamples.dataIndex] && problemInfo[problemConfig.inOutExamples.dataIndex].map(({ input: exampleIn, output: exampleOut }, index) => {
                             return (
-                                <div>
+                                <div key={index}>
                                     <h5>样例输入{index + 1}</h5>
                                     <div className={styles.example}>{exampleIn}</div>
                                     <h5>样例输出{index + 1}</h5>
@@ -187,11 +231,27 @@ export default class ProblemDetail extends Component {
                     <h5>
                         提交代码
                     </h5>
-                    <div>
-                        <TextArea rows={10} value={code} onChange={this.handleStudentSubmitInfoChange('code')} />
+
+                    <div className={styles['code-editor-wrapper']}>
+                        <CodeMirror
+                            value={code}
+                            options={{
+                                mode: 'c++',
+                                lineNumbers: true,
+                            }}
+                            onChanges={this.handleCodeChange}
+                        />
                     </div>
+                    
                     <div>
                         <Button type="primary" onClick={this.handleSubmitCode}>提交代码</Button>
+                        &nbsp;
+                        &nbsp;
+                        {codeSubmitting && <Spin />}
+                    </div>
+
+                    <div>
+
                     </div>
                 </div>
             </Fragment>

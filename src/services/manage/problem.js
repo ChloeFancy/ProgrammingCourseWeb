@@ -1,4 +1,5 @@
 import request from '../../lib/request';
+import { async } from 'q';
 
 export const fetchList = async (data) => {
   return request({ 
@@ -45,13 +46,21 @@ export const addProblem = async (data) => {
   });
 };
 
-// todo 
+export const getJudgeResult = async () => {
+  return request({
+    url: '/getJudgeResult',
+    data: null,
+    resProto: 'JudgeResults',
+    method: 'get',
+  });
+};
+
 export const submitCodeByStudent = async (data) => {
   return request({
-    url: '/conf',
-    data: null,
-    resProto: 'Config',
-    method: 'get',
+    url: '/judge',
+    data,
+    reqProto: 'JudgeRequest',
+    resProto: 'JudgeResponse',
   });
 };
 
