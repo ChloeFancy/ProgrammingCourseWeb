@@ -6,6 +6,7 @@ import {
   editProblem,
   addProblem,
   getJudgeResult,
+  getSubmitRecords,
 } from '@/services/manage/problem';
 import { formatOptionsFromMap, transformFromByteToM } from '../../lib/common';
 import { formatObjectToFields, formatRequestFromFields, formatBraftEditorField } from '../../lib/form';
@@ -27,6 +28,7 @@ export default {
       difficulty: [],
     },
 
+    /* 判题 */
     // 学生提交信息
     studentSubmitInfo: {
       language: undefined,
@@ -42,6 +44,15 @@ export default {
 
     // 语言选项
     languageOptions: [],
+
+    
+    /* 学生提交记录 */
+    submitRecords: {
+      dataSource: [],
+      pageIndex: 0,
+      pageSize: 20,
+      total: 0,
+    },
   },
 
   effects: {
@@ -109,6 +120,23 @@ export default {
         payload,
       });
     },
+    *getSubmitRecords({ payload: { id } }, { call, put, select }) {
+      const { submitRecords: { pageIndex, pageSize } } = yield select(state => state.problemDetail);
+      const { submitRecords, total } = yield call(getSubmitRecords, {
+        problemId: id,
+        userId: 1, // todo 获取用户id
+        pageIndex,
+        pageNum: pageSize,
+      });
+      yield put({
+        type: 'setSubmitRecords',
+        payload: {
+          total,
+          dataSource: Array.isArray(submitRecords) ? submitRecords : [],
+        },
+      });
+    },
+    
     *getInfo({ payload }, { call, put }) {
       const { id, mode } = payload;
       yield put({
@@ -156,6 +184,15 @@ export default {
   },
 
   reducers: {
+    setSubmitRecords(state, action) {
+      return {
+        ...state,
+        submitRecords: {
+          ...state.submitRecords,
+          ...action.payload,
+        },
+      };
+    },
     setJudgeResults(state, action) {
       return {
         ...state,

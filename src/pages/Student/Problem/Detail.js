@@ -24,6 +24,7 @@ const TextArea = Input.TextArea;
     codeSubmitting: problemDetail.codeSubmitting,
     judgeResult: problemDetail.judgeResult,
     judgeResultsMap: problemDetail.judgeResultsMap,
+    submitRecords: problemDetail.submitRecords,
 }))
 export default class ProblemDetail extends Component {
     async componentDidMount() {
@@ -41,6 +42,12 @@ export default class ProblemDetail extends Component {
             }),
             dispatch({
                 type: 'problemDetail/getJudgeResultsMap',
+            }),
+            dispatch({
+                type: 'problemDetail/getSubmitRecords',
+                payload: {
+                    id,
+                },
             }),
             dispatch({
                 type: 'problemDetail/getInfo',
@@ -105,25 +112,53 @@ export default class ProblemDetail extends Component {
         }
     };
 
+    handleShowSizeChange = (current, size) => {
+        const {
+            dispatch,
+            submitRecords: {
+                pageSize,
+            },
+            match: {
+                params: {
+                    id,
+                },
+            },
+        } = this.props;
+        dispatch({
+            type: 'problemDetail/setSubmitRecords',
+            payload: {
+                pageIndex: current,
+                pageSize: size || pageSize,
+            },
+        });
+        dispatch({
+            type: 'problemDetail/getSubmitRecords',
+            payload: {
+                id,
+            },
+        });
+      };
+
     getColumns = () => {
+        const { languageOptions } = this.props;
         return [
             {
                 title: '#',
                 dataIndex: submitRecordConfig.id.dataIndex,
                 key: submitRecordConfig.id.dataIndex,
-                width: '20%',
             },
             {
                 title: submitRecordConfig.submitTime.text,
                 dataIndex: submitRecordConfig.submitTime.dataIndex,
                 key: submitRecordConfig.submitTime.dataIndex,
-                width: '10%',
+                render: formatTimeFromTimeStamp('YYYY-MM-DD HH:MM:SS'),
             },
             {
                 title: submitRecordConfig.language.text,
                 dataIndex: submitRecordConfig.language.dataIndex,
                 key: submitRecordConfig.language.dataIndex,
                 width: '16%',
+                render: (text) => (languageOptions.find(({ value }) => value === text) || {}).key,
             },
             {
                 title: submitRecordConfig.runningTime.text,
@@ -162,14 +197,29 @@ export default class ProblemDetail extends Component {
 
     renderSubmitInfo = () => {
         const {
-            problemInfo: {
-                submitLogs = [],
+            submitRecords: {
+                dataSource,
+                total,
+                pageIndex,
+                pageSize
             },
         } = this.props;
         return (
             <Fragment>
                 {this.renderProblemBasicInfo()}
-                <Table columns={this.getColumns()} dataSource={submitLogs} />
+                <Table
+                    columns={this.getColumns()}
+                    dataSource={dataSource}
+                    pagination={{
+                        total,
+                        pageSize,
+                        current: pageIndex,
+                        showSizeChanger: true,
+                        showTotal: (t) => `共 ${t} 条`,
+                        onShowSizeChange: this.handleShowSizeChange,
+                        onChange: this.handleShowSizeChange,
+                    }}
+                />
             </Fragment>
         );
     };
