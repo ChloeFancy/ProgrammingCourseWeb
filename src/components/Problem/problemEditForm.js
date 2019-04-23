@@ -198,7 +198,11 @@ class ProblemEditForm extends PureComponent {
               </a>
             </div>
             {/* <Table columns={testCaseColumns} dataSource={testCaseList} /> */}
-            <Upload>
+            <Upload
+              accept=".zip"
+              action="http://47.102.117.222:8082/upload"
+              name="uploadFile"
+            >
               <Button type="primary">
                 <Icon type="upload" />
                 选择文件

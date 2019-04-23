@@ -783,10 +783,14 @@ var $root = ($protobuf.roots["default"] || ($protobuf.roots["default"] = new $pr
             type: "Status",
             id: 1
           },
+          result: {
+            type: "int64",
+            id: 2
+          },
           results: {
             rule: "repeated",
             type: "JudgeResult",
-            id: 2
+            id: 3
           }
         }
       },
