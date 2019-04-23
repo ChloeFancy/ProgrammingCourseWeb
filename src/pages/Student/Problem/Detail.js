@@ -5,7 +5,7 @@ import CodeMirror from '@uiw/react-codemirror';
 import 'codemirror/keymap/sublime';
 import 'codemirror/theme/monokai.css';
 import 'codemirror/lib/codemirror.css';
-import { Tabs, Radio, Input, Button, Table, Spin, message } from 'antd';
+import { Tabs, Radio, Input, Button, Table, Spin, message, Alert } from 'antd';
 import { getProblemDetail, getProblemLogs } from '../../../services/student/problemDetail';
 import config from '../../../configs/ProblemDetail';
 import problemConfig, { modeConfig, submitRecordConfig } from '../../../configs/problemEdit';
@@ -22,7 +22,8 @@ const TextArea = Input.TextArea;
     loading: problemDetail.loading,
     languageOptions: problemDetail.languageOptions,
     codeSubmitting: problemDetail.codeSubmitting,
-    judgeResults: problemDetail.judgeResults,
+    judgeResult: problemDetail.judgeResult,
+    judgeResultsMap: problemDetail.judgeResultsMap,
 }))
 export default class ProblemDetail extends Component {
     async componentDidMount() {
@@ -182,7 +183,8 @@ export default class ProblemDetail extends Component {
             },
             languageOptions,
             codeSubmitting,
-            judgeResults,
+            judgeResult,
+            judgeResultsMap,
         } = this.props;
         return (
             <Fragment>
@@ -249,10 +251,15 @@ export default class ProblemDetail extends Component {
                         &nbsp;
                         {codeSubmitting && <Spin />}
                     </div>
-
-                    <div>
-
-                    </div>
+                    <br />
+                    {
+                        judgeResultsMap && judgeResultsMap[judgeResult] && 
+                        <Alert
+                            showIcon
+                            message={judgeResultsMap[judgeResult]}
+                            type={!judgeResult ? 'success' : 'error'}
+                        />
+                    }
                 </div>
             </Fragment>
         );

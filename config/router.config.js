@@ -27,6 +27,11 @@ export default [
             component: './Student/Problem/Detail',
             hideInMenu: true,
           },
+          {
+            path: '/student/rank',
+            name: 'rank',
+            component: './Student/Rank/index',
+          },
         ],
       },
       {

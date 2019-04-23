@@ -37,7 +37,8 @@ export default {
     codeSubmitting: false,
 
     // 判题结果
-    judgeResults: [],
+    judgeResult: undefined,
+    judgeResultsMap: {},
 
     // 语言选项
     languageOptions: [],
@@ -87,14 +88,15 @@ export default {
         studentSubmitInfo: { language, code }, 
         problemInfo: { id },
       } = yield select(state => state.problemDetail);
-      const { results } = yield call(submitCodeByStudent, {
+      const { result } = yield call(submitCodeByStudent, {
         language,
         src: code,
         id,
       });
       yield put({
         type: 'setJudgeResults',
-        payload: results,
+        // 由于解码的原因，当result字段是0时，在结构体中是undefined，故在此特殊处理
+        payload: typeof result === 'undefined' ? 0 : result,
       });
       yield put({
         type: 'setCodeUpdating',
@@ -157,7 +159,7 @@ export default {
     setJudgeResults(state, action) {
       return {
         ...state,
-        judgeResults: action.payload,
+        judgeResult: action.payload,
       };
     },
     setCodeUpdating(state, action) {

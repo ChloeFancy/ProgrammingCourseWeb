@@ -55,6 +55,8 @@ export default {
   'menu.class.addRequest': '加入班级请求',
   'menu.manage': '公共管理',
   'menu.student': '學生頁面',
+  'menu.problemList': '题目',
+  'menu.rank': '排名',
   'menu.manage.user': '用户管理',
   'menu.manage.user-add': '批量添加用户',
   'menu.manage.announce': '公告管理',

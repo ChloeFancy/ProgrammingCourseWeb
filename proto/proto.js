@@ -453,6 +453,10 @@ var $root = ($protobuf.roots["default"] || ($protobuf.roots["default"] = new $pr
           publisher: {
             type: "string",
             id: 16
+          },
+          judgeFile: {
+            type: "string",
+            id: 17
           }
         }
       },
@@ -715,6 +719,18 @@ var $root = ($protobuf.roots["default"] || ($protobuf.roots["default"] = new $pr
           },
           judgeResults: {
             keyType: "int64",
+            type: "string",
+            id: 2
+          }
+        }
+      },
+      File: {
+        fields: {
+          status: {
+            type: "Status",
+            id: 1
+          },
+          fileId: {
             type: "string",
             id: 2
           }
