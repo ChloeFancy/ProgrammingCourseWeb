@@ -11,12 +11,13 @@ export default {
 
   state: {
     status: undefined,
+    user: {},
   },
 
   effects: {
     *login({ payload }, { call, put }) {
       // todo 登陆失败如何处理？？？
-      const { token } = yield call(login, payload);
+      const { token, user } = yield call(login, payload);
       document.cookie = `token=${token}`;
       yield put({
         type: 'changeLoginStatus',
@@ -24,6 +25,12 @@ export default {
           status: 'ok',
           type: '',
           currentAuthority: 'admin',
+        },
+      });
+      yield put({
+        type: 'setUserInfo',
+        payload: {
+          user,
         },
       });
 
@@ -74,6 +81,12 @@ export default {
   },
 
   reducers: {
+    setUserInfo(state, action) {
+      return {
+        ...state,
+        ...action.payload,
+      };
+    },
     changeLoginStatus(state, { payload }) {
       setAuthority(payload.currentAuthority);
       return {

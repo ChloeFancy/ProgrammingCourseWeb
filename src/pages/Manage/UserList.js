@@ -1,6 +1,7 @@
 
 import React, { Component } from 'react';
 import { connect } from 'dva';
+import router from 'umi/router';
 import { Table, Modal, Form, Input, message, Button, Select, Row, Col } from 'antd';
 import EditModalForm from '../../components/UserList/EditModalForm';
 import SearchForm from '../../components/UserList/SearchForm';
@@ -8,7 +9,7 @@ import { formatTimeFromTimeStamp } from '../../lib/common';
 import config from '../../configs/UserList';
 
 const Option = Select.Option;
-const getColumns = (userTypeOptions, onEdit) => {
+const getColumns = (userTypeOptions, onEdit, onDetail) => {
     return [
         {
             title: 'ID',
@@ -59,6 +60,7 @@ const getColumns = (userTypeOptions, onEdit) => {
                 return (
                     <div>
                         <a onClick={onEdit(record)}>编辑</a>
+                        <a onClick={onDetail(record)}>查看学习情况</a>
                     </div>
                 );
             },
@@ -78,6 +80,12 @@ export default class UserList extends Component {
         }),
         this.fetchList();
     }
+
+    onDetail = (record) => {
+        return () => {
+            router.push(`/admin/manage/studentStatistics/${record.id}`);
+        };
+    };
 
     onEdit = (record) => {
         return async() => {
@@ -183,7 +191,7 @@ export default class UserList extends Component {
                 <SearchForm userTypeOptions={userTypeOptions} onSubmit={this.handleSearch} />
                 <Table
                     dataSource={dataSource}
-                    columns={getColumns(userTypeOptions, this.onEdit)}
+                    columns={getColumns(userTypeOptions, this.onEdit, this.onDetail)}
                     rowKey="ID"
                     loading={tableLoading}
                     pagination={{

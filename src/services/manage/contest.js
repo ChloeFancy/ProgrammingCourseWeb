@@ -9,15 +9,6 @@ export const fetchList = async (data) => {
   });
 };
 
-export const getAllOptions = async () => {
-  return request({
-    url: '/conf',
-    data: null,
-    resProto: 'Config',
-    method: 'get',
-  });
-};
-
 export const getMatchByID = async (data) => {
   return request({
     url: '/getMatchByID',

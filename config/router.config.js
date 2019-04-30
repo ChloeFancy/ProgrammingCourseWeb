@@ -68,6 +68,12 @@ export default [
                 component: './manage/UserList',
               },
               {
+                path: '/admin/manage/studentStatistics/:id',
+                name: 'studentStatistics',
+                component: './Student/Statistics',
+                hideInMenu: true,
+              },
+              {
                 path: '/admin/manage/user-add',
                 name: 'user-add',
                 component: './manage/UserAdd',

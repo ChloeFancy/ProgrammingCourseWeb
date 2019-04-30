@@ -3,10 +3,12 @@ import { Table, Icon, Upload, Button, Form, Input, Row, Col, Select, Checkbox } 
 import BraftEditor from '../common/BraftEditor';
 import { mapPropsToFields } from '../../lib/form';
 import config from '../../configs/problemEdit';
+import protoRoot from '../../../proto/proto';
 
 import styles from './problemEditForm.less';
 import dataConfig from '../../configs/announce';
 import InOutExamples from './InOutExamples';
+import { argumentPlaceholder } from '@babel/types';
 
 const FormItem = Form.Item;
 const { Option } = Select;
@@ -54,6 +56,18 @@ class ProblemEditForm extends PureComponent {
     setFieldsValue({
       [config.inOutExamples.dataIndex]: [...(getFieldValue(config.inOutExamples.dataIndex) || []), {}],
     });
+  };
+
+  handleTestCaseUpload = ({ file }) => {
+    // todo 限制上传个数
+    const { status, response } = file;
+    if (status === 'done') {
+      console.log(response);
+      const { fileId } = protoRoot.lookup('File').decode(new Uint8Array(response));
+      this.props.form.setFieldsValue({
+
+      });
+    }
   };
 
   render() {
@@ -202,6 +216,7 @@ class ProblemEditForm extends PureComponent {
               accept=".zip"
               action="http://47.102.117.222:8082/upload"
               name="uploadFile"
+              onChange={this.handleTestCaseUpload}
             >
               <Button type="primary">
                 <Icon type="upload" />

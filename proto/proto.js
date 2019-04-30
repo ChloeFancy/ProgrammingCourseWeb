@@ -10,6 +10,79 @@ var $root = ($protobuf.roots["default"] || ($protobuf.roots["default"] = new $pr
       go_package: "protocol;protocol"
     },
     nested: {
+      AnalysisByDifficultyReq: {
+        fields: {
+          userId: {
+            type: "int64",
+            id: 1
+          },
+          startTime: {
+            type: "int64",
+            id: 2
+          },
+          endTime: {
+            type: "int64",
+            id: 3
+          }
+        }
+      },
+      AnalysisByDifficultyResp: {
+        fields: {
+          status: {
+            type: "Status",
+            id: 1
+          },
+          line: {
+            keyType: "int64",
+            type: "double",
+            id: 2
+          },
+          pie: {
+            keyType: "int64",
+            type: "int64",
+            id: 3
+          }
+        }
+      },
+      AnalysisByTagsReq: {
+        fields: {
+          userId: {
+            type: "int64",
+            id: 1
+          },
+          startTime: {
+            type: "int64",
+            id: 2
+          },
+          endTime: {
+            type: "int64",
+            id: 3
+          },
+          tags: {
+            rule: "repeated",
+            type: "int64",
+            id: 4
+          }
+        }
+      },
+      AnalysisByTagsResp: {
+        fields: {
+          status: {
+            type: "Status",
+            id: 1
+          },
+          line: {
+            keyType: "int64",
+            type: "double",
+            id: 2
+          },
+          pie: {
+            keyType: "int64",
+            type: "int64",
+            id: 3
+          }
+        }
+      },
       AnnouncementsReq: {
         fields: {
           pageIndex: {

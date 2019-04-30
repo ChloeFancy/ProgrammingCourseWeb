@@ -1,11 +1,11 @@
 import moment from 'moment';
 import {
-  getAllOptions,
   getMatchByID,
   getPaperByID,
   editContest,
   addContest,
 } from '@/services/manage/contest';
+import { getAllOptions } from '@/services/common/conf';
 import { formatOptionsFromMap } from '../../lib/common';
 import { formatObjectToFields, formatRequestFromFields, formatBraftEditorField } from '../../lib/form';
 import { contestConfig, paperConfig } from '../../configs/contest';
@@ -18,7 +18,6 @@ export default {
     contestInfo: {},
     paperInfo: {},
     options: {
-        cognition: [],
         tags: [],
         difficulty: [],
     },
