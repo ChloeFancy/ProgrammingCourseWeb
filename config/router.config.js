@@ -149,11 +149,9 @@ export default [
                 component: './Class/List',
               },
               {
-                path: '/admin/class/addRequest',
+                path: '/admin/class/requestList',
                 name: 'addRequest',
-                component: './Class/Edit',
-                // todo 加入班級請求也
-                hideInMenu: true,
+                component: './Class/RequestList',
               },
               {
                 path: '/admin/class/detail/:id',
@@ -177,5 +175,5 @@ export default [
     ],
   },
   // 用户登录注册
-  
+
 ];

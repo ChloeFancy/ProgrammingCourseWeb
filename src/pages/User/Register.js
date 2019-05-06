@@ -174,7 +174,7 @@ class Register extends Component {
   render() {
     const { form, submitting } = this.props;
     const { getFieldDecorator } = form;
-    const { count, prefix, help, visible } = this.state;
+    const { help, visible } = this.state;
     return (
       <div className={styles.main}>
         <h3>
@@ -291,7 +291,7 @@ class Register extends Component {
               <Input size="large" />
             )}
           </FormItem>
-          
+
           <FormItem>
             <Button
               size="large"

@@ -2,14 +2,13 @@
 import React, { Component } from 'react';
 import { connect } from 'dva';
 import router from 'umi/router';
-import { Table, Modal, Form, Input, message, Button, Select, Row, Col } from 'antd';
+import { Table, Modal, Popconfirm } from 'antd';
 import EditModalForm from '../../components/UserList/EditModalForm';
 import SearchForm from '../../components/UserList/SearchForm';
 import { formatTimeFromTimeStamp } from '../../lib/common';
 import config from '../../configs/UserList';
 
-const Option = Select.Option;
-const getColumns = (userTypeOptions, onEdit, onDetail) => {
+const getColumns = (userTypeOptions, onEdit, onDetail, onDelete) => {
     return [
         {
             title: 'ID',
@@ -20,7 +19,6 @@ const getColumns = (userTypeOptions, onEdit, onDetail) => {
             title: '登录名',
             dataIndex: config.account,
             key: config.account,
-            width: '10%',
         },
         {
             title: '注册时间',
@@ -48,19 +46,22 @@ const getColumns = (userTypeOptions, onEdit, onDetail) => {
             title: '用户类型',
             dataIndex: config.type,
             key: 'type',
-            width: '10%',
             render: (text) => userTypeOptions.find(({ value }) => `${value}` === `${text}`).key,
         },
         {
             title: '管理',
             dataIndex: 'action',
             key: 'action',
-            width: '10%',
             render: (text, record) => {
                 return (
                     <div>
                         <a onClick={onEdit(record)}>编辑</a>
-                        <a onClick={onDetail(record)}>查看学习情况</a>
+                        <br />
+                      <Popconfirm title={`确定删除用户${record.name}吗？`} onConfirm={onDelete(record)}>
+                        <a>删除</a>
+                      </Popconfirm>
+                        <br />
+                      {record.role === 1 && <a onClick={onDetail(record)}>查看学习情况</a>}
                     </div>
                 );
             },
@@ -93,11 +94,18 @@ export default class UserList extends Component {
             dispatch({
                 type: 'userList/handleEdit',
                 payload: {
-                    edtingUser: record,
+                    editingUser: record,
                 },
             });
         };
     };
+
+    // todo 接口待补充
+  onDelete = () => {
+    return async() => {
+
+    };
+  };
 
     fetchList = async(data = {}) => {
         const { dispatch } = this.props;
@@ -191,7 +199,7 @@ export default class UserList extends Component {
                 <SearchForm userTypeOptions={userTypeOptions} onSubmit={this.handleSearch} />
                 <Table
                     dataSource={dataSource}
-                    columns={getColumns(userTypeOptions, this.onEdit, this.onDetail)}
+                    columns={getColumns(userTypeOptions, this.onEdit, this.onDetail, this.onDelete)}
                     rowKey="ID"
                     loading={tableLoading}
                     pagination={{

@@ -22,15 +22,14 @@ export const formatRequestFromFields = (obj) => {
 };
 
 export const mapPropsToFields = (object) => {
-    const fields = Object.entries(object).reduce((prev, [key, { value }]) => {
+    return Object.entries(object).reduce((prev, [key, field]) => {
         return {
             ...prev,
             [key]: Form.createFormField({
-                value,
+              ...field,
             }),
         };
     }, {});
-    return fields;
 };
 
 export const formatBraftEditorField = (info, dataIndexArray) => {

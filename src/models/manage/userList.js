@@ -4,7 +4,6 @@ import {
   getUserRoleOptions,
 } from '@/services/manage/userList';
 import { formatObjectToFields } from '../../lib/form';
-import { object } from 'prop-types';
 import { formatOptionsFromMap } from '../../lib/common';
 
 export default {
@@ -21,7 +20,7 @@ export default {
 
     // 搜索参数
     keyword: undefined, // 题目搜索关键字
-    role: 1, // 角色选择
+    role: undefined, // 角色选择
     pageSize: 10,
     pageIndex: 1,
 
@@ -68,7 +67,7 @@ export default {
         type: 'changeModalStatus',
         payload: {
           modalVisible: true,
-          editingInfo: formatObjectToFields(payload.edtingUser),
+          editingInfo: formatObjectToFields(payload.editingUser),
         },
       });
     },

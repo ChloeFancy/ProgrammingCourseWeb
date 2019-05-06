@@ -32,10 +32,8 @@ class SearchForm extends Component {
                         <Col span={colSpan}>
                             <FormItem {...formItemLayout} label="角色">
                                 {
-                                    getFieldDecorator(searchFormDataConfig.role, {
-                                        initialValue: 1,
-                                    })(
-                                        <Select>
+                                    getFieldDecorator(searchFormDataConfig.role)(
+                                        <Select placeholder="请选择用户角色" allowClear>
                                             {
                                                 userTypeOptions.map(({ key, value }) => {
                                                     return <Option key={value} value={value}>{key}</Option>;

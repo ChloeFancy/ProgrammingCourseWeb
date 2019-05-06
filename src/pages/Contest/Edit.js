@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'dva';
-import { Button, Row, Spin } from 'antd';
+import { Button, Row, Spin, message} from 'antd';
 import router from 'umi/router';
 import ContestDetailForm from '../../components/Contest/ContestDetail';
 import ContestPaperDetailForm from '../../components/Contest/ContestPaperDetail';
