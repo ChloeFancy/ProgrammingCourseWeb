@@ -1,36 +1,15 @@
 import React, { PureComponent } from 'react';
-import { Table, Icon, Upload, Button, Form, Input, Row, Col, Select, Checkbox } from 'antd';
+import { message, Icon, Upload, Button, Form, Input, Row, Col, Select, Checkbox } from 'antd';
 import BraftEditor from '../common/BraftEditor';
 import { mapPropsToFields } from '../../lib/form';
 import config from '../../configs/problemEdit';
 import protoRoot from '../../../proto/proto';
 
-import styles from './problemEditForm.less';
-import dataConfig from '../../configs/announce';
 import InOutExamples from './InOutExamples';
-import { argumentPlaceholder } from '@babel/types';
 
 const FormItem = Form.Item;
 const { Option } = Select;
 const { TextArea } = Input;
-
-const testCaseColumns = [
-  {
-    title: '编号',
-    dataIndex: 'id',
-    key: 'id',
-  },
-  {
-    title: '输入文件名',
-    dataIndex: 'inputName',
-    key: 'inputName',
-  },
-  {
-    title: '输出文件名',
-    dataIndex: 'outputName',
-    key: 'outputName',
-  },
-];
 
 const getLabel = text => <span style={{ fontSize: 16, fontWeight: 700 }}>{text}</span>;
 const getOptions = (arr) => arr.map(({ key, value }) => (
@@ -40,11 +19,21 @@ const getOptions = (arr) => arr.map(({ key, value }) => (
 ));
 
 class ProblemEditForm extends PureComponent {
+  state = {
+    fileList: [],
+  };
+
+  componentWillReceiveProps(nextProps) {
+    this.setState({
+      fileList: nextProps.fileList || [],
+    });
+  }
+
   handlePublishProblem = (ev) => {
     ev.preventDefault();
     const { onSuccess, onSubmit, form: { getFieldsValue } } = this.props;
     const values = getFieldsValue();
-    onSubmit({ 
+    onSubmit({
       ...values,
       [config.description.dataIndex]: values[config.description.dataIndex].toHTML(),
       [config.hint.dataIndex]: values[config.hint.dataIndex].toHTML(),
@@ -58,16 +47,54 @@ class ProblemEditForm extends PureComponent {
     });
   };
 
-  handleTestCaseUpload = ({ file }) => {
-    // todo 限制上传个数
-    const { status, response } = file;
-    if (status === 'done') {
-      console.log(response);
-      const { fileId } = protoRoot.lookup('File').decode(new Uint8Array(response));
-      this.props.form.setFieldsValue({
-
-      });
+  beforeUploadCheck = (file) => {
+    const isZip = file.type.includes('zip');
+    const lengthCorrect = this.state.fileList.length < 1;
+    if (!lengthCorrect) {
+      message.warning('只能上传一个测试数据压缩包, 请先删除已上传文件再重新上传！');
     }
+    if (!isZip) {
+      message.warning('请上传zip格式的测试数据压缩包！');
+    }
+    return isZip && lengthCorrect;
+  };
+
+  // todo 返回的不止有id还要有url
+  handleTestCaseUpload = (info) => {
+    let fileList = [...info.fileList];
+    if (fileList.length > 1 || !fileList[0].type.includes('zip')) {
+      fileList.pop();
+    }
+    fileList = fileList.map((file) => {
+      if (file.response) {
+        const { fileId } = protoRoot.lookup('File').decode(new Uint8Array(file.response));
+        if (fileId) {
+          const { judgeFile = [] } = this.props.form.getFieldsValue();
+          this.props.form.setFieldsValue({
+            judgeFile: [...judgeFile, fileId],
+          });
+          return {
+            ...file,
+            url: file.response.url,
+            fileId: file.response.fileId,
+          };
+        }
+        return {
+          ...file,
+        }
+      }
+      return {
+        ...file,
+        ...{ url: '', fileId: '' },
+      }
+    });
+    this.setState({ fileList });
+  };
+
+  handleFileRemove = () => {
+    this.setState({
+      fileList: [],
+    });
   };
 
   render() {
@@ -212,17 +239,23 @@ class ProblemEditForm extends PureComponent {
               </a>
             </div>
             {/* <Table columns={testCaseColumns} dataSource={testCaseList} /> */}
-            <Upload
-              accept=".zip"
-              action="http://47.102.117.222:8082/upload"
-              name="uploadFile"
-              onChange={this.handleTestCaseUpload}
-            >
-              <Button type="primary">
-                <Icon type="upload" />
-                选择文件
-              </Button>
-            </Upload>
+            <Row>
+              <Col span={10}>
+                <Upload
+                  action="http://47.102.117.222:8082/upload"
+                  name="uploadFile"
+                  beforeUpload={this.beforeUploadCheck}
+                  onChange={this.handleTestCaseUpload}
+                  onRemove={this.handleFileRemove}
+                  fileList={this.state.fileList}
+                >
+                  <Button type="primary">
+                    <Icon type="upload" />
+                    选择文件
+                  </Button>
+                </Upload>
+              </Col>
+            </Row>
           </FormItem>
         </Row>
         <Row>

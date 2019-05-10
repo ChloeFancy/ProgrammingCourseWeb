@@ -25,13 +25,6 @@ export const submitRecordConfig = {
     runningMem: { dataIndex: 'runningMem', text: '运行内存' },
     runningTime: { dataIndex: 'runningTime', text: '运行时间(ms)' },
     language: { dataIndex: 'runningLan', text: '语言' },
-    // int64 problem_id = 1;        // 题目
-    // int64 user_id = 2;          // 用户id
-    // int64 submit_time = 3;      // 提交时间戳
-    // bool is_pass = 4;           // 是否通过
-    // int64 running_time = 5;     
-    // int64 running_mem = 6;
-    // string code = 7;
 };
 
 export const modeConfig = {

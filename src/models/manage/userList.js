@@ -60,7 +60,8 @@ export default {
       const params = {
         users: [payload],
       };
-      yield call(submitUserInfo, params);
+      const { isSuccess } = yield call(submitUserInfo, params);
+      return isSuccess;
     },
     *handleEdit({ payload }, { call, put }) {
       yield put({

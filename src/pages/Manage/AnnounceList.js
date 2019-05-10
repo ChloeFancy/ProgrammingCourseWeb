@@ -1,7 +1,7 @@
 
 import React, { Component } from 'react';
 import { connect } from 'dva';
-import { Table, Modal, Form, Input, message, Button, Row, Col, Popconfirm, Spin } from 'antd';
+import { Table, Modal, message, Button, Row, Col, Popconfirm, Spin } from 'antd';
 import AnnounceEditForm from '../../components/Manage/AnnounceEditForm';
 import config from '../../configs/announce';
 import { formatTimeFromTimeStamp } from '../../lib/common';
@@ -45,7 +45,12 @@ const getColumns = (onEdit, onDelete) => {
                     <div>
                         <a onClick={onEdit(record)}>编辑</a>
                         &nbsp;
-                        <Popconfirm title="Are you sure delete this task?" onConfirm={onDelete(record)}>
+                        <Popconfirm
+                          overlayStyle={{ width: '200px' }}
+                          placement="topRight"
+                          title="删除后将不在学生页面显示，确认删除此条公告吗？"
+                          onConfirm={onDelete(record)}
+                        >
                             <a>删除</a>
                         </Popconfirm>
                     </div>

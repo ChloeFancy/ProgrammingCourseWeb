@@ -1,19 +1,9 @@
 import React, { Component } from 'react';
 import { connect } from 'dva';
 import router from 'umi/router';
-import { Table, Icon, Menu, Button, Row, Col, Input, Form, Divider, Select } from 'antd';
+import { Table, Button, Divider } from 'antd';
 import { formatTimeFromTimeStamp } from '../../lib/common';
 import SearchForm from '../../components/Problem/ProblemSearchForm';
-
-const SubMenu = Menu.SubMenu;
-const MenuItemGroup = Menu.ItemGroup;
-const FormItem = Form.Item;
-const Option = Select.Option;
-
-const formItemLayout = {
-  labelCol: { span: 8 },
-  wrapperCol: { span: 16 },
-};
 
 @connect(({ problem }) => ({
   ...problem,

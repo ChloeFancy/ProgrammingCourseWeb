@@ -73,12 +73,12 @@ const getColumns = (userTypeOptions, onEdit, onDetail, onDelete) => {
 @connect(({ userList }) => ({
     ...userList,
 }))
-export default class UserList extends Component {
+class UserList extends Component {
     async componentDidMount() {
         const { dispatch } = this.props;
         await dispatch({
             type: 'userList/getUserRoleOptions',
-        }),
+        });
         this.fetchList();
     }
 
@@ -129,14 +129,16 @@ export default class UserList extends Component {
 
     handleSubmit = async(values) => {
         const { dispatch } = this.props;
-        await dispatch({
+        const isSuccess = await dispatch({
             type: 'userList/handleSubmit',
             payload: values,
         });
-        dispatch({
+        if (isSuccess) {
+          dispatch({
             type: 'userList/closeEdit',
-        });
-        this.fetchList();
+          });
+          this.fetchList();
+        }
     };
 
     handleSearch = async(data) => {
@@ -231,3 +233,5 @@ export default class UserList extends Component {
         );
     }
 }
+
+export default UserList;

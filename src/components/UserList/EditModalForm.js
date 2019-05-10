@@ -1,15 +1,19 @@
 
 import React, { Component } from 'react';
-import { Card, Form, Input, Select, Row, Col } from 'antd';
+import { Form, Input, Select, Row, Col } from 'antd';
 import dataConfig from '../../configs/UserList';
 import { mapPropsToFields } from '../../lib/form';
 
 const { Item: FormItem } = Form;
-const Option = Select.Option;
+const { Option } = Select;
 
 class EditModalForm extends Component {
     handleSubmit = () => {
-        this.props.onSubmit(this.props.form.getFieldsValue());
+      this.props.form.validateFieldsAndScroll((err, values) => {
+        if (!err) {
+          this.props.onSubmit(values);
+        }
+      });
     };
 
     render() {
@@ -22,7 +26,7 @@ class EditModalForm extends Component {
         const colSpan = 7;
         return (
             <div>
-                <Form onSubmit={this.handleSubmit}>
+                <Form>
                     <Row {...RowConfig}>
                         <Col span={colSpan}>
                             <FormItem label="ID">

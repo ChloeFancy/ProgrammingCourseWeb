@@ -1,5 +1,4 @@
 import React, { PureComponent } from 'react';
-import { Table, Icon, Upload, Button, Form, Input, Row, Col, Select, Checkbox } from 'antd';
 import BraftEditor from 'braft-editor';
 import 'braft-editor/dist/index.css';
 import styles from './braft-editor.less';
@@ -8,11 +7,8 @@ export default class BraftEditorWrapped extends PureComponent {
   static createEditorState = BraftEditor.createEditorState;
 
   render() {
-    const { testCaseList, value, onChange } = this.props;
-    const RowConfig = {
-      type: 'flex',
-      justify: 'space-between',
-    };
+    const { value, onChange } = this.props;
+
     const controls = [
         'font-size', 'line-height', 'letter-spacing', 'separator',
         'text-color', 'bold',
@@ -27,7 +23,7 @@ export default class BraftEditorWrapped extends PureComponent {
             controls={controls}
             className={styles['braft-editor']}
             contentClassName={styles['bf-content']}
-        />        
+        />
     );
   }
 }
