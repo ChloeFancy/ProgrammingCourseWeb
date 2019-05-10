@@ -45,3 +45,17 @@ export const addContest = async (data) => {
     resProto: 'NewMatchResp',
   });
 };
+
+// todo 生成试卷接口
+export const generatePaper = async (data) => {
+  console.log('生成试卷', data);
+  return {};
+};
+
+// todo 删除试卷题目
+export const deleteProblemFromPaper = async (data) => {
+  console.log('删除题目', data);
+  return { isSuccess: true };
+};
+
+

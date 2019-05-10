@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'dva';
 import router from 'umi/router';
-import { Spin, Table, Icon, Upload, Button, Form, Input, Row, Col, Select, Checkbox, message } from 'antd';
+import { Spin,Button, Row, message } from 'antd';
 import ProbelmForm from '../../components/Problem/problemEditForm';
 
 @connect(({ problemDetail }) => ({
@@ -68,11 +68,11 @@ class ProblemEdit extends Component {
         {id && <Row><Button onClick={this.handleBackToProblemList}>返回</Button></Row>}
         <Row>
           <Spin spinning={loading}>
-            <ProbelmForm 
+            <ProbelmForm
               wrappedComponentRef={(ref) => { this.formRef = ref; }}
-              options={ options } 
-              onChange={this.handleProblemInfoChange} 
-              problemInfo={problemInfo} 
+              options={ options }
+              onChange={this.handleProblemInfoChange}
+              problemInfo={problemInfo}
               onSubmit={this.handleSubmit}
             />
           </Spin>

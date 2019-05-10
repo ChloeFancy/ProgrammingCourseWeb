@@ -4,6 +4,8 @@ import {
   getPaperByID,
   editContest,
   addContest,
+  generatePaper,
+  deleteProblemFromPaper,
 } from '@/services/manage/contest';
 import { getAllOptions } from '@/services/common/conf';
 import { formatOptionsFromMap } from '../../lib/common';
@@ -17,6 +19,8 @@ export default {
     loading: false,
     contestInfo: {},
     paperInfo: {},
+    problemList: [],
+    paperTableLoading: false,
     options: {
         tags: [],
         difficulty: [],
@@ -28,7 +32,7 @@ export default {
       const { contestInfo, paperInfo } = yield select(state => state.contestDetail);
       const match = formatRequestFromFields(contestInfo);
       const paper = formatRequestFromFields(paperInfo);
-      
+
       const data = {
         match: {
           ...match,
@@ -53,6 +57,38 @@ export default {
       yield put({
         type: 'updatePaperInfo',
         payload,
+      });
+    },
+    *handleDeleteProblem({ payload }, { call, put }) {
+      const { isSuccess } = yield call(deleteProblemFromPaper);
+      if (isSuccess) {
+        yield put({
+          type: 'updateProblemList',
+          payload: payload.problemList,
+        });
+      }
+    },
+    *handleEditProblemList({ payload }, { put }) {
+      yield put({
+        type: 'updateProblemList',
+        payload,
+      });
+    },
+    *generatePaper({ payload }, { call, put }) {
+      yield put({
+        type: 'setPaperTableLoading',
+        payload: true,
+      });
+      const res = yield call(generatePaper, payload);
+      if (res && res.problems) {
+        yield put({
+          type: 'updateProblemList',
+          payload: res.problems,
+        });
+      }
+      yield put({
+        type: 'setPaperTableLoading',
+        payload: false,
       });
     },
     *getInfo({ payload }, { call, put, all }) {
@@ -90,6 +126,7 @@ export default {
               [contestConfig.startTime.dataIndex]: moment.unix(contestInfo[contestConfig.startTime.dataIndex]),
             }),
             paperInfo: formatObjectToFields(paperInfo),
+            problemList: paperInfo.problems,
           },
         });
       } else {
@@ -100,6 +137,7 @@ export default {
               ...formatBraftEditorField({}, [contestConfig.introduction.dataIndex]),
             }),
             paperInfo: {},
+            problemList: [],
           },
         });
       }
@@ -113,6 +151,12 @@ export default {
   },
 
   reducers: {
+    setPaperTableLoading(state, action) {
+      return {
+        ...state,
+        paperTableLoading: action.payload,
+      };
+    },
     updateContestInfo(state, action) {
       return {
         ...state,
@@ -129,6 +173,12 @@ export default {
           ...state.paperInfo,
           ...action.payload,
         },
+      };
+    },
+    updateProblemList(state, action) {
+      return {
+        ...state,
+        problemList: action.payload,
       };
     },
     setContestAndPaperInfo(state, action) {

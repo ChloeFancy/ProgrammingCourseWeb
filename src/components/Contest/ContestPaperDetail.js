@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
-import { Form, Radio, Row, Col, Checkbox, InputNumber, Table, Button } from 'antd';
+import { Modal, Popconfirm, Form, Radio, Row, Col, Checkbox, InputNumber, Table, Button } from 'antd';
 import router from 'umi/router';
 import { mapPropsToFields } from '../../lib/form';
 import { paperConfig } from '../../configs/contest';
@@ -41,10 +41,13 @@ const getColumns = (onEdit, onDelete) => {
       dataIndex: 'action',
       key: 'action',
       width: '10%',
-      render: (text, record) => {
+      render: (text, record, index) => {
         return (
           <div>
             <Button onClick={onEdit(record)}>编辑</Button>
+            <Popconfirm title="确定删除此题吗？" onConfirm={onDelete(record, index)}>
+              <Button>删除</Button>
+            </Popconfirm>
           </div>
         );
       },
@@ -55,26 +58,48 @@ const getColumns = (onEdit, onDelete) => {
 class ContestPaperDetailForm extends PureComponent {
   static propTypes = {
       options: PropTypes.object,
+      generatePaper: PropTypes.func,
   };
 
   static defaultProps = {
       options: {},
+      generatePaper: () => {},
   };
-  // constructor(props) {
-  //   super(props);
-  //   this.state = {
-  //     tags: [],
-  //     indeterminate: true,
-  //     checkTagsAll: false,
-  //   };
-  // }
-  //
-  // onTagsCheckAllChange = (e) => {
-  //   this.setState({
-  //     indeterminate: false,
-  //     checkTagsAll: e.target.checked,
-  //   });
-  // };
+
+  constructor(props) {
+    super(props);
+    this.state = {
+      modalVisible: false,
+    };
+  }
+
+  // todo 生成试卷
+  generatePaper = () => {
+    const { validateFieldsAndScroll } = this.props.form;
+    validateFieldsAndScroll((err, values) => {
+      if (!err) {
+        this.props.generatePaper(values);
+        this.setState({
+          modalVisible: false,
+        });
+      }
+    });
+  };
+
+  showModal = () => {
+    const { getFieldValue } = this.props.form;
+    if (getFieldValue('id')) {
+      this.setState({
+        modalVisible: true,
+      });
+    }
+  };
+
+  handleModalCancel = () => {
+    this.setState({
+      modalVisible: false,
+    });
+  };
 
   handleEdit = (record) => {
     return () => {
@@ -82,21 +107,37 @@ class ContestPaperDetailForm extends PureComponent {
     };
   };
 
-  handleDelete = () => {
-
+  // todo 从试卷中删除题目
+  handleDelete = (record, index) => {
+    return async () => {
+      const { getFieldValue } = this.props.form;
+      const problemList = [...this.props.problemList];
+      problemList.splice(index, 1);
+      await this.props.handleDeleteProblem({
+        problemId: record.id,
+        paperId: getFieldValue('id'),
+      }, problemList);
+    };
   };
 
   render() {
     // todo 考虑做个全选
-    const { info, options, form: { getFieldDecorator, getFieldValue } } = this.props;
-    const problems = getFieldValue(paperConfig.problems.dataIndex);
+    const { problemList, paperTableLoading, options, form: { getFieldDecorator } } = this.props;
+    const { modalVisible } = this.state;
     return (
       <Form>
         <h1>试卷信息</h1>
         <Row>
           <FormItem label={getLabel(paperConfig.problemNum.text)}>
             {
-              getFieldDecorator(paperConfig.problemNum.dataIndex)(
+              getFieldDecorator(paperConfig.problemNum.dataIndex, {
+                rules: [
+                  {
+                    required: true,
+                    message: '请输入试题数目',
+                  },
+                ],
+              })(
                 <InputNumber />
               )
             }
@@ -105,7 +146,14 @@ class ContestPaperDetailForm extends PureComponent {
         <Row>
           <FormItem label={getLabel(paperConfig.difficulty.text)}>
             {
-              getFieldDecorator(paperConfig.difficulty.dataIndex)(
+              getFieldDecorator(paperConfig.difficulty.dataIndex, {
+                rules: [
+                  {
+                    required: true,
+                    message: '请选择试卷难度',
+                  },
+                ],
+              })(
                 <RadioGroup>
                   {
                     Array.isArray(options.difficulty) ?
@@ -123,17 +171,17 @@ class ContestPaperDetailForm extends PureComponent {
             <FormItem label={getLabel(
               <span>
                 {paperConfig.tags.text}&nbsp;
-                {/*<Checkbox*/}
-                  {/*indeterminate={this.state.indeterminate}*/}
-                  {/*onChange={this.onTagsCheckAllChange}*/}
-                  {/*checked={this.state.checkTagsAll}*/}
-                {/*>*/}
-                  {/*Check all*/}
-                {/*</Checkbox>*/}
               </span>)}
             >
               {
-                getFieldDecorator(paperConfig.tags.dataIndex)(
+                getFieldDecorator(paperConfig.tags.dataIndex, {
+                  rules: [
+                    {
+                      required: true,
+                      message: '请选择知识点范围',
+                    },
+                  ],
+                })(
                   <CheckboxGroup>
                     {
                       Array.isArray(options.tags) ?
@@ -147,26 +195,19 @@ class ContestPaperDetailForm extends PureComponent {
             </FormItem>
           </Col>
         </Row>
+        <Row><Button onClick={this.showModal}>生成试卷</Button></Row>
         <Row>
-          <h1>比赛题目列表</h1>
-          {
-            Array.isArray(info.problems) && info.problems.map((problem, index) => {
-              return (
-                <div>
-                  <div>{index + 1}</div>
-                  <div>
-                    {problem.title}
-                  </div>
-                  <div><Button></Button></div>
-                </div>
-              )
-            })
-          }
+          <br />
+          <h1>比赛题目列表<Button>新增题目</Button></h1>
           <Table
+            loading={paperTableLoading}
             columns={getColumns(this.handleEdit, this.handleDelete)}
-            dataSource={problems || []}
+            dataSource={problemList || []}
           />
         </Row>
+        <Modal visible={modalVisible} onCancel={this.handleModalCancel} onOk={this.generatePaper}>
+          生成试卷后，当前试题会被全部覆盖，确定重新生成试卷吗？
+        </Modal>
       </Form>
     );
   }

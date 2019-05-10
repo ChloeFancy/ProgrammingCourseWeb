@@ -41,6 +41,33 @@ class ProblemEdit extends Component {
     });
   };
 
+  handleDeleteProblem = async (param, problemList) => {
+    const { dispatch } = this.props;
+    await dispatch({
+      type: 'contestDetail/handleDeleteProblem',
+      payload: {
+        param,
+        problemList,
+      },
+    });
+  };
+
+  handleEditPaper = (problemList) => {
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'contestDetail/handleEditProblemList',
+      payload: problemList,
+    });
+  };
+
+  generatePaper = (values) => {
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'contestDetail/generatePaper',
+      payload: values,
+    });
+  };
+
   handlePaperChange = (fields) => {
     const { dispatch } = this.props;
     dispatch({
@@ -64,7 +91,15 @@ class ProblemEdit extends Component {
   };
 
   render() {
-    const { loading, options, contestInfo, paperInfo, match: { params: { id } } } = this.props;
+    const {
+      problemList,
+      paperTableLoading,
+      loading,
+      options,
+      contestInfo,
+      paperInfo,
+      match: { params: { id } },
+    } = this.props;
     return (
       <div>
         {
@@ -84,6 +119,10 @@ class ProblemEdit extends Component {
             <ContestPaperDetailForm
               wrappedComponentRef={(ref) => { this.paperForm = ref; }}
               info={paperInfo}
+              problemList={problemList}
+              generatePaper={this.generatePaper}
+              handleDeleteProblem={this.handleDeleteProblem}
+              paperTableLoading={paperTableLoading}
               options={options}
               onChange={this.handlePaperChange}
             />
