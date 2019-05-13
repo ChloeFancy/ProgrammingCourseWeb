@@ -11,6 +11,8 @@ import { CURRENT } from './renderAuthorize';
  * @param { 未通过的组件 | no pass components } Exception
  */
 const checkPermissions = (authority, currentAuthority, target, Exception) => {
+  console.log(authority, currentAuthority, target, Exception);
+
   // 没有判定权限.默认查看所有
   // Retirement authority, return target;
   if (!authority) {
@@ -64,6 +66,5 @@ const checkPermissions = (authority, currentAuthority, target, Exception) => {
 export { checkPermissions };
 
 const check = (authority, target, Exception) =>
-  checkPermissions(authority, CURRENT, target, Exception);
-
+  checkPermissions(authority, CURRENT, target, Exception); // 权限判定依据、当前权限、通过组件、不通过组件
 export default check;

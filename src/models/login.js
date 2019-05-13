@@ -1,10 +1,12 @@
 import { routerRedux } from 'dva/router';
 import { stringify } from 'qs';
-import { fakeAccountLogin, getFakeCaptcha } from '@/services/api';
+import { message } from 'antd';
+import { getFakeCaptcha } from '@/services/api';
 import { setAuthority } from '@/utils/authority';
 import { getPageQuery } from '@/utils/utils';
 import { reloadAuthorized } from '@/utils/Authorized';
 import { login, logout } from '@/services/common/user';
+import { GUEST } from '../configs/UserList';
 
 export default {
   namespace: 'login',
@@ -16,40 +18,44 @@ export default {
 
   effects: {
     *login({ payload }, { call, put }) {
-      // todo 登陆失败如何处理？？？
-      const { token, user } = yield call(login, payload);
-      document.cookie = `token=${token}`;
-      yield put({
-        type: 'changeLoginStatus',
-        payload: {
-          status: 'ok',
-          type: '',
-          currentAuthority: 'admin',
-        },
-      });
-      yield put({
-        type: 'setUserInfo',
-        payload: {
-          user,
-        },
-      });
+      const { token, user, isSuccess } = yield call(login, payload);
+      if (isSuccess && user) {
+        document.cookie = `token=${token}`;
+        yield put({
+          type: 'changeLoginStatus',
+          payload: {
+            status: 'ok',
+            type: '',
+            currentAuthority: user.role,
+          },
+        });
+        yield put({
+          type: 'setUserInfo',
+          payload: {
+            user,
+          },
+        });
 
-      reloadAuthorized();
-      const urlParams = new URL(window.location.href);
-      const params = getPageQuery();
-      let { redirect } = params;
-      if (redirect) {
-        const redirectUrlParams = new URL(redirect);
-        if (redirectUrlParams.origin === urlParams.origin) {
-          redirect = redirect.substr(urlParams.origin.length);
-          if (redirect.match(/^\/.*#/)) {
-            redirect = redirect.substr(redirect.indexOf('#') + 1);
+        reloadAuthorized();
+        // 重定向到登录之前的页面
+        const urlParams = new URL(window.location.href);
+        const params = getPageQuery();
+        let { redirect } = params;
+        if (redirect) {
+          const redirectUrlParams = new URL(redirect);
+          if (redirectUrlParams.origin === urlParams.origin) {
+            redirect = redirect.substr(urlParams.origin.length);
+            if (redirect.match(/^\/.*#/)) {
+              redirect = redirect.substr(redirect.indexOf('#') + 1);
+            }
+          } else {
+            redirect = null;
           }
-        } else {
-          redirect = null;
         }
+        yield put(routerRedux.replace(redirect || '/'));
+      } else {
+        message.error('用户名和密码错误，请重新输入');
       }
-      yield put(routerRedux.replace(redirect || '/'));
     },
 
     *getCaptcha({ payload }, { call }) {
@@ -62,7 +68,8 @@ export default {
         type: 'changeLoginStatus',
         payload: {
           status: false,
-          currentAuthority: 'guest',
+          currentAuthority: GUEST,
+          // 登出后就设置游客
         },
       });
       reloadAuthorized();

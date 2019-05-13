@@ -70,7 +70,7 @@ const filterMenuData = menuData => {
   }
   return menuData
     .filter(item => item.name && !item.hideInMenu)
-    .map(item => check(item.authority, getSubMenu(item)))
+    .map(item => { return check(item.authority, getSubMenu(item)); })
     .filter(item => item);
 };
 /**

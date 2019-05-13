@@ -1,3 +1,14 @@
+import { STUDENT, ADMIN, TEACHER, GUEST } from '../src/configs/UserList';
+
+// 总结，在父组件的权限可以因隐藏菜单
+// 在页面组件的权限可以关闭隐藏页面
+
+// todo
+// 新建一个conf，在其中写上接口对应可调用的角色
+// 把这层拦截加在request中
+// 角色从getAuthority获取
+// 如果无权限，不放松请求，提示“无权限操作”
+
 export default [
   // 前台学生
   // hideInMenu: true,
@@ -9,12 +20,17 @@ export default [
       {
         path: '/',
         redirect: '/student/problem/list',
+        authority: [STUDENT, ADMIN, TEACHER, GUEST],
       },
       {
         name: 'student', // 学生相关页面
         icon: 'highlight',
         component: '../layouts/StudentLayout',
+        Routes: ['src/pages/Authorized'],
         path: '/student',
+        // 在这里加了authority， 则两个菜单没了
+        authority: [STUDENT, ADMIN, TEACHER],
+        // 但是具体页面的的权限没有被限制，因此需要在每个页面加权限
         routes: [
           {
             path: '/student/problem/list',
@@ -31,6 +47,8 @@ export default [
             path: '/student/rank',
             name: 'rank',
             component: './Student/Rank/index',
+            // authority: [STUDENT, ADMIN],
+            // 在这里加了auth，则菜单也没了，并且会跳转登陆
           },
         ],
       },
@@ -61,6 +79,7 @@ export default [
             name: 'manage',
             icon: 'highlight',
             path: '/admin/manage',
+            authority: [ADMIN, TEACHER],
             routes: [
               {
                 path: '/admin/manage/user',
@@ -90,11 +109,13 @@ export default [
             name: 'problem',
             icon: 'highlight',
             path: '/admin/problem',
+            authority: [ADMIN, TEACHER],
             routes: [
               {
                 path: '/admin/problem/list',
                 name: 'list',
                 component: './Problem/List',
+                authority: [ADMIN, TEACHER],
               },
               {
                 path: '/admin/problem/add',

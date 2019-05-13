@@ -8,7 +8,7 @@ import Exception403 from '@/pages/Exception/403';
 
 function AuthComponent({ children, location, routerData }) {
   const auth = getAuthority();
-  const isLogin = auth && auth[0] !== 'guest';
+  const isLogin = auth > 0;
   const getRouteAuthority = (path, routeData) => {
     let authorities;
     routeData.forEach(route => {
@@ -33,6 +33,7 @@ function AuthComponent({ children, location, routerData }) {
     </Authorized>
   );
 }
-export default connect(({ menu: menuModel }) => ({
+export default connect(({ login, menu: menuModel }) => ({
   routerData: menuModel.routerData,
+  role: login.user.role,
 }))(AuthComponent);

@@ -5,7 +5,7 @@ import router from 'umi/router';
 import { mapPropsToFields } from '../../lib/form';
 import { paperConfig } from '../../configs/contest';
 import problemConfig from '../../configs/problemEdit';
-import { formatTimeFromTimeStamp } from '../../lib/common';
+import { formatTimeFromTimeStamp, debounce } from '../../lib/common';
 
 const FormItem = Form.Item;
 const RadioGroup = Radio.Group;
@@ -75,25 +75,28 @@ class ContestPaperDetailForm extends PureComponent {
 
   // todo 生成试卷
   generatePaper = () => {
-    const { validateFieldsAndScroll } = this.props.form;
-    validateFieldsAndScroll((err, values) => {
-      if (!err) {
-        this.props.generatePaper(values);
-        this.setState({
-          modalVisible: false,
-        });
-      }
+    this.setState({
+      modalVisible: false,
     });
+    const values = this.props.getFieldsValue;
+    this.props.generatePaper(values);
   };
 
-  showModal = () => {
-    const { getFieldValue } = this.props.form;
-    if (getFieldValue('id')) {
-      this.setState({
-        modalVisible: true,
-      });
-    }
-  };
+  handleGeneratePaper = debounce(() => {
+    const { validateFieldsAndScroll } = this.props.form;
+    validateFieldsAndScroll((err) => {
+      if (!err) {
+        const { getFieldValue } = this.props.form;
+        if (getFieldValue('id')) {
+          this.setState({
+            modalVisible: true,
+          });
+        } else {
+          this.generatePaper();
+        }
+      }
+    });
+  }, 200);
 
   handleModalCancel = () => {
     this.setState({
@@ -195,7 +198,7 @@ class ContestPaperDetailForm extends PureComponent {
             </FormItem>
           </Col>
         </Row>
-        <Row><Button onClick={this.showModal}>生成试卷</Button></Row>
+        <Row><Button onClick={this.handleGeneratePaper}>生成试卷</Button></Row>
         <Row>
           <br />
           <h1>比赛题目列表<Button>新增题目</Button></h1>

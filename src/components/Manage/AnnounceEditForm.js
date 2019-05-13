@@ -10,7 +10,7 @@ const { Item: FormItem } = Form;
 class AnnounceEditForm extends Component {
     handleSubmit = () => {
       this.props.form.validateFieldsAndScroll((err, values) => {
-        if (err) {
+        if (!err) {
           const values = this.props.form.getFieldsValue();
           this.props.onSubmit({
             ...values,
