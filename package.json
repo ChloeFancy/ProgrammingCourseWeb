@@ -82,6 +82,9 @@
     "umi-request": "^1.0.5"
   },
   "devDependencies": {
+    "@babel/cli": "^7.4.4",
+    "@babel/core": "^7.4.4",
+    "@babel/preset-env": "^7.4.4",
     "@types/history": "^4.7.2",
     "@types/react": "^16.8.1",
     "@types/react-dom": "^16.0.11",
@@ -89,6 +92,7 @@
     "antd-theme-webpack-plugin": "^1.2.0",
     "babel-cli": "^6.26.0",
     "babel-eslint": "^10.0.1",
+    "babel-preset-env": "^1.7.0",
     "babel-preset-es2015": "^6.24.1",
     "babel-preset-es2017": "^6.24.1",
     "chalk": "^2.4.2",

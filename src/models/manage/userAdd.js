@@ -3,8 +3,6 @@ import {
   submitUserInfo,
   getUserRoleOptions,
 } from '@/services/manage/userList';
-import { formatObjectToFields } from '../../lib/form';
-import { object } from 'prop-types';
 
 export default {
   namespace: 'userAdd',

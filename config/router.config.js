@@ -1,4 +1,11 @@
-import { STUDENT, ADMIN, TEACHER, GUEST } from '../src/configs/UserList';
+// import { STUDENT, ADMIN, TEACHER, GUEST } from '../src/configs/UserList';
+// 为什么？？？在这里import就是报错的？？？
+// 和commonjs有关
+const STUDENT = 1;
+const TEACHER = 2;
+const ADMIN = 3;
+const GUEST = 0;
+
 
 // 总结，在父组件的权限可以因隐藏菜单
 // 在页面组件的权限可以关闭隐藏页面
