@@ -4,24 +4,6 @@ import { setCookie, getCookie } from '../lib/cookie';
 const authCookie = 'userRole';
 
 export function getAuthority() {
-  // return localStorage.getItem('antd-pro-authority') || ['admin', 'user'];
-  // const authorityString =
-  //   typeof str === 'undefined' ? localStorage.getItem('antd-pro-authority') : str;
-  // const authorityString =
-  //   typeof str === 'undefined' ? Number(getCookie(authCookie)) : str;
-  // authorityString could be admin, "admin", ["admin"]
-  // let authority;
-  // try {
-  //   authority = JSON.parse(authorityString);
-  // } catch (e) {
-  //   authority = authorityString;
-  // }
-  // if (typeof authority === 'string') {
-  //   return [authority];
-  // }
-  // if (!authority && NODE_ENV !== 'production') {
-  //   return ['admin'];
-  // }
   return Number(getCookie(authCookie));
 }
 

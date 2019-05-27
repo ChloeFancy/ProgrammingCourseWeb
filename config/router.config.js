@@ -36,13 +36,18 @@ export default [
         Routes: ['src/pages/Authorized'],
         path: '/student',
         // 在这里加了authority， 则两个菜单没了
-        authority: [STUDENT, ADMIN, TEACHER],
+        // authority: [STUDENT, ADMIN, TEACHER],
         // 但是具体页面的的权限没有被限制，因此需要在每个页面加权限
         routes: [
           {
             path: '/student/problem/list',
             name: 'problemList',
             component: './Student/Problem/List',
+          },
+          {
+            path: '/student/announce',
+            name: 'studentAnnounce',
+            component: './Student/Announce',
           },
           {
             path: '/student/problem/detail/:id',
