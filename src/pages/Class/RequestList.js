@@ -1,171 +1,107 @@
-
 import React, { Component } from 'react';
 import { connect } from 'dva';
-import router from 'umi/router';
-import { Table, Form, Input, Button, Row, Col, Modal, Spin } from 'antd';
-import { classConfig } from '../../configs/class';
-import { formatTimeFromTimeStamp } from '../../lib/common';
+import { Table, Button } from 'antd';
+import { classMemberConfig } from '../../configs/class';
 
-const FormItem = Form.Item;
-
-const getColumns = (onDetail, onMemberManage) => {
-  return [
-    {
-      title: classConfig.id.text,
-      dataIndex: classConfig.id.dataIndex,
-      key: classConfig.id.dataIndex,
-    },
-    {
-      title: classConfig.name.text,
-      dataIndex: classConfig.name.dataIndex,
-      key: classConfig.name.dataIndex,
-      width: '20%',
-    },
-    {
-      title: classConfig.createTime.text,
-      dataIndex: classConfig.createTime.dataIndex,
-      key: classConfig.createTime.dataIndex,
-      width: '15%',
-      render: formatTimeFromTimeStamp('YYYY-MM-DD HH:MM:SS'),
-    },
-    {
-      title: classConfig.isCheck.text,
-      dataIndex: classConfig.isCheck.dataIndex,
-      key: classConfig.isCheck.dataIndex,
-      width: '15%',
-      render: (isCheck) => isCheck ? '需要导师审核' : '无需审核',
-    },
-    {
-      title: '管理',
-      dataIndex: 'action',
-      key: 'action',
-      width: '20%',
-      render: (_, record) => {
-        return (
-          <div>
-            <Button type="primary" onClick={onDetail(record)}>编辑班级</Button>
-            &nbsp;&nbsp;
-            <Button type="primary" onClick={onMemberManage(record)}>班级成员管理</Button>
-          </div>
-        );
-      },
-    },
-  ];
-};
-
-const formItemLayout = {
-  labelCol: {
-    xs: { span: 24 },
-    sm: { span: 8 },
-  },
-  wrapperCol: {
-    xs: { span: 24 },
-    sm: { span: 16 },
-  },
-};
-
-@connect(({ classList }) => ({
-  ...classList,
+@connect(({ requestList }) => ({
+  ...requestList,
 }))
-export default class ClassList extends Component {
+class RequestList extends Component {
   async componentDidMount() {
-    this.fetchList();
+    document.title = '加入班级请求';
+    const { dispatch } = this.props;
+    await dispatch({
+      type: 'requestList/fetchList',
+    });
   }
 
-  onDetail = ({ id }) => {
-    return () => {
-      const { dispatch } = this.props;
-      dispatch({
-        type: 'classList/openModal',
-        payload: {
-          id,
-          operation: 1,
-        },
-      });
-    };
-  };
-
-  // 查看编辑班级成员
-  onMemberManage = (record) => {
-    return () => {
-      router.push(`/admin/class/member/${record.id}`);
-    };
-  };
-
-  handleOk = () => {
-    this.formRef.handleSubmit();
-  };
-
-  handleCancel = () => {
-    const { dispatch } = this.props;
-    dispatch({
-      type: 'classList/closeModal',
-    });
-  };
-
-  handleSubmit = (values) => {
-    const { dispatch } = this.props;
-    dispatch({
-      type: 'classList/classSubmit',
-    });
-    dispatch({
-      type: 'classList/closeModal',
-    });
-  };
-
-  handleModalFormChange = (fields) => {
-    const { dispatch } = this.props;
-    dispatch({
-      type: 'classList/changeModalForm',
-      payload: {
-        ...fields,
+  getColumns = (onApprove, onDecline) => {
+    // todo
+    return [
+      {
+        title: '#',
+        dataIndex: classMemberConfig.userId.dataIndex,
+        key: classMemberConfig.userId.dataIndex,
+        width: '20%',
       },
-    });
+      {
+        title: classMemberConfig.name.text,
+        dataIndex: classMemberConfig.name.dataIndex,
+        key: classMemberConfig.name.dataIndex,
+        width: '10%',
+      },
+      {
+        title: '操作',
+        dataIndex: 'action',
+        key: 'action',
+        width: '20%',
+        render: (text, record) => {
+          return (
+            <div>
+              <Button type="primary" onClick={onApprove(record)}>批准</Button>
+              &nbsp;&nbsp;
+              <Button type="primary" onClick={onDecline(record)}>拒绝</Button>
+            </div>
+          );
+        },
+      },
+    ];
   };
 
   fetchList = async() => {
     const { dispatch } = this.props;
     await dispatch({
-      type: 'classList/fetchList',
+      type: 'requestList/fetchList',
     });
   };
 
   handleShowSizeChange = (current, size) => {
     const {
-      dispatch,
       pageSize,
     } = this.props;
+    this.handleSearchParamsChange({
+      pageIndex: current,
+      pageSize: size || pageSize,
+    });
+  };
+
+  handleSearchParamsChange = (params) => {
+    const { dispatch } = this.props;
     dispatch({
-      type: 'classList/setSearchParams',
-      payload: {
-        pageIndex: current,
-        pageSize: size || pageSize,
-      },
+      type: 'requestList/changeSearchParams',
+      payload: params,
     });
     this.fetchList();
   };
 
+    // todo 补充接口
+    handleApprove = ({ id }) => {
+      return () => {
+
+      };
+    };
+
+    handleDecline = ({ id }) => {
+      return () => {
+
+      };
+    };
+
   render() {
     const {
       total,
-      list: dataSource,
+      list,
       tableLoading,
-      pageIndex,
       pageSize,
-      keyword,
-      modalVisible,
-      info,
-      operation,
-      modalLoading,
+      pageIndex,
     } = this.props;
-
     return (
       <div>
+        <h1 style={{ fontSize: '30px' }}>加入班级请求</h1>
         <Table
-          dataSource={dataSource}
-          columns={getColumns(this.onDetail, this.onMemberManage)}
-          rowKey="ID"
           loading={tableLoading}
+          columns={this.getColumns()}
+          dataSource={list}
           pagination={{
             total,
             pageSize,
@@ -180,3 +116,5 @@ export default class ClassList extends Component {
     );
   }
 }
+
+export default RequestList;

@@ -1,7 +1,6 @@
 import {
     getClassMemberList,
 } from '@/services/manage/class';
-import { formatOptionsFromMap } from '../../lib/common';
 
 export default {
 namespace: 'memberList',
@@ -83,4 +82,3 @@ reducers: {
     },
 },
 };
-  

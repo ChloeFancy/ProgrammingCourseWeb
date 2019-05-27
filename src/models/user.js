@@ -1,4 +1,5 @@
-import { query as queryUsers, queryCurrent } from '@/services/user';
+import { query as queryUsers } from '@/services/user';
+import { getCookie } from '@/lib/cookie';
 
 export default {
   namespace: 'user',
@@ -16,11 +17,14 @@ export default {
         payload: response,
       });
     },
-    *fetchCurrent(_, { call, put }) {
-      const response = yield call(queryCurrent);
+    *fetchCurrent(_, { put }) {
+      // 每到一個頁面都獲取用戶信息
+      const name = getCookie('name');
       yield put({
         type: 'saveCurrentUser',
-        payload: response,
+        payload: {
+          name,
+        },
       });
     },
   },

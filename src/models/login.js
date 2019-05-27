@@ -18,15 +18,16 @@ export default {
 
   effects: {
     *login({ payload }, { call, put }) {
-      const { token, user, isSuccess } = yield call(login, payload);
-      if (isSuccess && user) {
-        document.cookie = `token=${token}`;
+      const { token, user } = yield call(login, payload);
+      if (token && user) {
         yield put({
           type: 'changeLoginStatus',
           payload: {
             status: 'ok',
             type: '',
             currentAuthority: user.role,
+            token,
+            name: user.name,
           },
         });
         yield put({
@@ -95,7 +96,7 @@ export default {
       };
     },
     changeLoginStatus(state, { payload }) {
-      setAuthority(payload.currentAuthority);
+      setAuthority(payload.currentAuthority, payload.token, payload.name);
       return {
         ...state,
         status: payload.status,

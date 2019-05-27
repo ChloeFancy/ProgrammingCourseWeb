@@ -19,7 +19,7 @@ export default {
     keyword: undefined, // 题目搜索关键字
     pageSize: 10,
     pageIndex: 1,
-    
+
     // 对话框
     info: {},
     modalVisible: false,
@@ -28,7 +28,11 @@ export default {
   },
 
   effects: {
-    *changeModalForm({ payload }, { call, put }) {
+    *applyJoinClass({ payload }, { call, put }) {
+      // todo 补充接口
+      yield call();
+    },
+    *changeModalForm({ payload }, { put }) {
       yield put({
         type: 'changeEditingInfo',
         payload,

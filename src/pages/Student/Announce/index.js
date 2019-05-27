@@ -70,7 +70,6 @@ class StudentAnnounce extends Component {
     const {
       loading,
     } = this.props;
-    console.log(loading);
     return (
       <div ref={(ref) => { this.list = ref; }}>
         <h1 style={{ fontSize: '30px' }}>排名</h1>

@@ -1,5 +1,7 @@
 import axios from 'axios';
+import { message as Message } from 'antd';
 import protoRoot from '../../proto/proto';
+import { getAuthority } from '../utils/authority';
 
 const httpService = axios.create({
   baseURL: 'http://47.102.117.222:8081',
@@ -38,10 +40,15 @@ const transformResponseFactory = responseType => {
  * @param {*} resProto 返回值协议
  * @param {*} method 方法
  */
-const request = ({ url, data, reqProto, resProto, method = 'post' }) => {
+const request = ({ url, data, reqProto, resProto, method = 'post', auth }) => {
   // 这里用到axios的配置项：transformRequest和transformResponse
   // transformRequest 发起请求时，调用transformRequest方法，目的是将req转换成二进制
   // transformResponse 对返回的数据进行处理，目的是将二进制转换成真正的json数据
+  const role = getAuthority();
+  if (Array.isArray(auth) && !auth.includes(role)) {
+    Message.warning('无接口权限');
+    return false;
+  }
   try {
     const requestBody = reqProto && data ? createReqMsg(reqProto, data) : null;
     console.log(`请求url: ${url}, 请求参数协议: ${reqProto}, data: `, data, '编码后: ', requestBody);
@@ -68,7 +75,7 @@ const request = ({ url, data, reqProto, resProto, method = 'post' }) => {
   } catch (e) {
     throw e;
   }
-  
+
 };
 
 // 在request下添加一个方法，方便用于处理请求参数

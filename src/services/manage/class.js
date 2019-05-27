@@ -44,3 +44,14 @@ export const getClassMemberList = async (data) => {
     resProto: 'GetMemberResp',
   });
 };
+
+// todo
+export const getRequestList = async (data) => {
+  return {};
+  // return request({
+  //   url: '/getMembers',
+  //   data,
+  //   reqProto: 'GetMemberReq',
+  //   resProto: 'GetMemberResp',
+  // });
+};

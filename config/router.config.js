@@ -1,11 +1,5 @@
-// import { STUDENT, ADMIN, TEACHER, GUEST } from '../src/configs/UserList';
-// 为什么？？？在这里import就是报错的？？？
-// 和commonjs有关
-const STUDENT = 1;
-const TEACHER = 2;
-const ADMIN = 3;
-const GUEST = 0;
-
+// 用户角色
+import { STUDENT, TEACHER, ADMIN, GUEST } from './role.config';
 
 // 总结，在父组件的权限可以因隐藏菜单
 // 在页面组件的权限可以关闭隐藏页面
@@ -43,6 +37,11 @@ export default [
             path: '/student/problem/list',
             name: 'problemList',
             component: './Student/Problem/List',
+          },
+          {
+            path: '/student/class/list',
+            name: 'studentClassList',
+            component: './Class/List',
           },
           {
             path: '/student/announce',
@@ -86,12 +85,13 @@ export default [
         name: 'admin',
         component: '../layouts/BasicLayout',
         Routes: ['src/pages/Authorized'],
+        authority: [ADMIN, TEACHER],
         routes: [
           {
             name: 'manage',
             icon: 'highlight',
             path: '/admin/manage',
-            authority: [ADMIN, TEACHER],
+            authority: [ADMIN],
             routes: [
               {
                 path: '/admin/manage/user',
@@ -127,7 +127,6 @@ export default [
                 path: '/admin/problem/list',
                 name: 'list',
                 component: './Problem/List',
-                authority: [ADMIN, TEACHER],
               },
               {
                 path: '/admin/problem/add',
@@ -152,6 +151,7 @@ export default [
             name: 'contest',
             icon: 'highlight',
             path: '/admin/contest',
+            authority: [ADMIN, TEACHER],
             routes: [
               {
                 path: '/admin/contest/list',
@@ -175,6 +175,7 @@ export default [
             name: 'class',
             icon: 'highlight',
             path: '/admin/class',
+            authority: [ADMIN, TEACHER],
             routes: [
               {
                 path: '/admin/class/list',
@@ -207,6 +208,4 @@ export default [
       },
     ],
   },
-  // 用户登录注册
-
 ];

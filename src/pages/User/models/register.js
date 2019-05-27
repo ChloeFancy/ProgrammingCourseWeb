@@ -21,9 +21,9 @@ export default {
 
   reducers: {
     registerHandle(state, { payload }) {
-      setAuthority('user');
+      // todo 跳转登录
+      setAuthority(0);
       reloadAuthorized();
-      console.log(payload)
       return {
         ...state,
         status: payload,

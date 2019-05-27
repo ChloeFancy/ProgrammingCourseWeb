@@ -2,14 +2,17 @@
 import React, { Component } from 'react';
 import { connect } from 'dva';
 import router from 'umi/router';
-import { Table, Form, Input, Button, Row, Col, Modal, Spin } from 'antd';
+import { Table, Form, Input, Button, Row, Col, Modal, Spin, Popconfirm } from 'antd';
 import { classConfig } from '../../configs/class';
 import { formatTimeFromTimeStamp } from '../../lib/common';
-import ClassInfoForm from '../../components/Class/ClassInfoForm'; 
+import ClassInfoForm from '../../components/Class/ClassInfoForm';
+import { getAuthority } from '../../utils/authority';
+import { STUDENT } from '../../configs/UserList';
 
 const FormItem = Form.Item;
 
-const getColumns = (onDetail, onMemberManage) => {
+const getColumns = (onDetail, onMemberManage, onApply) => {
+    const auth = getAuthority();
     return [
         {
             title: classConfig.id.text,
@@ -29,28 +32,48 @@ const getColumns = (onDetail, onMemberManage) => {
             width: '15%',
             render: formatTimeFromTimeStamp('YYYY-MM-DD HH:MM:SS'),
         },
-        {
-            title: classConfig.isCheck.text,
-            dataIndex: classConfig.isCheck.dataIndex,
-            key: classConfig.isCheck.dataIndex,
-            width: '15%',
-            render: (isCheck) => isCheck ? '需要导师审核' : '无需审核',
-        },
-        {
-            title: '管理',
-            dataIndex: 'action',
-            key: 'action',
-            width: '20%',
-            render: (_, record) => {
-                return (
-                    <div>
-                      <Button type="primary" onClick={onDetail(record)}>编辑班级</Button>
-                      &nbsp;&nbsp;
-                      <Button type="primary" onClick={onMemberManage(record)}>班级成员管理</Button>
-                    </div>
-                );
+      ...(auth !== STUDENT ? (
+          [
+            {
+              title: classConfig.isCheck.text,
+              dataIndex: classConfig.isCheck.dataIndex,
+              key: classConfig.isCheck.dataIndex,
+              width: '15%',
+              render: (isCheck) => isCheck ? '需要导师审核' : '无需审核',
             },
-        },
+            {
+              title: '管理',
+              dataIndex: 'action',
+              key: 'action',
+              width: '20%',
+              render: (_, record) => {
+                return (
+                  <div>
+                    <Button type="primary" onClick={onDetail(record)}>编辑班级</Button>
+                    &nbsp;&nbsp;
+                    <Button type="primary" onClick={onMemberManage(record)}>班级成员管理</Button>
+                  </div>
+                );
+              },
+            },
+          ]
+        ) : (
+            [{
+              title: '管理',
+              dataIndex: 'action',
+              key: 'action',
+              width: '20%',
+              render: (_, record) => {
+                return (
+                  <div>
+                    <Popconfirm title="确认加入此班级？" onConfirm={() => onApply(record)}>
+                      <Button type="primary">申请加入</Button>
+                    </Popconfirm>
+                  </div>
+                );
+              },
+            }]
+        )),
     ];
 };
 
@@ -90,6 +113,18 @@ export default class ClassList extends Component {
     onMemberManage = (record) => {
       return () => {
         router.push(`/admin/class/member/${record.id}`);
+      };
+    };
+
+    onApply = ({ id }) => {
+      return () => {
+        const { dispatch } = this.props;
+        dispatch({
+          type: 'classList/applyJoinClass',
+          payload: {
+            id,
+          },
+        });
       };
     };
 
@@ -197,7 +232,7 @@ export default class ClassList extends Component {
                 </Form>
                 <Table
                     dataSource={dataSource}
-                    columns={getColumns(this.onDetail, this.onMemberManage)}
+                    columns={getColumns(this.onDetail, this.onMemberManage, this.onApply)}
                     rowKey="ID"
                     loading={tableLoading}
                     pagination={{

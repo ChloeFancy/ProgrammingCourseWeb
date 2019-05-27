@@ -1,29 +1,24 @@
 import request from '../../lib/request';
+import api from '../../../config/api.config';
 
 export const login = ({ account, password }) => {
     return request({
-        url: '/login',
+        ...api.LOGIN,
         data: { account, password },
-        reqProto: 'LoginReq',
-        resProto: 'LoginResp',
     });
-}
+};
 
 
 export const logout = () => {
     return request({
-        url: '/logout',
+        ...api.LOGOUT,
         data: null,
-        method: 'get',
-        resProto: 'LogoutResp',
     });
 }
 
 export const register = (data) => {
     return request({
-        url: '/register',
+      ...api.REGISTER,
         data,
-        reqProto: 'RegisterReq',
-        resProto: 'RegisterResp',
     });
-}
+};

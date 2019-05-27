@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react';
-import { FormattedMessage, formatMessage } from 'umi-plugin-react/locale';
-import { Spin, Tag, Menu, Icon, Avatar, Tooltip, message } from 'antd';
+import { FormattedMessage } from 'umi-plugin-react/locale';
+import { Spin, Tag, Menu, Icon, Avatar } from 'antd';
 import moment from 'moment';
 import groupBy from 'lodash/groupBy';
 import HeaderDropdown from '../HeaderDropdown';
@@ -10,7 +10,7 @@ export default class GlobalHeaderRight extends PureComponent {
   getNoticeData() {
     const { notices = [] } = this.props;
     if (notices.length === 0) {
-      
+
       return {};
     }
     const newNotices = notices.map(notice => {
@@ -64,10 +64,7 @@ export default class GlobalHeaderRight extends PureComponent {
   render() {
     const {
       currentUser,
-      fetchingNotices,
-      onNoticeVisibleChange,
       onMenuClick,
-      onNoticeClear,
       theme,
     } = this.props;
     const menu = (
@@ -78,29 +75,19 @@ export default class GlobalHeaderRight extends PureComponent {
         </Menu.Item>
       </Menu>
     );
-    const noticeData = this.getNoticeData();
-    const unreadMsg = this.getUnreadData(noticeData);
     let className = styles.right;
     if (theme === 'dark') {
       className = `${styles.right}  ${styles.dark}`;
     }
     return (
       <div className={className}>
-        {currentUser.name ? (
+        { currentUser.name &&
           <HeaderDropdown overlay={menu}>
             <span className={`${styles.action} ${styles.account}`}>
-              <Avatar
-                size="small"
-                className={styles.avatar}
-                src={currentUser.avatar}
-                alt="avatar"
-              />
               <span className={styles.name}>{currentUser.name}</span>
             </span>
           </HeaderDropdown>
-        ) : (
-          <Spin size="small" style={{ marginLeft: 8, marginRight: 8 }} />
-        )}
+        }
       </div>
     );
   }

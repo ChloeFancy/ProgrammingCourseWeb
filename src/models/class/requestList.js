@@ -1,146 +1,81 @@
 import {
-  fetchList,
-  getClassByID,
-  editClass,
-  addClass,
+  getRequestList,
 } from '@/services/manage/class';
-import { formatObjectToFields, formatRequestFromFields } from '../../lib/form';
 
 export default {
   namespace: 'requestList',
 
   state: {
-    // 表格
+    // 表格数据
     tableLoading: false,
-    list: [], // 列表
+    list: [], // 題目列表
     total: 0, // 总数
 
     // 搜索参数
     pageSize: 10,
     pageIndex: 1,
+    classId: -1,
   },
 
   effects: {
-    *changeModalForm({ payload }, { call, put }) {
+    *setId({ payload }, { put }) {
       yield put({
-        type: 'changeEditingInfo',
+        type: 'setClassId',
         payload,
       });
     },
-    *closeModal(_, { put }) {
+    *changeSearchParams({ payload }, { put }) {
       yield put({
-        type: 'setModalInfo',
-        payload: {
-          info: {},
-          modalVisible: false,
-          modalLoading: false,
-          operation: 0,
-        },
+        type: 'changeSearchParamsConfig',
+        payload,
       });
     },
-    *classSubmit(_, { call, put, select }) {
-      const { operation, info } = yield select(state => state.classList);
-      yield call(operation ? editClass : addClass, {
-        class: formatRequestFromFields({
-          ...info,
-        }),
-      });
-    },
-    *openModal({ payload }, { call, put }) {
+    *fetchList({ payload }, { call, put, select }) {
       yield put({
-        type: 'setModalInfo',
+        type: 'setTableLoading',
         payload: {
-          modalVisible: true,
-          operation: payload.operation,
+          loading: true,
         },
       });
-      if(payload && payload.id) {
-        yield put({
-          type:'setLoading',
-          payload: {
-            modalLoading: true,
-          },
-        });
-        const { id } = payload;
-        const { class: info } = yield call(getClassByID, { id });
-        yield put({
-          type: 'setModalInfo',
-          payload: {
-            info: formatObjectToFields(info),
-          },
-        });
-        yield put({
-          type:'setLoading',
-          payload: {
-            modalLoading: false,
-          },
-        });
-      }
-    },
-    *fetchList(_, { select, call, put }) {
-      yield put({
-        type:'setLoading',
-        payload: {
-          tableLoading: true,
-        },
-      });
-      const { pageIndex, pageSize, keyword } = yield select(state => state.classList);
-      const { classes, total } = yield call(fetchList, {
-        pageIndex,
-        pageNum: pageSize,
-        keyword,
-      });
+      const { pageIndex, pageSize } = yield select(state => state.requestList);
+      // todo
+      const { requests: list, total } = yield call(getRequestList, { pageIndex, pageNum: pageSize });
       yield put({
         type: 'queryList',
         payload: {
-          list: Array.isArray(classes) ? classes : [],
+          list: Array.isArray(list) ? list : [],
           total,
-        }
+        },
       });
       yield put({
-        type:'setLoading',
+        type: 'setTableLoading',
         payload: {
-          tableLoading: false,
+          loading: false,
         },
       });
     },
-    *setSearchParams({ payload }, { put }) {
-      yield put({
-        type: 'changeSearchParams',
-        payload,
-      });
-    }
   },
 
   reducers: {
-    changeEditingInfo(state, action) {
-      return {
-        ...state,
-        info: {
-          ...state.info,
-          ...action.payload,
-        },
-      };
-    },
-    setModalInfo(state, action) {
+    setClassId(state, action) {
       return {
         ...state,
         ...action.payload,
       };
     },
-    changeSearchParams(state, action) {
+    changeSearchParamsConfig(state, action) {
       return {
         ...state,
         ...action.payload,
+      };
+    },
+    setTableLoading(state, action) {
+      return {
+        ...state,
+        tableLoading: action.payload.loading,
       };
     },
     queryList(state, action) {
-      return {
-        ...state,
-        ...action.payload,
-      };
-    },
-    setLoading(state, action) {
       return {
         ...state,
         ...action.payload,

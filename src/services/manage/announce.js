@@ -1,46 +1,37 @@
 import request from '../../lib/request';
+import api from '../../../config/api.config';
 
 export const fetchList = async (data) => {
   return request({
-    url: '/getAnnouncements',
+    ...api.GET_ANNOUNCEMENTS,
     data,
-    reqProto: 'AnnouncementsReq',
-    resProto: 'AnnouncementsResp',
   });
 };
 
 export const editAnnounceSubmit = async (data) => {
   return request({
-    url: '/editAnnouncement',
+    ...api.EDIT_ANNOUNCEMENTS,
     data,
-    reqProto: 'EditAnnouncementReq',
-    resProto: 'EditAnnouncementResp',
   });
 };
 
 export const getAnnouncementDetail = async (data) => {
   return request({
-    url: '/announcementDetail',
+    ...api.GET_ANNOUNCEMENT_DETAIL,
     data,
-    reqProto: 'AnnouncementDetailReq',
-    resProto: 'AnnouncementDetailResp',
   });
 };
 
 export const AddAnnounceSubmit = async (data) => {
   return request({
-    url: '/addAnnouncement',
+    ...api.ADD_ANNOUNCEMENT_SUBMIT,
     data,
-    reqProto: 'AddAnnouncementReq',
-    resProto: 'AddAnnouncementResp',
   });
 };
 
 export const deleteAnnounce = async (data) => {
   return request({
-    url: '/delAnnouncement',
+    ...api.DELETE_ANNOUNCE,
     data,
-    reqProto: 'DelAnnouncementReq',
-    resProto: 'DelAnnouncementResp',
   });
 };

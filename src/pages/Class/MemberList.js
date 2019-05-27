@@ -1,20 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'dva';
-import router from 'umi/router';
-import { Table, Icon, Menu, Button, Row, Col, Input, Form, Divider, Select } from 'antd';
-import { formatTimeFromTimeStamp } from '../../lib/common';
-import SearchForm from '../../components/Problem/ProblemSearchForm';
+import { Table } from 'antd';
 import { classMemberConfig } from '../../configs/class';
-
-const SubMenu = Menu.SubMenu;
-const MenuItemGroup = Menu.ItemGroup;
-const FormItem = Form.Item;
-const Option = Select.Option;
-
-const formItemLayout = {
-  labelCol: { span: 8 },
-  wrapperCol: { span: 16 },
-};
 
 @connect(({ memberList }) => ({
   ...memberList,
@@ -55,25 +42,6 @@ class MemberListList extends Component {
             key: classMemberConfig.name.dataIndex,
             width: '10%',
         },
-        // {
-        //     title: classMemberConfig.language.text,
-        //     dataIndex: classMemberConfig.language.dataIndex,
-        //     key: classMemberConfig.language.dataIndex,
-        //     width: '16%',
-        // },
-        // {
-        //     title: classMemberConfig.runningTime.text,
-        //     dataIndex: classMemberConfig.runningTime.dataIndex,
-        //     key: classMemberConfig.runningTime.dataIndex,
-        //     width: '20%',
-        // },
-        // {
-        //     title: classMemberConfig.isPass.text,
-        //     dataIndex: classMemberConfig.isPass.dataIndex,
-        //     key: classMemberConfig.isPass.dataIndex,
-        //     width: '10%',
-        //     render: (isPass) => isPass ? '通过' : '未通过', 
-        // },
     ];
   };
 
@@ -108,11 +76,9 @@ class MemberListList extends Component {
     const {
       total,
       list,
-      keyword,
       tableLoading,
       pageSize,
       pageIndex,
-      tagsOptions,
     } = this.props;
     return (
       <div>

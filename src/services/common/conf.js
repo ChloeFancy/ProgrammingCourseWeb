@@ -1,10 +1,9 @@
 import request from '../../lib/request';
+import api from '../../../config/api.config';
 
 export const getAllOptions = async () => {
   return request({
-    url: '/conf',
+    ...api.CONF,
     data: null,
-    resProto: 'Config',
-    method: 'get',
   });
 };
