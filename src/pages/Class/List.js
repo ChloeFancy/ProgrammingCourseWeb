@@ -2,7 +2,7 @@
 import React, { Component } from 'react';
 import { connect } from 'dva';
 import router from 'umi/router';
-import { Table, Form, Input, Button, Row, Col, Modal, Spin, Popconfirm } from 'antd';
+import { message, Table, Form, Input, Button, Row, Col, Modal, Spin, Popconfirm } from 'antd';
 import { classConfig } from '../../configs/class';
 import { formatTimeFromTimeStamp } from '../../lib/common';
 import ClassInfoForm from '../../components/Class/ClassInfoForm';
@@ -11,8 +11,7 @@ import { STUDENT } from '../../configs/UserList';
 
 const FormItem = Form.Item;
 
-const getColumns = (onDetail, onMemberManage, onApply, onRequest) => {
-    const auth = getAuthority();
+const getColumns = (auth, onDetail, onMemberManage, onApply, onRequest) => {
     return [
         {
             title: classConfig.id.text,
@@ -70,7 +69,7 @@ const getColumns = (onDetail, onMemberManage, onApply, onRequest) => {
               render: (_, record) => {
                 return (
                   <div>
-                    <Popconfirm title="确认加入此班级？" onConfirm={() => onApply(record)}>
+                    <Popconfirm title="确认加入此班级？" onConfirm={onApply(record)}>
                       <Button type="primary">申请加入</Button>
                     </Popconfirm>
                   </div>
@@ -79,6 +78,37 @@ const getColumns = (onDetail, onMemberManage, onApply, onRequest) => {
             }]
         )),
     ];
+};
+
+const myClassColumns = (onQuit) => {
+  return [
+    {
+      title: classConfig.id.text,
+      dataIndex: classConfig.id.dataIndex,
+      key: classConfig.id.dataIndex,
+    },
+    {
+      title: classConfig.name.text,
+      dataIndex: classConfig.name.dataIndex,
+      key: classConfig.name.dataIndex,
+      width: '20%',
+    },
+    {
+      title: '管理',
+      dataIndex: 'action',
+      key: 'action',
+      width: '20%',
+      render: (_, record) => {
+        return (
+          <div>
+            <Popconfirm title="确认退出此班级？" onConfirm={onQuit(record)}>
+              <Button type="primary">退出</Button>
+            </Popconfirm>
+          </div>
+        );
+      },
+    }
+  ];
 };
 
 const formItemLayout = {
@@ -129,19 +159,25 @@ export default class ClassList extends Component {
 
 
   onApply = ({ id }) => {
-      return () => {
+      return async () => {
         const { dispatch } = this.props;
-        dispatch({
+        const isSuccess = await dispatch({
           type: 'classList/applyJoinClass',
           payload: {
             id,
           },
         });
+        if (isSuccess) {
+          message.success('申请成功');
+        } else {
+          message.error('申请失败');
+        }
       };
     };
 
     handleOk = () => {
       this.formRef.handleSubmit();
+      this.fetchList();
     };
 
     handleCancel = () => {
@@ -204,6 +240,36 @@ export default class ClassList extends Component {
       this.fetchList();
     };
 
+    showMyClass = () => {
+      const { dispatch } = this.props;
+      dispatch({
+        type: 'classList/showMyClass',
+      });
+    };
+
+    closeMyClass = () => {
+      const { dispatch } = this.props;
+      dispatch({
+        type: 'classList/closeMyClass',
+      });
+    };
+
+    onQuit = async ({ id }) => {
+      const { dispatch } = this.props;
+      const isSuccess = await dispatch({
+        type: 'classList/quitMyClass',
+        payload: {
+          id,
+        },
+      });
+      if (isSuccess) {
+        message.success('退出成功');
+        this.showMyClass();
+      } else {
+        message.error('退出成功');
+      }
+    };
+
     render() {
         const {
             total,
@@ -216,35 +282,50 @@ export default class ClassList extends Component {
             info,
             operation,
             modalLoading,
-        } = this.props;
+            myClassVisible,
+          myClassLoading,
+          myClassDataSource,
 
-        return (
+        } = this.props;
+      const auth = getAuthority();
+
+      return (
             <div>
               <Form>
-                <Row type="flex" justify="end">
+                <Row type="flex" justify="space-between">
+                  {
+                    auth === STUDENT && (<Col>
+                      <FormItem>
+                        <Button type="primary" onClick={this.showMyClass}>我的班级</Button>
+                      </FormItem>
+                    </Col>)
+                  }
                   <Col span={10}>
-                    <FormItem label="关键词" {...formItemLayout}>
-                      <Input
-                        value={keyword}
-                        onChange={this.handleKeywordChange}
-                        placeholder="请输入关键词"
-                      />
-                    </FormItem>
-                  </Col>
-
-                  <Col>
-                    <FormItem>
-                      <Button type="primary" onClick={this.fetchList}>
-                        搜索
-                      </Button>
-                    </FormItem>
+                    <Row type="flex" justify="end">
+                      <Col>
+                        <FormItem label="关键词" {...formItemLayout}>
+                          <Input
+                            value={keyword}
+                            onChange={this.handleKeywordChange}
+                            placeholder="请输入关键词"
+                          />
+                        </FormItem>
+                      </Col>
+                      <Col>
+                        <FormItem>
+                          <Button type="primary" onClick={this.fetchList}>
+                            搜索
+                          </Button>
+                        </FormItem>
+                      </Col>
+                    </Row>
                   </Col>
 
                 </Row>
                 </Form>
                 <Table
                     dataSource={dataSource}
-                    columns={getColumns(this.onDetail, this.onMemberManage, this.onApply, this.onRequest)}
+                    columns={getColumns(auth, this.onDetail, this.onMemberManage, this.onApply, this.onRequest)}
                     rowKey="ID"
                     loading={tableLoading}
                     pagination={{
@@ -274,6 +355,21 @@ export default class ClassList extends Component {
                             onChange={this.handleModalFormChange}
                         />
                     </Spin>
+                </Modal>
+
+                <Modal
+                  title="我的班级"
+                  visible={myClassVisible}
+                  onOk={this.closeMyClass}
+                  onCancel={this.closeMyClass}
+                  maskClosable={false}
+                >
+                  <Table
+                    dataSource={myClassDataSource}
+                    columns={myClassColumns(this.onQuit)}
+                    rowKey="ID"
+                    loading={myClassLoading}
+                  />
                 </Modal>
             </div>
         );

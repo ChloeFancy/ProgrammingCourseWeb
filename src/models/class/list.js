@@ -1,8 +1,12 @@
 import {
-  fetchList,
+  // fetchList,
   getClassByID,
   editClass,
   addClass,
+  searchClass,
+  applyEnterClass,
+  quitClass,
+  getMyClass,
 } from '@/services/manage/class';
 import { formatObjectToFields, formatRequestFromFields } from '../../lib/form';
 
@@ -25,12 +29,52 @@ export default {
     modalVisible: false,
     modalLoading: false,
     operation: 0, // 0 - 新增 1 - 编辑
+
+    // 学生 -- 我的班级
+    myClassVisible: false,
+    myClassDataSource: [],
+    myClassLoading: false,
   },
 
   effects: {
-    *applyJoinClass({ payload }, { call, put }) {
-      // todo 补充接口
-      yield call();
+    *quitMyClass({ payload }, { call }) {
+      const { isSuccess } = yield call(quitClass, { classId: payload.id });
+      return isSuccess;
+    },
+    *closeMyClass(_, { put }) {
+      yield put({
+        type: 'modifyMyClassModal',
+        payload: {
+          myClassVisible: false,
+          myClassLoading: false,
+          myClassDataSource: [],
+        },
+      });
+    },
+    *showMyClass(_, { call, put, select }) {
+      const { user: { id: userId } } = yield select(state => state.login);
+      yield put({
+        type: 'modifyMyClassModal',
+        payload: {
+          myClassVisible: true,
+          myClassLoading: true,
+        },
+      });
+      // todo 我的班级接口
+      const { list } = yield call(getMyClass, { userId });
+      yield put({
+        type: 'modifyMyClassModal',
+        payload: {
+          myClassDataSource: list,
+          myClassLoading: false,
+        },
+      });
+    },
+    *applyJoinClass({ payload }, { call }) {
+      const { isSuccess } = yield call(applyEnterClass, {
+        classId: payload.id,
+      });
+      return isSuccess;
     },
     *changeModalForm({ payload }, { put }) {
       yield put({
@@ -96,7 +140,7 @@ export default {
         },
       });
       const { pageIndex, pageSize, keyword } = yield select(state => state.classList);
-      const { classes, total } = yield call(fetchList, {
+      const { classes, total } = yield call(searchClass, {
         pageIndex,
         pageNum: pageSize,
         keyword,
@@ -131,6 +175,12 @@ export default {
           ...state.info,
           ...action.payload,
         },
+      };
+    },
+    modifyMyClassModal(state, action) {
+      return {
+        ...state,
+        ...action.payload,
       };
     },
     setModalInfo(state, action) {

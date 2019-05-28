@@ -59,3 +59,31 @@ export const replyRequest = async (data) => {
     ...api.REPLY_ENTER_REQUEST,
   });
 };
+
+export const searchClass = async (data) => {
+  return request({
+    data,
+    ...api.SEARCH_CLASS,
+  });
+};
+
+export const applyEnterClass = async (data) => {
+  return request({
+    data,
+    ...api.APPLY_ENTER_CLASS,
+  });
+};
+
+export const quitClass = async (data) => {
+  return request({
+    data,
+    ...api.QUIT_CLASS,
+  });
+};
+
+export const getMyClass = async (data) => {
+  return request({
+    data,
+    ...api.GET_MY_CLASS,
+  });
+};

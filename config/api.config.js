@@ -80,4 +80,28 @@ export default {
     resProto: 'ApplyEnterRequestResp',
     auth: [ADMIN, TEACHER],
   },
+  SEARCH_CLASS: {
+    url: '/searchClasses',
+    reqProto: 'SearchClassesReq',
+    resProto: 'SearchClassesResp',
+    auth: [ADMIN, TEACHER, STUDENT],
+  },
+  APPLY_ENTER_CLASS: {
+    url: '/enterClass',
+    reqProto: 'EnterClassReq',
+    resProto: 'EnterClassResp',
+    auth: [ADMIN, TEACHER, STUDENT],
+  },
+  QUIT_CLASS: {
+    url: '/quitClass',
+    reqProto: 'QuitClassReq',
+    resProto: 'QuitClassResp',
+    auth: [ADMIN, TEACHER, STUDENT],
+  },
+  GET_MY_CLASS: {
+    Url: '/', // TODO 我的班级接口
+    reqProto: 'QuitClassReq',
+    resProto: 'QuitClassResp',
+    auth: [ADMIN, TEACHER, STUDENT],
+  }
 };

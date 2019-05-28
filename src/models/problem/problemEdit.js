@@ -45,7 +45,7 @@ export default {
     // 语言选项
     languageOptions: [],
 
-    
+
     /* 学生提交记录 */
     submitRecords: {
       dataSource: [],
@@ -95,8 +95,8 @@ export default {
         type: 'setCodeUpdating',
         payload: true,
       });
-      const { 
-        studentSubmitInfo: { language, code }, 
+      const {
+        studentSubmitInfo: { language, code },
         problemInfo: { id },
       } = yield select(state => state.problemDetail);
       const { result } = yield call(submitCodeByStudent, {
@@ -121,10 +121,11 @@ export default {
       });
     },
     *getSubmitRecords({ payload: { id } }, { call, put, select }) {
+      const { user: { id: userId } } = yield select(state => state.login);
       const { submitRecords: { pageIndex, pageSize } } = yield select(state => state.problemDetail);
       const { submitRecords, total } = yield call(getSubmitRecords, {
         problemId: id,
-        userId: 1, // todo 获取用户id
+        userId,
         pageIndex,
         pageNum: pageSize,
       });
@@ -136,7 +137,7 @@ export default {
         },
       });
     },
-    
+
     *getInfo({ payload }, { call, put }) {
       const { id, mode } = payload;
       yield put({
@@ -153,7 +154,7 @@ export default {
           payload: mode === modeConfig.STUDENT ? problem : {
             ...formatObjectToFields({
               ...problem,
-              ...formatBraftEditorField(problem, [config.description.dataIndex, config.hint.dataIndex]),              
+              ...formatBraftEditorField(problem, [config.description.dataIndex, config.hint.dataIndex]),
             }),
           },
         });
@@ -161,7 +162,7 @@ export default {
         yield put({
           type: 'setProblemInfo',
           payload: formatObjectToFields({
-            ...formatBraftEditorField({}, [config.description.dataIndex, config.hint.dataIndex]),                          
+            ...formatBraftEditorField({}, [config.description.dataIndex, config.hint.dataIndex]),
           }),
         });
       }
