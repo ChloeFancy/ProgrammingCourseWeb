@@ -178,7 +178,6 @@ class ContestPaperDetailForm extends PureComponent {
     } else {
       message.error('请先生成试卷再新增题目');
     }
-
   };
 
   handleAddProblemModalCancel = () => {
@@ -321,6 +320,7 @@ class ContestPaperDetailForm extends PureComponent {
           生成试卷后，当前试题会被全部覆盖，确定重新生成试卷吗？
         </Modal>
         <Modal
+          style={{ width: '600px' }}
           visible={showAddProblemModal}
           onCancel={this.handleAddProblemModalCancel}
           cancelText=""

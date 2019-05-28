@@ -1,4 +1,5 @@
 import request from '../../lib/request';
+import api from '../../../config/api.config';
 
 export const fetchList = async(data) => {
     return request({
@@ -38,20 +39,23 @@ export const addClass = async (data) => {
 
 export const getClassMemberList = async (data) => {
   return request({
-    url: '/getMembers',
+    url: '/getMember',
     data,
     reqProto: 'GetMemberReq',
     resProto: 'GetMemberResp',
   });
 };
 
-// todo
 export const getRequestList = async (data) => {
-  return {};
-  // return request({
-  //   url: '/getMembers',
-  //   data,
-  //   reqProto: 'GetMemberReq',
-  //   resProto: 'GetMemberResp',
-  // });
+  return request({
+    data,
+    ...api.GET_CLASS_REQUESTS,
+  });
+};
+
+export const replyRequest = async (data) => {
+  return request({
+    data,
+    ...api.REPLY_ENTER_REQUEST,
+  });
 };

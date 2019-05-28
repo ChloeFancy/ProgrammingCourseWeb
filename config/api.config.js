@@ -68,4 +68,16 @@ export default {
     resProto: 'ManualModifyPaperResp',
     auth: [ADMIN, TEACHER],
   },
+  GET_CLASS_REQUESTS: {
+    url: '/getMember',
+    reqProto: 'GetMemberReq',
+    resProto: 'GetMemberResp',
+    auth: [ADMIN, TEACHER],
+  },
+  REPLY_ENTER_REQUEST: {
+    url: '/applyEnterRequest',
+    reqProto: 'ApplyEnterRequestReq',
+    resProto: 'ApplyEnterRequestResp',
+    auth: [ADMIN, TEACHER],
+  },
 };

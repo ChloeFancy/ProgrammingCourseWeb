@@ -11,7 +11,7 @@ import { STUDENT } from '../../configs/UserList';
 
 const FormItem = Form.Item;
 
-const getColumns = (onDetail, onMemberManage, onApply) => {
+const getColumns = (onDetail, onMemberManage, onApply, onRequest) => {
     const auth = getAuthority();
     return [
         {
@@ -50,8 +50,12 @@ const getColumns = (onDetail, onMemberManage, onApply) => {
                 return (
                   <div>
                     <Button type="primary" onClick={onDetail(record)}>编辑班级</Button>
-                    &nbsp;&nbsp;
+                    <br />
+                    <br />
                     <Button type="primary" onClick={onMemberManage(record)}>班级成员管理</Button>
+                    <br />
+                    <br />
+                    <Button type="primary" onClick={onRequest(record)}>查看加入班级申请</Button>
                   </div>
                 );
               },
@@ -116,7 +120,15 @@ export default class ClassList extends Component {
       };
     };
 
-    onApply = ({ id }) => {
+    // 查看加入班级请求
+    onRequest = (record) => {
+      return () => {
+        router.push(`/admin/class/request/${record.id}`);
+      };
+    };
+
+
+  onApply = ({ id }) => {
       return () => {
         const { dispatch } = this.props;
         dispatch({
@@ -232,7 +244,7 @@ export default class ClassList extends Component {
                 </Form>
                 <Table
                     dataSource={dataSource}
-                    columns={getColumns(this.onDetail, this.onMemberManage, this.onApply)}
+                    columns={getColumns(this.onDetail, this.onMemberManage, this.onApply, this.onRequest)}
                     rowKey="ID"
                     loading={tableLoading}
                     pagination={{

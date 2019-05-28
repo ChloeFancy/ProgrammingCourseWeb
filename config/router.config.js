@@ -183,14 +183,9 @@ export default [
                 component: './Class/List',
               },
               {
-                path: '/admin/class/requestList',
+                path: '/admin/class/request/:id',
                 name: 'addRequest',
                 component: './Class/RequestList',
-              },
-              {
-                path: '/admin/class/detail/:id',
-                name: 'detail',
-                component: './Class/Edit',
                 hideInMenu: true,
               },
               {

@@ -1,5 +1,6 @@
 import {
   getRequestList,
+  replyRequest,
 } from '@/services/manage/class';
 
 export default {
@@ -12,12 +13,15 @@ export default {
     total: 0, // 总数
 
     // 搜索参数
-    pageSize: 10,
-    pageIndex: 1,
     classId: -1,
   },
 
   effects: {
+    *replyRequest({ payload }, { call, select }) {
+      const { classId } = yield select(state => state.requestList);
+      const { isSuccess } = yield call(replyRequest, { classId, ...payload });
+      return isSuccess;
+    },
     *setId({ payload }, { put }) {
       yield put({
         type: 'setClassId',
@@ -30,21 +34,20 @@ export default {
         payload,
       });
     },
-    *fetchList({ payload }, { call, put, select }) {
+    *fetchList(_, { call, put, select }) {
       yield put({
         type: 'setTableLoading',
         payload: {
           loading: true,
         },
       });
-      const { pageIndex, pageSize } = yield select(state => state.requestList);
-      // todo
-      const { requests: list, total } = yield call(getRequestList, { pageIndex, pageNum: pageSize });
+      const { classId } = yield select(state => state.requestList);
+      const { members } = yield call(getRequestList, { classId });
+      const requests = members.filter(({ isChecked }) => !isChecked);
       yield put({
         type: 'queryList',
         payload: {
-          list: Array.isArray(list) ? list : [],
-          total,
+          list: Array.isArray(requests) ? requests : [],
         },
       });
       yield put({
