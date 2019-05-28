@@ -5,16 +5,13 @@ import CodeMirror from '@uiw/react-codemirror';
 import 'codemirror/keymap/sublime';
 import 'codemirror/theme/monokai.css';
 import 'codemirror/lib/codemirror.css';
-import { Tabs, Radio, Input, Button, Table, Spin, message, Alert } from 'antd';
-import { getProblemDetail, getProblemLogs } from '../../../services/student/problemDetail';
-import config from '../../../configs/ProblemDetail';
+import { Tag, Tabs, Radio, Button, Table, Spin, message, Alert } from 'antd';
 import problemConfig, { modeConfig, submitRecordConfig } from '../../../configs/problemEdit';
 import { formatTimeFromTimeStamp } from '../../../lib/common';
 import styles from './problem-detail.less';
 
 const TabPane = Tabs.TabPane;
 const RadioGroup = Radio.Group;
-const TextArea = Input.TextArea;
 
 @connect(({ problemDetail }) => ({
     studentSubmitInfo: problemDetail.studentSubmitInfo,
@@ -188,9 +185,17 @@ export default class ProblemDetail extends Component {
                     <span>最后更新: 暂无
                     {/* {formatTimeFromTimeStamp('YYYY-MM-DD HH:MM:SS')(problemInfo[problemConfig.createTime.dataIndex])} */}
                     </span>
-                    <span>时间限制:{problemInfo[problemConfig.judgeLimitTime.dataIndex]}</span>
-                    <span>内存限制:{problemInfo[problemConfig.judgeLimitMem.dataIndex]}</span>
+                    <span>时间限制(ms):{problemInfo[problemConfig.judgeLimitTime.dataIndex]}</span>
+                    <span>内存限制(MB):{problemInfo[problemConfig.judgeLimitMem.dataIndex]}</span>
                 </div>
+              <div className={styles.info}>
+                <span>
+                  知识点:
+                  {
+                    Array.isArray(problemInfo[problemConfig.tags.dataIndex]) && problemInfo[problemConfig.tags.dataIndex].map(item => <Tag>{item}</Tag>)
+                  }
+                </span>
+              </div>
             </div>
         );
     };
@@ -243,9 +248,7 @@ export default class ProblemDetail extends Component {
                     <h5>
                         描述
                     </h5>
-                    <div>
-                        {problemInfo[problemConfig.description.dataIndex]}
-                    </div>
+                    <div dangerouslySetInnerHTML={{ __html: problemInfo[problemConfig.description.dataIndex] }} />
                     <h5>
                         输入
                     </h5>
@@ -270,46 +273,50 @@ export default class ProblemDetail extends Component {
                             );
                         })
                     }
-                    <h5>
-                        选择语言
-                    </h5>
-                    <div>
-                        <RadioGroup onChange={this.handleStudentSubmitInfoChange('language')} value={language}>
-                            {
-                                languageOptions.map(({ key, value }) => <Radio key={value} value={value}>{key}</Radio>)
-                            }
-                        </RadioGroup>
-                    </div>
-                    <h5>
-                        提交代码
-                    </h5>
+                  <h5>
+                    提示
+                  </h5>
+                  <div dangerouslySetInnerHTML={{ __html: problemInfo[problemConfig.hint.dataIndex] }} />
+                  <h5>
+                      选择语言
+                  </h5>
+                  <div>
+                      <RadioGroup onChange={this.handleStudentSubmitInfoChange('language')} value={language}>
+                          {
+                              languageOptions.map(({ key, value }) => <Radio key={value} value={value}>{key}</Radio>)
+                          }
+                      </RadioGroup>
+                  </div>
+                  <h5>
+                      提交代码
+                  </h5>
 
-                    <div className={styles['code-editor-wrapper']}>
-                        <CodeMirror
-                            value={code}
-                            options={{
-                                mode: 'c++',
-                                lineNumbers: true,
-                            }}
-                            onChanges={this.handleCodeChange}
-                        />
-                    </div>
-                    
-                    <div>
-                        <Button type="primary" onClick={this.handleSubmitCode}>提交代码</Button>
-                        &nbsp;
-                        &nbsp;
-                        {codeSubmitting && <Spin />}
-                    </div>
-                    <br />
-                    {
-                        judgeResultsMap && judgeResultsMap[judgeResult] && 
-                        <Alert
-                            showIcon
-                            message={judgeResultsMap[judgeResult]}
-                            type={!judgeResult ? 'success' : 'error'}
-                        />
-                    }
+                  <div className={styles['code-editor-wrapper']}>
+                      <CodeMirror
+                          value={code}
+                          options={{
+                              mode: 'c++',
+                              lineNumbers: true,
+                          }}
+                          onChanges={this.handleCodeChange}
+                      />
+                  </div>
+
+                  <div>
+                      <Button type="primary" onClick={this.handleSubmitCode}>提交代码</Button>
+                      &nbsp;
+                      &nbsp;
+                      {codeSubmitting && <Spin />}
+                  </div>
+                  <br />
+                  {
+                      judgeResultsMap && judgeResultsMap[judgeResult] &&
+                      <Alert
+                          showIcon
+                          message={judgeResultsMap[judgeResult]}
+                          type={!judgeResult ? 'success' : 'error'}
+                      />
+                  }
                 </div>
             </Fragment>
         );
