@@ -5,7 +5,8 @@ import {
   editContest,
   addContest,
   generatePaper,
-  deleteProblemFromPaper,
+  modifyPaper,
+  getAlgorithm,
 } from '@/services/manage/contest';
 import { getAllOptions } from '@/services/common/conf';
 import { formatOptionsFromMap } from '../../lib/common';
@@ -40,9 +41,7 @@ export default {
           [contestConfig.endTime.dataIndex]: match[contestConfig.endTime.dataIndex].unix(),
           [contestConfig.introduction.dataIndex]: match[contestConfig.introduction.dataIndex].toHTML(),
         },
-        paper: {
-          ...paper,
-        },
+        paperId: paper.id,
       };
       const { isSuccess } = yield call(contestInfo.id ? editContest : addContest, data);
       return isSuccess;
@@ -59,14 +58,15 @@ export default {
         payload,
       });
     },
-    *handleDeleteProblem({ payload }, { call, put }) {
-      const { isSuccess } = yield call(deleteProblemFromPaper);
+    *handleModifyPaper({ payload }, { call, put }) {
+      const { isSuccess } = yield call(modifyPaper, payload.param);
       if (isSuccess) {
         yield put({
           type: 'updateProblemList',
           payload: payload.problemList,
         });
       }
+      return isSuccess;
     },
     *handleEditProblemList({ payload }, { put }) {
       yield put({
@@ -79,11 +79,14 @@ export default {
         type: 'setPaperTableLoading',
         payload: true,
       });
-      const res = yield call(generatePaper, payload);
-      if (res && res.problems) {
+      const { isSuccess, paper } = yield call(generatePaper, {
+        paper: payload,
+        algorithm: payload.algorithm,
+      });
+      if (isSuccess && paper && paper.problems) {
         yield put({
           type: 'updateProblemList',
-          payload: res.problems,
+          payload: paper.problems,
         });
       }
       yield put({
@@ -99,13 +102,18 @@ export default {
         },
       });
       const { id } = payload;
-      const [options, matchRes] = yield all([
-        call(getAllOptions, payload),
+      const [options, algorithm, matchRes] = yield all([
+        call(getAllOptions),
+        call(getAlgorithm),
         id && call(getMatchByID, { id }),
       ]);
+      const allOptions = {
+        ...options,
+        algorithm,
+      };
       yield put({
         type: 'setOptions',
-        payload: Object.entries(options).reduce((prev, [key, map]) => {
+        payload: Object.entries(allOptions).reduce((prev, [key, map]) => {
           return {
             ...prev,
             [key]: formatOptionsFromMap(map),

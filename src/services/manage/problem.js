@@ -1,13 +1,11 @@
-import axios from 'axios';
 import request from '../../lib/request';
-import { async } from 'q';
 
 export const fetchList = async (data) => {
-  return request({ 
-    url: '/getProblems', 
-    data, 
-    reqProto: 'GetProblemsReq', 
-    resProto: 'GetProblemsResp', 
+  return request({
+    url: '/getProblems',
+    data,
+    reqProto: 'GetProblemsReq',
+    resProto: 'GetProblemsResp',
   });
 };
 
@@ -21,7 +19,7 @@ export const getOptions = async () => {
 };
 
 export const getProblemById = async (data) => {
-  return request({ 
+  return request({
     url: '/getProblemByID',
     data,
     reqProto: 'GetProblemByIDReq',
@@ -30,7 +28,7 @@ export const getProblemById = async (data) => {
 };
 
 export const editProblem = async (data) => {
-  return request({ 
+  return request({
     url: '/editProblem',
     data,
     reqProto: 'EditProblemReq',
@@ -39,7 +37,7 @@ export const editProblem = async (data) => {
 };
 
 export const addProblem = async (data) => {
-  return request({ 
+  return request({
     url: '/addProblem',
     data,
     reqProto: 'AddProblemReq',

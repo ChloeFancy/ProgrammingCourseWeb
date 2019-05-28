@@ -8,7 +8,7 @@ export default {
   state: {
     // 表格相关
     tableLoading: false, // 加载中
-    list: [], // 比赛列表
+    list: [], // 考试列表
     total: 0, // 总数
 
     // 搜索参数
@@ -31,7 +31,7 @@ export default {
           tableLoading: true,
         },
       });
-      const { keyword, pageIndex, pageSize } = yield select(state => state.contestList); 
+      const { keyword, pageIndex, pageSize } = yield select(state => state.contestList);
       const { matches, total } = yield call(fetchList, {
         keyword,
         pageIndex,

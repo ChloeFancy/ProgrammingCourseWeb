@@ -41,23 +41,20 @@ class ProblemEdit extends Component {
     });
   };
 
-  handleDeleteProblem = async (param, problemList) => {
+  handleModifyPaper = async (param, problemList) => {
     const { dispatch } = this.props;
-    await dispatch({
-      type: 'contestDetail/handleDeleteProblem',
+    const result = await dispatch({
+      type: 'contestDetail/handleModifyPaper',
       payload: {
         param,
         problemList,
       },
     });
-  };
-
-  handleEditPaper = (problemList) => {
-    const { dispatch } = this.props;
-    dispatch({
-      type: 'contestDetail/handleEditProblemList',
-      payload: problemList,
-    });
+    if (result) {
+      message.success('操作成功');
+    } else {
+      message.error('操作失败，请重试');
+    }
   };
 
   generatePaper = (values) => {
@@ -77,16 +74,20 @@ class ProblemEdit extends Component {
   };
 
   handleSubmitContestAndPaper = async () => {
-    const { dispatch } = this.props;
-    const isSuccess = await dispatch({
-      type: 'contestDetail/submitContestWithPaper',
-    });
-    if (isSuccess) {
-      message.success('编辑成功，即将返回', 3, () => {
-        router.go(-1);
+    const { dispatch, paperInfo } = this.props;
+    if (paperInfo.id.value) {
+      const isSuccess = await dispatch({
+        type: 'contestDetail/submitContestWithPaper',
       });
+      if (isSuccess) {
+        message.success('发布考试成功，即将返回列表页', 3, () => {
+          router.go(-1);
+        });
+      } else {
+        message.error('发布失败，请重试');
+      }
     } else {
-      message.error('编辑失败，请重试');
+      message.error('请先生成试卷在发布考试');
     }
   };
 
@@ -121,13 +122,13 @@ class ProblemEdit extends Component {
               info={paperInfo}
               problemList={problemList}
               generatePaper={this.generatePaper}
-              handleDeleteProblem={this.handleDeleteProblem}
+              handleModifyPaper={this.handleModifyPaper}
               paperTableLoading={paperTableLoading}
               options={options}
               onChange={this.handlePaperChange}
             />
             <Row>
-              <Button onClick={this.handleSubmitContestAndPaper} type="primary">发布比赛</Button>
+              <Button onClick={this.handleSubmitContestAndPaper} type="primary">发布考试</Button>
             </Row>
           </div>
         </Spin>

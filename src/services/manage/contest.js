@@ -1,4 +1,5 @@
 import request from '../../lib/request';
+import api from '../../../config/api.config';
 
 export const fetchList = async (data) => {
   return request({
@@ -46,16 +47,24 @@ export const addContest = async (data) => {
   });
 };
 
-// todo 生成试卷接口
 export const generatePaper = async (data) => {
-  console.log('生成试卷', data);
-  return {};
+  return request({
+    data,
+    ...api.GENERATE_PAPER,
+  });
 };
 
-// todo 删除试卷题目
-export const deleteProblemFromPaper = async (data) => {
-  console.log('删除题目', data);
-  return { isSuccess: true };
+export const modifyPaper = async (data) => {
+  return request({
+    data,
+    ...api.MODIFY_PAPER,
+  });
+};
+
+export const getAlgorithm = async () => {
+  return request({
+    ...api.GET_ALGORITHM,
+  });
 };
 
 

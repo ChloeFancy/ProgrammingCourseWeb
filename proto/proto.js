@@ -200,6 +200,156 @@ var $root = ($protobuf.roots["default"] || ($protobuf.roots["default"] = new $pr
           }
         }
       },
+      SearchClassesReq: {
+        fields: {
+          pageIndex: {
+            type: "int64",
+            id: 1
+          },
+          pageNum: {
+            type: "int64",
+            id: 2
+          },
+          keyword: {
+            type: "string",
+            id: 3
+          }
+        }
+      },
+      SearchClassesResp: {
+        fields: {
+          status: {
+            type: "Status",
+            id: 1
+          },
+          classes: {
+            rule: "repeated",
+            type: "Class",
+            id: 2
+          },
+          pageIndex: {
+            type: "int64",
+            id: 3
+          },
+          pageNum: {
+            type: "int64",
+            id: 4
+          },
+          total: {
+            type: "int64",
+            id: 5
+          }
+        }
+      },
+      EnterClassReq: {
+        fields: {
+          classId: {
+            type: "int64",
+            id: 1
+          }
+        }
+      },
+      EnterClassResp: {
+        fields: {
+          status: {
+            type: "Status",
+            id: 1
+          },
+          isSuccess: {
+            type: "bool",
+            id: 2
+          }
+        }
+      },
+      QuitClassReq: {
+        fields: {
+          classId: {
+            type: "int64",
+            id: 1
+          }
+        }
+      },
+      QuitClassResp: {
+        fields: {
+          status: {
+            type: "Status",
+            id: 1
+          },
+          isSuccess: {
+            type: "bool",
+            id: 2
+          }
+        }
+      },
+      GetMemberReq: {
+        fields: {
+          classId: {
+            type: "int64",
+            id: 1
+          },
+          pageIndex: {
+            type: "int64",
+            id: 2
+          },
+          pageNum: {
+            type: "int64",
+            id: 3
+          }
+        }
+      },
+      GetMemberResp: {
+        fields: {
+          status: {
+            type: "Status",
+            id: 1
+          },
+          members: {
+            rule: "repeated",
+            type: "ClassMember",
+            id: 2
+          },
+          pageIndex: {
+            type: "int64",
+            id: 3
+          },
+          pageNum: {
+            type: "int64",
+            id: 4
+          },
+          total: {
+            type: "int64",
+            id: 5
+          }
+        }
+      },
+      ApplyEnterRequestReq: {
+        fields: {
+          classId: {
+            type: "int64",
+            id: 1
+          },
+          userId: {
+            type: "int64",
+            id: 2
+          },
+          isApply: {
+            type: "bool",
+            id: 3
+          }
+        }
+      },
+      ApplyEnterRequestResp: {
+        fields: {
+          status: {
+            type: "Status",
+            id: 1
+          },
+          isSuccess: {
+            type: "bool",
+            id: 2
+          }
+        }
+      },
       GetClassesReq: {
         fields: {
           pageIndex: {
@@ -323,67 +473,6 @@ var $root = ($protobuf.roots["default"] || ($protobuf.roots["default"] = new $pr
         }
       },
       MemberManageResp: {
-        fields: {
-          status: {
-            type: "Status",
-            id: 1
-          },
-          isSuccess: {
-            type: "bool",
-            id: 2
-          }
-        }
-      },
-      GetMemberReq: {
-        fields: {
-          classId: {
-            type: "int64",
-            id: 1
-          },
-          pageIndex: {
-            type: "int64",
-            id: 2
-          },
-          pageNum: {
-            type: "int64",
-            id: 3
-          }
-        }
-      },
-      GetMemberResp: {
-        fields: {
-          status: {
-            type: "Status",
-            id: 1
-          },
-          members: {
-            rule: "repeated",
-            type: "ClassMember",
-            id: 2
-          },
-          pageIndex: {
-            type: "int64",
-            id: 3
-          },
-          pageNum: {
-            type: "int64",
-            id: 4
-          },
-          total: {
-            type: "int64",
-            id: 5
-          }
-        }
-      },
-      EnterClassReq: {
-        fields: {
-          classId: {
-            type: "int64",
-            id: 1
-          }
-        }
-      },
-      EnterClassResp: {
         fields: {
           status: {
             type: "Status",
@@ -797,6 +886,19 @@ var $root = ($protobuf.roots["default"] || ($protobuf.roots["default"] = new $pr
           }
         }
       },
+      PaperComposeAlgorithm: {
+        fields: {
+          status: {
+            type: "Status",
+            id: 1
+          },
+          algorithm: {
+            keyType: "int64",
+            type: "string",
+            id: 2
+          }
+        }
+      },
       File: {
         fields: {
           status: {
@@ -941,8 +1043,8 @@ var $root = ($protobuf.roots["default"] || ($protobuf.roots["default"] = new $pr
       },
       NewMatchReq: {
         fields: {
-          paper: {
-            type: "Paper",
+          paperId: {
+            type: "int64",
             id: 1
           },
           match: {
@@ -1049,6 +1151,70 @@ var $root = ($protobuf.roots["default"] || ($protobuf.roots["default"] = new $pr
         }
       },
       EditMatchResp: {
+        fields: {
+          status: {
+            type: "Status",
+            id: 1
+          },
+          isSuccess: {
+            type: "bool",
+            id: 2
+          }
+        }
+      },
+      NewPaperReq: {
+        fields: {
+          paper: {
+            type: "Paper",
+            id: 1
+          },
+          algorithm: {
+            type: "int64",
+            id: 2
+          }
+        }
+      },
+      NewPaperResp: {
+        fields: {
+          status: {
+            type: "Status",
+            id: 1
+          },
+          isSuccess: {
+            type: "bool",
+            id: 2
+          },
+          paper: {
+            type: "Paper",
+            id: 3
+          }
+        }
+      },
+      ManualModifyPaperReq: {
+        fields: {
+          modifyType: {
+            type: "ModifyType",
+            id: 1
+          },
+          problemId: {
+            type: "int64",
+            id: 2
+          },
+          paperId: {
+            type: "int64",
+            id: 3
+          }
+        },
+        nested: {
+          ModifyType: {
+            values: {
+              ADD: 0,
+              DEL: 1
+            }
+          }
+        }
+      },
+      ManualModifyPaperResp: {
         fields: {
           status: {
             type: "Status",
