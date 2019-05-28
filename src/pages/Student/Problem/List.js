@@ -1,19 +1,8 @@
 import React, { Component } from 'react';
 import { connect } from 'dva';
 import router from 'umi/router';
-import { Table, Icon, Menu, Button, Row, Col, Input, Form, Divider, Select } from 'antd';
-import { formatTimeFromTimeStamp } from '../../../lib/common';
+import { Table, Divider } from 'antd';
 import SearchForm from '../../../components/Problem/ProblemSearchForm';
-
-const SubMenu = Menu.SubMenu;
-const MenuItemGroup = Menu.ItemGroup;
-const FormItem = Form.Item;
-const Option = Select.Option;
-
-const formItemLayout = {
-  labelCol: { span: 8 },
-  wrapperCol: { span: 16 },
-};
 
 @connect(({ problem }) => ({
   ...problem,
@@ -54,6 +43,12 @@ class ProblemList extends Component {
         dataIndex: 'ratio',
         key: 'ratio',
         render: (text, record) => `${record.acceptTime}/${record.submitTime}`,
+      },
+      {
+        title: '知识点',
+        dataIndex: 'tags',
+        key: 'tags',
+        render: (text) => (text || []).join(', '),
       },
       {
         title: '难度',

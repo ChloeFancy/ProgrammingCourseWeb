@@ -55,8 +55,7 @@ class StudentAnnounce extends Component {
         {
           list.map((item) => {
             return (
-              <div>
-                {item[config.detail]}
+              <div dangerouslySetInnerHTML={{ __html: item[config.detail] }}>
               </div>
             )
           })
