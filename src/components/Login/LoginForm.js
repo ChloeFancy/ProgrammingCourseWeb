@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 
 import {
-    Form, Icon, Input, Button, Checkbox, Row, Col,
+    Form, Icon, Input, Button, Row, Col,
 } from 'antd';
 import router from 'umi/router';
 
@@ -57,8 +57,8 @@ class NormalLoginForm extends Component {
                 <Row type="flex" justify="center">
                     <Col>
                         <div>
-                            <a className="login-form-forgot" href="">忘记用户名/密码</a>
-                            <br />
+                            {/* <a className="login-form-forgot" href="">忘记用户名/密码</a> */}
+                            {/* <br /> */}
                             <a onClick={this.toRegister}>还没有帐号?点击注册</a>
                         </div>
                     </Col>

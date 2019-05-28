@@ -57,13 +57,13 @@ export default {
     method: GET,
   },
   GENERATE_PAPER: {
-    url: '/', // todo 生成试卷接口
+    url: '/newPaper',
     reqProto: 'NewPaperReq',
     resProto: 'NewPaperResp',
     auth: [ADMIN, TEACHER],
   },
   MODIFY_PAPER: {
-    url: '/', // todo 删除试卷题目
+    url: '/modifyPaper',
     reqProto: 'ManualModifyPaperReq',
     resProto: 'ManualModifyPaperResp',
     auth: [ADMIN, TEACHER],

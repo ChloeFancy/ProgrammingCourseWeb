@@ -105,14 +105,6 @@ class ContestPaperDetailForm extends PureComponent {
     };
   }
 
-  // todo 生成试卷
-  generatePaper = () => {
-    this.setState({
-      modalVisible: false,
-    });
-    const values = this.props.getFieldsValue;
-    this.props.generatePaper(values);
-  };
 
   handleGeneratePaper = debounce(() => {
     const { validateFieldsAndScroll } = this.props.form;
@@ -129,6 +121,15 @@ class ContestPaperDetailForm extends PureComponent {
       }
     });
   }, 200);
+
+  // todo 生成试卷
+  generatePaper = () => {
+    this.setState({
+      modalVisible: false,
+    });
+    const values = this.props.form.getFieldsValue();
+    this.props.generatePaper(values);
+  };
 
   handleModalCancel = () => {
     this.setState({

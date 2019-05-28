@@ -107,13 +107,9 @@ export default {
         call(getAlgorithm),
         id && call(getMatchByID, { id }),
       ]);
-      const allOptions = {
-        ...options,
-        algorithm,
-      };
       yield put({
         type: 'setOptions',
-        payload: Object.entries(allOptions).reduce((prev, [key, map]) => {
+        payload: Object.entries({ ...options, ...algorithm }).reduce((prev, [key, map]) => {
           return {
             ...prev,
             [key]: formatOptionsFromMap(map),
