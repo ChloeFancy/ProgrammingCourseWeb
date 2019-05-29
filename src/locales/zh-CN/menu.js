@@ -60,5 +60,6 @@ export default {
   'menu.manage.user': '用户管理',
   'menu.manage.user-add': '批量添加用户',
   'menu.manage.announce': '公告管理',
+  'menu.manage.tag': '知识点管理',
   'menu.student.problem-detail': '题目详情',
 };

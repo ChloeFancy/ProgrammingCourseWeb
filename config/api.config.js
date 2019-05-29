@@ -99,9 +99,27 @@ export default {
     auth: [ADMIN, TEACHER, STUDENT],
   },
   GET_MY_CLASS: {
-    Url: '/', // TODO 我的班级接口
+    url: '/', // TODO 我的班级接口
     reqProto: 'QuitClassReq',
     resProto: 'QuitClassResp',
     auth: [ADMIN, TEACHER, STUDENT],
+  },
+  GET_ALL_TAGS: {
+    url: '/getTags',
+    reqProto: 'GetTagsReq',
+    resProto: 'GetTagsResp',
+    auth: [ADMIN, TEACHER],
+  },
+  ADD_TAG: {
+    url: '/addTag',
+    reqProto: 'AddTagReq',
+    resProto: 'AddTagResp',
+    auth: [ADMIN, TEACHER],
+  },
+  UPDATE_TAG: {
+    url: '/updateTag',
+    reqProto: 'UpdateTagReq',
+    resProto: 'UpdateTagResp',
+    auth: [ADMIN, TEACHER],
   }
 };

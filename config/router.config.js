@@ -115,6 +115,11 @@ export default [
                 name: 'announce',
                 component: './manage/AnnounceList',
               },
+              {
+                path: '/admin/manage/tag',
+                name: 'tag',
+                component: './manage/TagList',
+              },
             ],
           },
           {

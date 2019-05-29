@@ -11,7 +11,7 @@ const httpService = axios.create({
     'Content-Type': 'application/octet-stream',
   },
   responseType: 'arraybuffer',
-  // withCredentials: true,
+  withCredentials: true,
 });
 
 const isArrayBuffer = obj => {

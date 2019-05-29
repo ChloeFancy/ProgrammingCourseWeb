@@ -286,14 +286,6 @@ var $root = ($protobuf.roots["default"] || ($protobuf.roots["default"] = new $pr
           classId: {
             type: "int64",
             id: 1
-          },
-          pageIndex: {
-            type: "int64",
-            id: 2
-          },
-          pageNum: {
-            type: "int64",
-            id: 3
           }
         }
       },
@@ -307,18 +299,6 @@ var $root = ($protobuf.roots["default"] || ($protobuf.roots["default"] = new $pr
             rule: "repeated",
             type: "ClassMember",
             id: 2
-          },
-          pageIndex: {
-            type: "int64",
-            id: 3
-          },
-          pageNum: {
-            type: "int64",
-            id: 4
-          },
-          total: {
-            type: "int64",
-            id: 5
           }
         }
       },
@@ -346,6 +326,19 @@ var $root = ($protobuf.roots["default"] || ($protobuf.roots["default"] = new $pr
           },
           isSuccess: {
             type: "bool",
+            id: 2
+          }
+        }
+      },
+      GetClasserByUserID: {
+        fields: {
+          status: {
+            type: "Status",
+            id: 1
+          },
+          classes: {
+            rule: "repeated",
+            type: "Class",
             id: 2
           }
         }
@@ -1392,6 +1385,87 @@ var $root = ($protobuf.roots["default"] || ($protobuf.roots["default"] = new $pr
           NO_TOKEN: 3,
           UNAUTHORIZATED: 4,
           PERMISSION_DENIED: 5
+        }
+      },
+      GetTagsReq: {
+        fields: {
+          pageIndex: {
+            type: "int64",
+            id: 1
+          },
+          pageNum: {
+            type: "int64",
+            id: 2
+          }
+        }
+      },
+      GetTagsResp: {
+        fields: {
+          status: {
+            type: "Status",
+            id: 1
+          },
+          tags: {
+            keyType: "int64",
+            type: "string",
+            id: 2
+          },
+          pageIndex: {
+            type: "int64",
+            id: 3
+          },
+          pageNum: {
+            type: "int64",
+            id: 4
+          },
+          total: {
+            type: "int64",
+            id: 5
+          }
+        }
+      },
+      AddTagReq: {
+        fields: {
+          tag: {
+            type: "string",
+            id: 1
+          }
+        }
+      },
+      AddTagResp: {
+        fields: {
+          status: {
+            type: "Status",
+            id: 1
+          },
+          isSuccess: {
+            type: "bool",
+            id: 2
+          }
+        }
+      },
+      UpdateTagReq: {
+        fields: {
+          id: {
+            type: "int64",
+            id: 1
+          },
+          tag: {
+            type: "string",
+            id: 2
+          }
+        }
+      },
+      UpdateTagResp: {
+        fields: {
+          status: {
+            type: "Status",
+            id: 1
+          },
+          isSuccess: {
+            type: "bool",
+            id: 2
+          }
         }
       },
       GetUsersReq: {
