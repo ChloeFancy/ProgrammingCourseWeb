@@ -5,6 +5,8 @@ import moment from 'moment';
 import groupBy from 'lodash/groupBy';
 import HeaderDropdown from '../HeaderDropdown';
 import styles from './index.less';
+import { getAuthority } from '../../utils/authority';
+import { TEACHER, ADMIN } from '../../configs/UserList';
 
 export default class GlobalHeaderRight extends PureComponent {
   getNoticeData() {
@@ -67,8 +69,21 @@ export default class GlobalHeaderRight extends PureComponent {
       onMenuClick,
       theme,
     } = this.props;
+    const role = getAuthority();
     const menu = (
       <Menu className={styles.menu} selectedKeys={[]} onClick={onMenuClick}>
+        <Menu.Item key="homePage">
+          <Icon type="home" />
+          首页
+        </Menu.Item>
+        {
+          [TEACHER, ADMIN].includes(role) && (
+            <Menu.Item key="enterAdmin">
+              <Icon type="profile" />
+              后台管理系统
+            </Menu.Item>
+          )
+        }
         <Menu.Item key="logout">
           <Icon type="logout" />
           <FormattedMessage id="menu.account.logout" defaultMessage="logout" />

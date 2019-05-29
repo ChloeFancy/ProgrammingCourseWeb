@@ -9,7 +9,6 @@ import { classMemberConfig } from '../../configs/class';
 }))
 class RequestList extends Component {
     async componentDidMount() {
-      document.title = '加入班级请求';
       const {
         dispatch,
         match: {

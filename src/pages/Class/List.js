@@ -320,7 +320,6 @@ export default class ClassList extends Component {
                       </Col>
                     </Row>
                   </Col>
-
                 </Row>
                 </Form>
                 <Table

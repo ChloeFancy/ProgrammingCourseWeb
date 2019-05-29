@@ -19,7 +19,6 @@ const formItemLayout = {
 }))
 class RankList extends Component {
   async componentDidMount() {
-    document.title = '排名';
     const { dispatch } = this.props;
     dispatch({
       type: 'rankList/fetchList',
@@ -57,7 +56,7 @@ class RankList extends Component {
             dataIndex: rankConfig.ratio.dataIndex,
             key: rankConfig.ratio.dataIndex,
             width: '10%',
-            render: (_, record) => (100.0 * record[rankConfig.passNum.dataIndex] / record[rankConfig.submitNum.dataIndex]).toFixed(2) + '%', 
+            render: (_, record) => (100.0 * record[rankConfig.passNum.dataIndex] / record[rankConfig.submitNum.dataIndex]).toFixed(2) + '%',
         },
     ];
   };
@@ -101,7 +100,6 @@ class RankList extends Component {
     } = this.props;
     return (
       <div>
-        <h1 style={{ fontSize: '30px' }}>排名</h1>
         <Table
           loading={tableLoading}
           columns={this.getColumns()}

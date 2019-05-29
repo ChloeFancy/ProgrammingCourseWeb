@@ -62,4 +62,11 @@ export default {
   'menu.manage.announce': '公告管理',
   'menu.manage.tag': '知识点管理',
   'menu.student.problem-detail': '题目详情',
+  'menu.manage.studentStatistics': '学习情况统计',
+  'menu.class.detail': '班级详情',
+  '/student.problemList': '题目列表',
+  '/student.studentClassList': '班级列表',
+  '/student.studentAnnounce': '公告列表',
+  '/student.problemDetail': '题目详情',
+  '/student.rank': '排名',
 };

@@ -24,6 +24,11 @@ export default [
         authority: [STUDENT, ADMIN, TEACHER, GUEST],
       },
       {
+        path: '/admin',
+        redirect: '/admin/problem/list',
+        authority: [ADMIN, TEACHER],
+      },
+      {
         name: 'student', // 学生相关页面
         icon: 'highlight',
         component: '../layouts/StudentLayout',
@@ -60,6 +65,9 @@ export default [
             component: './Student/Rank/index',
             // authority: [STUDENT, ADMIN],
             // 在这里加了auth，则菜单也没了，并且会跳转登陆
+          },
+          {
+            component: '404',
           },
         ],
       },

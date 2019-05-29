@@ -10,7 +10,6 @@ import SearchForm from '../../components/Problem/ProblemSearchForm';
 }))
 class ProblemList extends Component {
   async componentDidMount() {
-    document.title = '题库';
     const { dispatch } = this.props;
     Promise.all([
       dispatch({

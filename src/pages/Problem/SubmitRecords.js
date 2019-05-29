@@ -21,7 +21,6 @@ const formItemLayout = {
 }))
 class SubmitRecordsList extends Component {
   async componentDidMount() {
-    document.title = '提交列表';
     const { dispatch, match: { params: { id } } } = this.props;
     dispatch({
       type: 'submitRecords/setId',
@@ -48,7 +47,7 @@ class SubmitRecordsList extends Component {
             title: submitRecordConfig.id.text,
             dataIndex: submitRecordConfig.id.dataIndex,
             key: submitRecordConfig.id.dataIndex,
-            
+
         },
         {
             title: submitRecordConfig.submitTime.text,
@@ -71,7 +70,7 @@ class SubmitRecordsList extends Component {
             title: submitRecordConfig.isPass.text,
             dataIndex: submitRecordConfig.isPass.dataIndex,
             key: submitRecordConfig.isPass.dataIndex,
-            render: (isPass) => isPass ? '通过' : '未通过', 
+            render: (isPass) => isPass ? '通过' : '未通过',
         },
     ];
   };
@@ -94,7 +93,7 @@ class SubmitRecordsList extends Component {
     });
   };
 
-  
+
   handleSearchParamsChange = (params) => {
     const { dispatch } = this.props;
     dispatch({

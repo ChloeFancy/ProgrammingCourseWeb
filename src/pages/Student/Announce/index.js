@@ -16,7 +16,6 @@ class StudentAnnounce extends Component {
   }
 
   async componentDidMount() {
-    document.title = '公告';
     const { dispatch } = this.props;
     dispatch({
       type: 'studentAnnounce/fetchList',
@@ -71,7 +70,6 @@ class StudentAnnounce extends Component {
     } = this.props;
     return (
       <div ref={(ref) => { this.list = ref; }}>
-        <h1 style={{ fontSize: '30px' }}>排名</h1>
         {this.renderAnnounceList()}
         {loading && <div><Spin size="large" spinning={true} /></div>}
       </div>

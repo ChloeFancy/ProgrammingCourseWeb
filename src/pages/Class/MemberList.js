@@ -8,7 +8,6 @@ import { classMemberConfig } from '../../configs/class';
 }))
 class MemberListList extends Component {
   async componentDidMount() {
-    document.title = '提交列表';
     const {
         dispatch,
         match: {

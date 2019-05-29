@@ -21,7 +21,6 @@ const formItemLayout = {
 }))
 class Statistics extends Component {
     async componentDidMount() {
-        document.title = '学习统计情况';
         const {
             dispatch,
             match: {
