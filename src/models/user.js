@@ -1,5 +1,5 @@
 import { query as queryUsers } from '@/services/user';
-import { getCookie } from '@/lib/cookie';
+import { getCurrentUser } from '@/utils/authority';
 
 export default {
   namespace: 'user',
@@ -19,12 +19,11 @@ export default {
     },
     *fetchCurrent(_, { put }) {
       // 每到一個頁面都獲取用戶信息
-      const name = getCookie('name');
+      // 其實這裏應該傳token到服務器端獲取用戶信息的
+      // 但是爲了簡單就從cookie中獲取
       yield put({
         type: 'saveCurrentUser',
-        payload: {
-          name,
-        },
+        payload: getCurrentUser(),
       });
     },
   },

@@ -64,6 +64,10 @@ class HeaderView extends Component {
       router.push('/');
       return;
     }
+    if (key === 'personalCenter') {
+      router.push('/user/personalCenter');
+      return;
+    }
     if (key === 'logout') {
       dispatch({
         type: 'login/logout',

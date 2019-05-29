@@ -16,8 +16,9 @@ const formItemLayout = {
   wrapperCol: { span: 10 },
 };
 
-@connect(({ statistics }) => ({
+@connect(({ statistics, login }) => ({
   ...statistics,
+  currentUser: login.user,
 }))
 class Statistics extends Component {
     async componentDidMount() {
@@ -28,10 +29,11 @@ class Statistics extends Component {
                     id,
                 },
             },
+            currentUser,
         } = this.props;
-        const payload = id ? {
-            userId: id,
-        } : {};
+        const payload = {
+            userId: id || currentUser.id,
+        };
         await dispatch({
           type: 'statistics/initInfo',
           payload,

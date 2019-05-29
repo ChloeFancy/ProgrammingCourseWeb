@@ -85,6 +85,10 @@ export default class GlobalHeaderRight extends PureComponent {
           <Icon type="home" />
           首页
         </Menu.Item>
+        <Menu.Item key="personalCenter">
+          <Icon type="user" />
+          修改个人信息
+        </Menu.Item>
         {
           [TEACHER, ADMIN].includes(role) && (
             <Menu.Item key="enterAdmin">
@@ -95,7 +99,7 @@ export default class GlobalHeaderRight extends PureComponent {
         }
         <Menu.Item key="logout">
           <Icon type="logout" />
-          <FormattedMessage id="menu.account.logout" defaultMessage="logout" />
+          退出登陆
         </Menu.Item>
       </Menu>
     );

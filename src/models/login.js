@@ -25,9 +25,8 @@ export default {
           payload: {
             status: 'ok',
             type: '',
-            currentAuthority: user.role,
             token,
-            name: user.name,
+            user,
           },
         });
         yield put({
@@ -96,7 +95,7 @@ export default {
       };
     },
     changeLoginStatus(state, { payload }) {
-      setAuthority(payload.currentAuthority, payload.token, payload.name);
+      setAuthority(payload.token || '', payload.user || {});
       return {
         ...state,
         status: payload.status,

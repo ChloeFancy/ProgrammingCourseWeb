@@ -67,6 +67,13 @@ export default [
             // 在这里加了auth，则菜单也没了，并且会跳转登陆
           },
           {
+            path: '/student/statistics',
+            name: 'statistics',
+            component: './Student/Statistics',
+            authority: [STUDENT],
+            // 在这里加了auth，则菜单也没了，并且会跳转登陆
+          },
+          {
             component: '404',
           },
         ],
@@ -78,6 +85,12 @@ export default [
           { path: '/user', redirect: '/user/login' },
           { path: '/user/login', name: 'login', component: './User/Login' },
           { path: '/user/register', name: 'register', component: './User/Register' },
+          {
+            path: '/user/personalCenter',
+            name: 'personalCenter',
+            component: './User/PersonalCenter',
+            authority: [ADMIN, TEACHER, STUDENT],
+          },
           {
             path: '/user/register-result',
             name: 'register.result',

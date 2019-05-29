@@ -22,7 +22,7 @@ export default {
   reducers: {
     registerHandle(state, { payload }) {
       // todo 跳转登录
-      setAuthority(0);
+      setAuthority(0, {});
       reloadAuthorized();
       return {
         ...state,
