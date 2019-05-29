@@ -1,7 +1,8 @@
 import React, { PureComponent } from 'react';
 import { FormattedMessage } from 'umi-plugin-react/locale';
-import { Spin, Tag, Menu, Icon, Avatar } from 'antd';
+import { Tag, Menu, Icon } from 'antd';
 import moment from 'moment';
+import router from 'umi/router';
 import groupBy from 'lodash/groupBy';
 import HeaderDropdown from '../HeaderDropdown';
 import styles from './index.less';
@@ -63,6 +64,14 @@ export default class GlobalHeaderRight extends PureComponent {
     });
   };
 
+  handleLogin = () => {
+    router.push('/user/login');
+  };
+
+  handleRegister = () => {
+    router.push('/user/register');
+  };
+
   render() {
     const {
       currentUser,
@@ -96,12 +105,29 @@ export default class GlobalHeaderRight extends PureComponent {
     }
     return (
       <div className={className}>
-        { currentUser.name &&
+        { currentUser.name ? (
           <HeaderDropdown overlay={menu}>
             <span className={`${styles.action} ${styles.account}`}>
               <span className={styles.name}>{currentUser.name}</span>
             </span>
           </HeaderDropdown>
+        ) : (
+          <div>
+            <a onClick={this.handleLogin}>
+              <Icon type="user" />
+              登陆
+            </a>
+            &nbsp;
+            &nbsp;
+            &nbsp;
+            <a onClick={this.handleRegister}>
+            <Icon type="user" />
+              注册
+            </a>
+            &nbsp;
+            &nbsp;
+          </div>
+        )
         }
       </div>
     );
