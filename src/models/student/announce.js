@@ -9,7 +9,7 @@ export default {
     // 表格数据
     loading: false,
     list: [], // 題目列表
-    // total: 0, // 总数
+    total: 0, // 总数
 
     // 搜索参数
     pageSize: 10,
@@ -17,7 +17,7 @@ export default {
   },
 
   effects: {
-    *fetchList({ payload }, { call, put, select }) {
+    *fetchList(_, { call, put, select }) {
       yield put({
         type: 'setTableLoading',
         payload: {
@@ -26,10 +26,12 @@ export default {
       });
       const { pageIndex, pageSize, list: currentList } = yield select(state => state.studentAnnounce);
       const { announcements: list, total } = yield call(fetchList, { pageIndex, pageNum: pageSize });
+      const newList = Array.isArray(list) ? [...currentList, ...list] : [...currentList];
       yield put({
         type: 'queryList',
         payload: {
-          list: Array.isArray(list) ? [...currentList, ...list] : [...currentList],
+          list: newList,
+          total,
         },
       });
       yield put({

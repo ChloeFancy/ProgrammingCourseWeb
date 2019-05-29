@@ -1,43 +1,48 @@
 import React, { Component } from 'react';
+import ReactDom from 'react-dom';
 import { connect } from 'dva';
-import { Spin } from 'antd';
+import { Spin, Card, Empty } from 'antd';
 import config from '../../../configs/announce';
-import { debounce } from '../../../lib/common';
 
 @connect(({ studentAnnounce }) => ({
   ...studentAnnounce,
 }))
 class StudentAnnounce extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      scrollTop: document.documentElement.scrollTop,
-    };
-  }
-
   async componentDidMount() {
     const { dispatch } = this.props;
-    dispatch({
+    await dispatch({
       type: 'studentAnnounce/fetchList',
     });
-    window.addEventListener("scroll", debounce(() => {
-      const afterScrollTop = document.documentElement.scrollTop;
-      const delta = afterScrollTop - this.state.scrollTop;
-      this.setState({
-        scrollTop: afterScrollTop,
-      });
-      if (delta > 0) {
-        this.loadMoreAnnouncements();
-      }
-    }, 300), false);
+    this.observe();
   }
 
+  observe = () => {
+    const options = {
+      // 表示重叠面积占被观察者的比例，从 0 - 1 取值，
+      // 1 表示完全被包含
+      threshold: 1.0,
+    };
+    const callback = (entries) => {
+      entries.forEach(async (entry) => {
+        const { isIntersecting } = entry;
+        if (isIntersecting) {
+          await this.loadMoreAnnouncements();
+        }
+      });
+    };
+    const observer = new IntersectionObserver(callback, options);
+    const target = ReactDom.findDOMNode(this.bottomRef);
+    observer.observe(target);
+  };
+
   loadMoreAnnouncements = async() => {
-    const { dispatch } = this.props;
-    await dispatch({
-      type: 'studentAnnounce/addPageIndex',
-    });
-    this.fetchList();
+    const { dispatch, pageIndex, pageSize, total } = this.props;
+    if (pageIndex * pageSize < total) {
+      await dispatch({
+        type: 'studentAnnounce/addPageIndex',
+      });
+      this.fetchList();
+    }
   };
 
   fetchList = async() => {
@@ -54,7 +59,10 @@ class StudentAnnounce extends Component {
         {
           list.map((item) => {
             return (
-              <div dangerouslySetInnerHTML={{ __html: item[config.detail] }}>
+              <div style={{ margin: '10px 0' }}>
+                <Card title={item.title}>
+                  <div dangerouslySetInnerHTML={{ __html: item[config.detail] }} />
+                </Card>
               </div>
             )
           })
@@ -63,15 +71,23 @@ class StudentAnnounce extends Component {
     );
   };
 
-
   render() {
     const {
       loading,
+      list,
+      total,
     } = this.props;
     return (
       <div ref={(ref) => { this.list = ref; }}>
         {this.renderAnnounceList()}
-        {loading && <div><Spin size="large" spinning={true} /></div>}
+        <div ref={ref => { this.bottomRef = ref; }}>
+          {loading && <Spin size="large" spinning />}
+          {!loading && list.length === total && (
+            <Empty
+              description="已加载全部公告"
+            />
+          )}
+        </div>
       </div>
     );
   }
