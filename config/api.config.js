@@ -98,10 +98,16 @@ export default {
     resProto: 'QuitClassResp',
     auth: [ADMIN, TEACHER, STUDENT],
   },
+  MANAGE_CLASS_MEMBER: {
+    url: '/memberManage',
+    reqProto: 'MemberManageReq',
+    resProto: 'MemberManageResp',
+    auth: [ADMIN, TEACHER],
+  },
   GET_MY_CLASS: {
-    url: '/', // TODO 我的班级接口
-    reqProto: 'QuitClassReq',
-    resProto: 'QuitClassResp',
+    url: '/getClassesByUserID',
+    resProto: 'GetClasserByUserID',
+    method: GET,
     auth: [ADMIN, TEACHER, STUDENT],
   },
   GET_ALL_TAGS: {

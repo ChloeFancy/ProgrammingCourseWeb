@@ -1,5 +1,6 @@
 import {
     getClassMemberList,
+  memberManage,
 } from '@/services/manage/class';
 
 export default {
@@ -30,7 +31,12 @@ effects: {
             payload,
         });
     },
-    *fetchList({ payload }, { call, put, select }) {
+    *manageMember({ payload }, { call, select }) {
+      const { classId } = yield select(state => state.memberList);
+      const { isSuccess } = yield call(memberManage, { classId, ...payload });
+      return isSuccess;
+    },
+    *fetchList(_, { call, put, select }) {
         yield put({
             type: 'setTableLoading',
             payload: {

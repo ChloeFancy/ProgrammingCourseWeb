@@ -87,3 +87,10 @@ export const getMyClass = async (data) => {
     ...api.GET_MY_CLASS,
   });
 };
+
+export const memberManage = async (data) => {
+  return request({
+    data,
+    ...api.MANAGE_CLASS_MEMBER,
+  });
+};

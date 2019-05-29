@@ -60,12 +60,11 @@ export default {
           myClassLoading: true,
         },
       });
-      // todo 我的班级接口
-      const { list } = yield call(getMyClass, { userId });
+      const { classes } = yield call(getMyClass, { userId });
       yield put({
         type: 'modifyMyClassModal',
         payload: {
-          myClassDataSource: list,
+          myClassDataSource: Array.isArray(classes) ? classes : [],
           myClassLoading: false,
         },
       });

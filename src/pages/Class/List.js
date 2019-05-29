@@ -130,14 +130,14 @@ export default class ClassList extends Component {
         this.fetchList();
     }
 
-    onDetail = ({ id }) => {
+    onDetail = ({ id }, operation) => {
       return () => {
         const { dispatch } = this.props;
         dispatch({
           type: 'classList/openModal',
           payload: {
             id,
-            operation: 1,
+            operation,
           },
         });
       };
@@ -156,7 +156,6 @@ export default class ClassList extends Component {
         router.push(`/admin/class/request/${record.id}`);
       };
     };
-
 
   onApply = ({ id }) => {
       return async () => {
@@ -293,13 +292,18 @@ export default class ClassList extends Component {
             <div>
               <Form>
                 <Row type="flex" justify="space-between">
-                  {
-                    auth === STUDENT && (<Col>
-                      <FormItem>
-                        <Button type="primary" onClick={this.showMyClass}>我的班级</Button>
-                      </FormItem>
-                    </Col>)
-                  }
+
+                  <Col>
+                    <FormItem>
+                      {
+                        auth === STUDENT ? (
+                          <Button type="primary" onClick={this.showMyClass}>我的班级</Button>
+                        ) : (
+                          <Button type="primary" onClick={this.onDetail({}, 0)}>新增班级</Button>
+                        )
+                      }
+                    </FormItem>
+                  </Col>
                   <Col span={10}>
                     <Row type="flex" justify="end">
                       <Col>
