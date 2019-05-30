@@ -2,7 +2,7 @@
 import React, { Component } from 'react';
 import { connect } from 'dva';
 import router from 'umi/router';
-import { Table, Modal, Popconfirm } from 'antd';
+import { message, Table, Modal, Popconfirm } from 'antd';
 import EditModalForm from '../../components/UserList/EditModalForm';
 import SearchForm from '../../components/UserList/SearchForm';
 import { formatTimeFromTimeStamp } from '../../lib/common';
@@ -100,12 +100,23 @@ class UserList extends Component {
         };
     };
 
-    // todo 接口待补充
-  onDelete = () => {
-    return async() => {
-
+    onDelete = (record) => {
+      return async() => {
+        const { dispatch } = this.props;
+        const isSuccess = await dispatch({
+          type: 'userList/handleDelete',
+          payload: {
+            deleteUser: record,
+          },
+        });
+        if (isSuccess) {
+          message.success('删除成功');
+          this.fetchList();
+        } else {
+          message.error('删除失败');
+        }
+      };
     };
-  };
 
     fetchList = async(data = {}) => {
         const { dispatch } = this.props;

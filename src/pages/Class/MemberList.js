@@ -94,7 +94,7 @@ class MemberListList extends Component {
               <Button type="primary" onClick={this.onManage(record, DELETE)}>删除小组成员</Button>
               &nbsp;&nbsp;
               {
-                !record.isAdmin ? (
+                !record.isAdministrator ? (
                   <Button type="primary" onClick={this.onManage(record, SET_ADMINISTRATOR)}>设置成管理员</Button>
                 ) : (
                   <Button onClick={this.onManage(record, CANCEL_ADMINISTRATOR)}>取消管理员</Button>

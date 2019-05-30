@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
 import { connect } from 'dva';
 import router from 'umi/router';
-import { Table, Divider } from 'antd';
+import { Table, Divider, Tag } from 'antd';
 import SearchForm from '../../../components/Problem/ProblemSearchForm';
+import problemConfig from '../../../configs/problemEdit';
 
 @connect(({ problem }) => ({
   ...problem,
@@ -21,7 +22,7 @@ class ProblemList extends Component {
   }
 
   getColumns = () => {
-    const { difficultyOptions } = this.props;
+    const { difficultyOptions, tagsOptions } = this.props;
     return [
       {
         title: 'ID',
@@ -47,7 +48,7 @@ class ProblemList extends Component {
         title: '知识点',
         dataIndex: 'tags',
         key: 'tags',
-        render: (text) => (text || []).join(', '),
+        render: (text) => (text || []).map(item => <Tag>{(tagsOptions.find(({ value }) => value === item) || {}).key}</Tag>),
       },
       {
         title: '难度',
@@ -75,9 +76,6 @@ class ProblemList extends Component {
       router.push(`/student/problem/detail/${record.id}`);
     };
   };
-
-  // todo 跳转到题目提交记录页面
-  handleSubmit = record => {};
 
   handleSearch = (values) => {
     const {

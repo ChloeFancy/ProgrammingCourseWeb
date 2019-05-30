@@ -1,61 +1,37 @@
 import request from '../../lib/request';
+import api from '../../../config/api.config';
 
 export const fetchList = async (data) => {
   return request({
-    url: '/getUsers', 
-    data, 
-    reqProto: 'GetUsersReq', 
-    resProto: 'GetUsersResp', 
-  });
-};
-
-// todo 需要getUserById
-export const getUserInfoByID = async () => {
-  const data = {
-    role: 1,
-    get_all: true,
-    page_index: 1,
-    page_num: 10,
-  };
-  return request({
-    url: '/getUsers', 
-    data, 
-    reqProto: 'GetUsersReq', 
-    resProto: 'GetUsersResp', 
+    url: '/getUsers',
+    data,
+    reqProto: 'GetUsersReq',
+    resProto: 'GetUsersResp',
   });
 };
 
 export const submitUserInfo = async (data) => {
   return request({
-    url: '/updateUsers', 
-    data, 
-    reqProto: 'UpdateUsersReq', 
-    resProto: 'UpdateUsersResp', 
-  });
-};
-
-// todo 需要getUserInfoByKeyword
-export const getUserInfoByKeyword = async () => {
-  const data = {
-    role: 1,
-    get_all: true,
-    page_index: 1,
-    page_num: 10,
-  };
-  return request({
-    url: '/getUsers', 
-    data, 
-    reqProto: 'GetUsersReq', 
-    resProto: 'GetUsersResp', 
+    url: '/updateUsers',
+    data,
+    reqProto: 'UpdateUsersReq',
+    resProto: 'UpdateUsersResp',
   });
 };
 
 export const getUserRoleOptions = async () => {
   return request({
-    url: '/userRole', 
+    url: '/userRole',
     method: 'get',
     data: null,
-    resProto: 'UserRole', 
+    resProto: 'UserRole',
+  });
+};
+
+export const delUser = async (data) => {
+  return request({
+    data,
+    ...api.DEL_USER,
   });
 };
 

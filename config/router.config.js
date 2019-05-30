@@ -4,11 +4,6 @@ import { STUDENT, TEACHER, ADMIN, GUEST } from './role.config';
 // 总结，在父组件的权限可以因隐藏菜单
 // 在页面组件的权限可以关闭隐藏页面
 
-// todo
-// 新建一个conf，在其中写上接口对应可调用的角色
-// 把这层拦截加在request中
-// 角色从getAuthority获取
-// 如果无权限，不放松请求，提示“无权限操作”
 
 export default [
   // 前台学生

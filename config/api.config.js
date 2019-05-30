@@ -127,5 +127,11 @@ export default {
     reqProto: 'UpdateTagReq',
     resProto: 'UpdateTagResp',
     auth: [ADMIN, TEACHER],
+  },
+  DEL_USER: {
+    url: '/delUsers',
+    reqProto: 'DelUsersReq',
+    resProto: 'DelUsersResp',
+    auth: [ADMIN, TEACHER],
   }
 };

@@ -18,7 +18,7 @@ export default {
         // 搜索参数
         pageSize: 10,
         pageIndex: 1,
-        problemId: -1, // todo
+        problemId: -1,
     },
 
     effects: {
@@ -101,4 +101,3 @@ export default {
         },
     },
 };
-  

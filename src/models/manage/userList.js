@@ -2,6 +2,7 @@ import {
   fetchList,
   submitUserInfo,
   getUserRoleOptions,
+  delUser,
 } from '@/services/manage/userList';
 import { formatObjectToFields } from '../../lib/form';
 import { formatOptionsFromMap } from '../../lib/common';
@@ -60,10 +61,14 @@ export default {
       const params = {
         users: [payload],
       };
-      const { isSuccess } = yield call(submitUserInfo, params);
-      return isSuccess;
+      const { succeed } = yield call(submitUserInfo, params);
+      return succeed && succeed.length;
     },
-    *handleEdit({ payload }, { call, put }) {
+    *handleDelete({ payload }, { call }) {
+      const { succeed } = yield call(delUser, { usersId: [payload.deleteUser.id] });
+      return succeed && succeed.length;
+    },
+    *handleEdit({ payload }, { put }) {
       yield put({
         type: 'changeModalStatus',
         payload: {

@@ -22,6 +22,7 @@ const RadioGroup = Radio.Group;
     judgeResult: problemDetail.judgeResult,
     judgeResultsMap: problemDetail.judgeResultsMap,
     submitRecords: problemDetail.submitRecords,
+    options: problemDetail.options,
 }))
 export default class ProblemDetail extends Component {
     async componentDidMount() {
@@ -176,6 +177,7 @@ export default class ProblemDetail extends Component {
     renderProblemBasicInfo = () => {
         const {
             problemInfo,
+            options,
         } = this.props;
         return (
             <div className={styles.problemBasicInfo}>
@@ -192,7 +194,7 @@ export default class ProblemDetail extends Component {
                 <span>
                   知识点:
                   {
-                    Array.isArray(problemInfo[problemConfig.tags.dataIndex]) && problemInfo[problemConfig.tags.dataIndex].map(item => <Tag>{item}</Tag>)
+                    Array.isArray(problemInfo[problemConfig.tags.dataIndex]) && problemInfo[problemConfig.tags.dataIndex].map(item => <Tag>{(options.tags.find(({ value }) => value === item) || {}).key}</Tag>)
                   }
                 </span>
               </div>
