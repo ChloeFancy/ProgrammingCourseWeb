@@ -36,9 +36,9 @@ class ProblemEdit extends Component {
     });
   };
 
-  handleSubmit = (values) => {
+  handleSubmit = async (values) => {
     const { dispatch } = this.props;
-    const isSuccess = dispatch({
+    const isSuccess = await dispatch({
       type: 'problemDetail/submitEditProblem',
       payload: values,
     });

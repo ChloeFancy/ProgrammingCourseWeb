@@ -6,6 +6,12 @@ import styles from './braft-editor.less';
 export default class BraftEditorWrapped extends PureComponent {
   static createEditorState = BraftEditor.createEditorState;
 
+  static getValueString = (value) => {
+    return JSON.parse(value.toRAW()).blocks.reduce((prev, { text }) => {
+      return prev + text;
+    }, '');
+  };
+
   render() {
     const { value, onChange } = this.props;
 

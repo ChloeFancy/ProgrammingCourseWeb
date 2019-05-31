@@ -29,7 +29,6 @@ class ProblemList extends Component {
         dataIndex: 'id',
         key: 'id',
         defaultSortOrder: 'descend',
-        sorter: (a, b) => a.id - b.id,
       },
       {
         title: '题目',

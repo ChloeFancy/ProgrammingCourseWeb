@@ -16,6 +16,7 @@ export default {
     id: { dataIndex: 'id', text: 'ID' },
     submitTime: { dataIndex: 'submitTime', text: '提交总数' },
     acceptTime: { dataIndex: 'acceptTime', text: '通过次数' },
+    judgeFile: { dataIndex: 'judgeFile', text: '测试数据' },
 };
 
 export const submitRecordConfig = {

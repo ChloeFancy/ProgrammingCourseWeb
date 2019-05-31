@@ -22,13 +22,11 @@ const getColumns = (auth, onDetail, onMemberManage, onApply, onRequest) => {
             title: classConfig.name.text,
             dataIndex: classConfig.name.dataIndex,
             key: classConfig.name.dataIndex,
-            width: '20%',
         },
         {
             title: classConfig.createTime.text,
             dataIndex: classConfig.createTime.dataIndex,
             key: classConfig.createTime.dataIndex,
-            width: '15%',
             render: formatTimeFromTimeStamp('YYYY-MM-DD HH:MM:SS'),
         },
       ...(auth !== STUDENT ? (
@@ -37,18 +35,16 @@ const getColumns = (auth, onDetail, onMemberManage, onApply, onRequest) => {
               title: classConfig.isCheck.text,
               dataIndex: classConfig.isCheck.dataIndex,
               key: classConfig.isCheck.dataIndex,
-              width: '15%',
               render: (isCheck) => isCheck ? '需要导师审核' : '无需审核',
             },
             {
               title: '管理',
               dataIndex: 'action',
               key: 'action',
-              width: '20%',
               render: (_, record) => {
                 return (
                   <div>
-                    <Button type="primary" onClick={onDetail(record)}>编辑班级</Button>
+                    <Button type="primary" onClick={onDetail(record, 1)}>编辑班级</Button>
                     <br />
                     <br />
                     <Button type="primary" onClick={onMemberManage(record)}>班级成员管理</Button>
@@ -65,7 +61,6 @@ const getColumns = (auth, onDetail, onMemberManage, onApply, onRequest) => {
               title: '管理',
               dataIndex: 'action',
               key: 'action',
-              width: '20%',
               render: (_, record) => {
                 return (
                   <div>
@@ -91,13 +86,11 @@ const myClassColumns = (onQuit) => {
       title: classConfig.name.text,
       dataIndex: classConfig.name.dataIndex,
       key: classConfig.name.dataIndex,
-      width: '20%',
     },
     {
       title: '管理',
       dataIndex: 'action',
       key: 'action',
-      width: '20%',
       render: (_, record) => {
         return (
           <div>
@@ -253,20 +246,22 @@ export default class ClassList extends Component {
       });
     };
 
-    onQuit = async ({ id }) => {
-      const { dispatch } = this.props;
-      const isSuccess = await dispatch({
-        type: 'classList/quitMyClass',
-        payload: {
-          id,
-        },
-      });
-      if (isSuccess) {
-        message.success('退出成功');
-        this.showMyClass();
-      } else {
-        message.error('退出成功');
-      }
+    onQuit = ({ id }) => {
+      return async () => {
+        const { dispatch } = this.props;
+        const isSuccess = await dispatch({
+          type: 'classList/quitMyClass',
+          payload: {
+            id,
+          },
+        });
+        if (isSuccess) {
+          message.success('退出成功');
+          this.showMyClass();
+        } else {
+          message.error('退出成功');
+        }
+      };
     };
 
     render() {

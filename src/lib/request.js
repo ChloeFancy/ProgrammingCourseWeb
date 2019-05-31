@@ -40,7 +40,7 @@ const transformResponseFactory = responseType => {
  * @param {*} resProto 返回值协议
  * @param {*} method 方法
  */
-const request = ({ url, data, reqProto, resProto, method = 'post', auth }) => {
+const request = ({ url, data = null, reqProto, resProto, method = 'post', auth, config = {} }) => {
   // 这里用到axios的配置项：transformRequest和transformResponse
   // transformRequest 发起请求时，调用transformRequest方法，目的是将req转换成二进制
   // transformResponse 对返回的数据进行处理，目的是将二进制转换成真正的json数据
@@ -50,9 +50,10 @@ const request = ({ url, data, reqProto, resProto, method = 'post', auth }) => {
     return false;
   }
   try {
-    const requestBody = reqProto && data ? createReqMsg(reqProto, data) : null;
+    const requestBody = reqProto && data ? createReqMsg(reqProto, data) : data;
     console.log(`请求url: ${url}, 请求参数协议: ${reqProto}, data: `, data, '编码后: ', requestBody);
     const requestConfig = {
+      ...config,
       transformResponse: transformResponseFactory(resProto),
     };
     const promise = method === 'post' ? httpService

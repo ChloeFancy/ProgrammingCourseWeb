@@ -1,9 +1,9 @@
 import React, { PureComponent } from 'react';
-import { message, Icon, Upload, Button, Form, Input, Row, Col, Select, Checkbox } from 'antd';
+import { message, Icon, Upload, Button, Form, Input, Row, Col, Select, InputNumber } from 'antd';
 import BraftEditor from '../common/BraftEditor';
 import { mapPropsToFields } from '../../lib/form';
 import config from '../../configs/problemEdit';
-import protoRoot from '../../../proto/proto';
+import request from '../../lib/request';
 
 import InOutExamples from './InOutExamples';
 
@@ -23,20 +23,96 @@ class ProblemEditForm extends PureComponent {
     fileList: [],
   };
 
-  componentWillReceiveProps(nextProps) {
-    this.setState({
-      fileList: nextProps.fileList || [],
-    });
-  }
+  //
+  // componentWillReceiveProps(nextProps) {
+  //   this.setState({
+  //     fileList: nextProps.fileList || [],
+  //   });
+  // }
+
+  handleDownload = () => {
+    window.open();
+  };
+
+  getUploadProps = () => {
+    return {
+      action: 'http://47.102.117.222:8082/upload',
+      multiple: false,
+      beforeUpload: (file) => {
+        const isZip = file.type.includes('zip');
+        const lengthCorrect = this.state.fileList.length < 1;
+        if (!lengthCorrect) {
+          message.warning('只能上传一个测试数据压缩包, 请先删除已上传文件再重新上传！');
+        }
+        if (!isZip) {
+          message.warning('请上传zip格式的测试数据压缩包！');
+        }
+        return isZip && lengthCorrect;
+      },
+      onSuccess: (FileObj, file) => {
+        const { judgeFile = {} }  = this.props.form.getFieldsValue();
+        (judgeFile.fileList[0] || {}).fileId = FileObj.fileId;
+        this.props.form.setFieldsValue({
+          judgeFile,
+        });
+        file.fileId = FileObj.fileId;
+        this.setState({
+          fileList: [file],
+        });
+      },
+      onRemove: () => {
+        this.setState({
+          fileList: [],
+        });
+      },
+      customRequest({
+                      action,
+                      file,
+                      onSuccess,
+                    }) {
+        const formData = new FormData();
+        formData.append('uploadFile', file);
+        request({
+          url: action,
+          data: formData,
+          resProto: 'File',
+          config: {
+            headers: {
+              'Content-Type': 'mutipart/form-data',
+            },
+          }
+        }).then(File => {
+          const { fileId } = File;
+          if (fileId) {
+            onSuccess(File, file);
+          } else {
+            message.error('上传失败');
+          }
+        }).catch(err => {
+          console.error(err);
+        });
+        return {
+          abort() {
+            console.log('upload progress is aborted.');
+          },
+        };
+      },
+    };
+  };
 
   handlePublishProblem = (ev) => {
     ev.preventDefault();
-    const { onSuccess, onSubmit, form: { getFieldsValue } } = this.props;
-    const values = getFieldsValue();
-    onSubmit({
-      ...values,
-      [config.description.dataIndex]: values[config.description.dataIndex].toHTML(),
-      [config.hint.dataIndex]: values[config.hint.dataIndex].toHTML(),
+    this.props.form.validateFieldsAndScroll((err) => {
+      if (!err) {
+        const { onSubmit, form: { getFieldsValue } } = this.props;
+        const values = getFieldsValue();
+        onSubmit({
+          ...values,
+          [config.judgeFile.dataIndex]: values[config.judgeFile.dataIndex].fileList[0].fileId,
+          [config.description.dataIndex]: values[config.description.dataIndex].toHTML(),
+          [config.hint.dataIndex]: values[config.hint.dataIndex].toHTML(),
+        });
+      }
     });
   };
 
@@ -47,54 +123,23 @@ class ProblemEditForm extends PureComponent {
     });
   };
 
-  beforeUploadCheck = (file) => {
-    const isZip = file.type.includes('zip');
-    const lengthCorrect = this.state.fileList.length < 1;
-    if (!lengthCorrect) {
-      message.warning('只能上传一个测试数据压缩包, 请先删除已上传文件再重新上传！');
+  checkInOutExamples = (rule, value, callback) => {
+    if (value && !value.length) {
+      callback('请添加用例');
+    } else {
+      callback();
     }
-    if (!isZip) {
-      message.warning('请上传zip格式的测试数据压缩包！');
-    }
-    return isZip && lengthCorrect;
   };
 
-  // todo 返回的不止有id还要有url
-  handleTestCaseUpload = (info) => {
-    let fileList = [...info.fileList];
-    if (fileList.length > 1 || !fileList[0].type.includes('zip')) {
-      fileList.pop();
-    }
-    fileList = fileList.map((file) => {
-      if (file.response) {
-        const { fileId } = protoRoot.lookup('File').decode(new Uint8Array(file.response));
-        if (fileId) {
-          const { judgeFile = [] } = this.props.form.getFieldsValue();
-          this.props.form.setFieldsValue({
-            judgeFile: [...judgeFile, fileId],
-          });
-          return {
-            ...file,
-            url: file.response.url,
-            fileId: file.response.fileId,
-          };
-        }
-        return {
-          ...file,
-        }
+  checkContent = (val) => {
+    return (rule, value, callback) => {
+      const content = BraftEditor.getValueString(value);
+      if (!content) {
+        callback(val);
+      } else {
+        callback();
       }
-      return {
-        ...file,
-        ...{ url: '', fileId: '' },
-      }
-    });
-    this.setState({ fileList });
-  };
-
-  handleFileRemove = () => {
-    this.setState({
-      fileList: [],
-    });
+    };
   };
 
   render() {
@@ -110,7 +155,11 @@ class ProblemEditForm extends PureComponent {
         <Row>
           <FormItem label={getLabel(config.title.text)}>
             {
-                getFieldDecorator(config.title.dataIndex)(
+                getFieldDecorator(config.title.dataIndex, {
+                  rules: [{
+                    required: true, message: '请输入标题',
+                  }],
+                })(
                   <Input />
                 )
             }
@@ -119,7 +168,13 @@ class ProblemEditForm extends PureComponent {
         <Row>
           <FormItem label={getLabel(config.description.text)}>
             {
-                getFieldDecorator(config.description.dataIndex)(
+                getFieldDecorator(config.description.dataIndex, {
+                  rules: [{
+                    required: true, message: '请输入描述内容',
+                  }, {
+                    validator: this.checkContent('请输入描述内容'),
+                  }],
+                })(
                   <BraftEditor />
                 )
             }
@@ -129,8 +184,12 @@ class ProblemEditForm extends PureComponent {
           <Col span={10}>
             <FormItem label={getLabel(config.judgeLimitTime.text)}>
               {
-                getFieldDecorator(config.judgeLimitTime.dataIndex)(
-                  <Input />
+                getFieldDecorator(config.judgeLimitTime.dataIndex, {
+                  rules: [{
+                    required: true, message: '请输入时间限制',
+                  }],
+                })(
+                  <InputNumber min={1} max={10000} />
                 )
               }
             </FormItem>
@@ -138,8 +197,12 @@ class ProblemEditForm extends PureComponent {
           <Col span={10}>
             <FormItem label={getLabel(config.judgeLimitMem.text)}>
               {
-                getFieldDecorator(config.judgeLimitMem.dataIndex)(
-                  <Input />
+                getFieldDecorator(config.judgeLimitMem.dataIndex, {
+                  rules: [{
+                    required: true, message: '请输入内存限制',
+                  }],
+                })(
+                  <InputNumber min={16} max={32} />
                 )
               }
             </FormItem>
@@ -147,10 +210,14 @@ class ProblemEditForm extends PureComponent {
         </Row>
 
         <Row {...RowConfig}>
-          <Col span={5}>
+          <Col span={10}>
             <FormItem label={getLabel(config.difficulty.text)}>
               {
-                getFieldDecorator(config.difficulty.dataIndex)(
+                getFieldDecorator(config.difficulty.dataIndex, {
+                  rules: [{
+                    required: true, message: '请选择难度',
+                  }],
+                })(
                   <Select>
                     {getOptions(options.difficulty)}
                   </Select>
@@ -163,10 +230,14 @@ class ProblemEditForm extends PureComponent {
               <Checkbox>可见</Checkbox>
             </FormItem>
           </Col> */}
-          <Col span={11}>
+          <Col span={10}>
             <FormItem label={getLabel(config.tags.text)}>
             {
-                getFieldDecorator(config.tags.dataIndex)(
+                getFieldDecorator(config.tags.dataIndex, {
+                  rules: [{
+                    required: true, message: '请选择知识点',
+                  }],
+                })(
                   <Select mode="multiple">
                     {getOptions(options.tags)}
                   </Select>
@@ -178,7 +249,11 @@ class ProblemEditForm extends PureComponent {
         <Row>
           <FormItem label={getLabel(config.in.text)}>
             {
-              getFieldDecorator(config.in.dataIndex)(
+              getFieldDecorator(config.in.dataIndex, {
+                rules: [{
+                  required: true, message: '请输入输入描述',
+                }],
+              })(
                 <TextArea rows={6} />
               )
             }
@@ -187,7 +262,11 @@ class ProblemEditForm extends PureComponent {
         <Row>
           <FormItem label={getLabel(config.out.text)}>
             {
-              getFieldDecorator(config.out.dataIndex)(
+              getFieldDecorator(config.out.dataIndex, {
+                rules: [{
+                  required: true, message: '请输入输出描述',
+                }],
+              })(
                 <TextArea rows={6} />
               )
             }
@@ -198,7 +277,13 @@ class ProblemEditForm extends PureComponent {
             label={<span>样例&nbsp;&nbsp;<Button onClick={this.handleAddInOutExamples}>添加</Button></span>}
           >
             {
-              getFieldDecorator(config.inOutExamples.dataIndex)(
+              getFieldDecorator(config.inOutExamples.dataIndex, {
+                rules: [{
+                  required: true, message: '请添加样例',
+                }, {
+                  validator: this.checkInOutExamples,
+                }],
+              })(
                 <InOutExamples />
               )
             }
@@ -223,7 +308,7 @@ class ProblemEditForm extends PureComponent {
           <FormItem
             label={getLabel(
               <span>
-                测试数据<a>下载</a>
+                测试数据<a onClick={this.handleDownload}>下载</a>
               </span>
             )}
           >
@@ -241,19 +326,19 @@ class ProblemEditForm extends PureComponent {
             {/* <Table columns={testCaseColumns} dataSource={testCaseList} /> */}
             <Row>
               <Col span={10}>
-                <Upload
-                  action="http://47.102.117.222:8082/upload"
-                  name="uploadFile"
-                  beforeUpload={this.beforeUploadCheck}
-                  onChange={this.handleTestCaseUpload}
-                  onRemove={this.handleFileRemove}
+                {getFieldDecorator(config.judgeFile.dataIndex, {
+                  rules: [{
+                    required: true, message: '请上传测试数据zip文件',
+                  }],
+                })(<Upload
+                  {...this.getUploadProps()}
                   fileList={this.state.fileList}
                 >
                   <Button type="primary">
                     <Icon type="upload" />
                     选择文件
                   </Button>
-                </Upload>
+                </Upload>)}
               </Col>
             </Row>
           </FormItem>
@@ -261,7 +346,13 @@ class ProblemEditForm extends PureComponent {
         <Row>
           <FormItem label={getLabel(config.hint.text)}>
             {
-              getFieldDecorator(config.hint.dataIndex)(
+              getFieldDecorator(config.hint.dataIndex, {
+                rules: [{
+                  required: true, message: '请输入提示',
+                }, {
+                  validator: this.checkContent('请输入提示'),
+                }],
+              })(
                 <BraftEditor />
               )
             }

@@ -122,7 +122,6 @@ class ContestPaperDetailForm extends PureComponent {
     });
   }, 200);
 
-  // todo 生成试卷
   generatePaper = () => {
     this.setState({
       modalVisible: false,
@@ -168,7 +167,6 @@ class ContestPaperDetailForm extends PureComponent {
     };
   };
 
-  // todo 新增题目D=到试卷
   showAddProblemModal = () => {
     const { paperInfo } = this.props;
     if (paperInfo && paperInfo.id) {
@@ -203,7 +201,6 @@ class ContestPaperDetailForm extends PureComponent {
   };
 
   render() {
-    // todo 考虑做个全选
     const { problemList, paperTableLoading, options, form: { getFieldDecorator } } = this.props;
     const { modalVisible, searchKeyword, showAddProblemModal, problemTable } = this.state;
     return (

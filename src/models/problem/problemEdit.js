@@ -8,10 +8,9 @@ import {
   getJudgeResult,
   getSubmitRecords,
 } from '@/services/manage/problem';
-import { formatOptionsFromMap, transformFromByteToM } from '../../lib/common';
+import { formatOptionsFromMap } from '../../lib/common';
 import { formatObjectToFields, formatRequestFromFields, formatBraftEditorField } from '../../lib/form';
 import config, { modeConfig } from '../../configs/problemEdit';
-import BraftEditor from '../../components/common/BraftEditor';
 
 export default {
   namespace: 'problemDetail',

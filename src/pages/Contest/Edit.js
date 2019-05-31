@@ -75,20 +75,24 @@ class ProblemEdit extends Component {
 
   handleSubmitContestAndPaper = async () => {
     const { dispatch, paperInfo } = this.props;
-    if (paperInfo.id.value) {
-      const isSuccess = await dispatch({
-        type: 'contestDetail/submitContestWithPaper',
-      });
-      if (isSuccess) {
-        message.success('发布考试成功，即将返回列表页', 3, () => {
-          router.go(-1);
-        });
-      } else {
-        message.error('发布失败，请重试');
+    this.contestForm.props.form.validateFieldsAndScroll(async (err) => {
+      if (!err) {
+        if (paperInfo && paperInfo.info && paperInfo.id.value) {
+          const isSuccess = await dispatch({
+            type: 'contestDetail/submitContestWithPaper',
+          });
+          if (isSuccess) {
+            message.success('发布考试成功，即将返回列表页', 3, () => {
+              router.go(-1);
+            });
+          } else {
+            message.error('发布失败，请重试');
+          }
+        } else {
+          message.error('请先生成试卷在发布考试');
+        }
       }
-    } else {
-      message.error('请先生成试卷在发布考试');
-    }
+    });
   };
 
   render() {

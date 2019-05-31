@@ -12,14 +12,20 @@ class PersonalCenterForm extends Component {
     e.preventDefault();
     this.props.form.validateFieldsAndScroll((err, values) => {
       if (!err) {
-        this.props.onSubmit(values);
+        const validValues = Object.entries(values).reduce((prev, [key, val]) => {
+          return val ? {
+            ...prev,
+            [key]: val,
+          } : prev;
+        }, {});
+        this.props.onSubmit(validValues);
       }
     });
   };
 
   checkConfirm = (rule, value, callback) => {
     const { form } = this.props;
-    if (value && value !== form.getFieldValue('password')) {
+    if (form.getFieldValue('password') && value !== form.getFieldValue('password')) {
       callback(formatMessage({ id: 'validation.password.twice' }));
     } else {
       callback();
@@ -58,12 +64,12 @@ class PersonalCenterForm extends Component {
               {
                 getFieldDecorator(dataConfig.password, {
                   rules: [
-                    {
-                      required: true,
-                      message: "密码不能为空",
-                    },
+                    // {
+                    //   required: true,
+                    //   message: "密码不能为空",
+                    // },
                   ],
-                })(<Input placeholder="请输入密码" type="password" />)
+                })(<Input placeholder="留空则保留原密码" type="password" />)
               }
             </FormItem>
           </Row>
@@ -72,10 +78,10 @@ class PersonalCenterForm extends Component {
               {
                 getFieldDecorator('repeatPassword', {
                   rules: [
-                    {
-                      required: true,
-                      message: formatMessage({ id: 'validation.confirm-password.required' }),
-                    },
+                    // {
+                    //   required: true,
+                    //   message: formatMessage({ id: 'validation.confirm-password.required' }),
+                    // },
                     {
                       validator: this.checkConfirm,
                     },

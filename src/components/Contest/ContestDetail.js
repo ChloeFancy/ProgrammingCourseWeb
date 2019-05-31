@@ -9,6 +9,15 @@ const FormItem = Form.Item;
 const getLabel = text => <span style={{ fontSize: 16, fontWeight: 700 }}>{text}</span>;
 
 class ContestDetailForm extends PureComponent {
+  checkContent = (rule, value, callback) => {
+    const content = BraftEditor.getValueString(value);
+    if (!content) {
+      callback('请输入说明');
+    } else {
+      callback();
+    }
+  };
+
   render() {
     const { form: { getFieldDecorator } } = this.props;
     const RowConfig = {
@@ -21,7 +30,11 @@ class ContestDetailForm extends PureComponent {
         <Row>
           <FormItem label={getLabel(contestConfig.name.text)}>
             {
-              getFieldDecorator(contestConfig.name.dataIndex)(
+              getFieldDecorator(contestConfig.name.dataIndex, {
+                rules: [{
+                  required: true, message: '请输入名称',
+                }],
+              })(
                 <Input />
               )
             }
@@ -30,7 +43,13 @@ class ContestDetailForm extends PureComponent {
         <Row>
           <FormItem label={getLabel('说明')}>
             {
-              getFieldDecorator(contestConfig.introduction.dataIndex)(
+              getFieldDecorator(contestConfig.introduction.dataIndex, {
+                rules: [{
+                  required: true, message: '请输入说明',
+                }, {
+                  validator: this.checkContent,
+                }],
+              })(
                 <BraftEditor />
               )
             }
@@ -40,7 +59,11 @@ class ContestDetailForm extends PureComponent {
           <Col span={10}>
             <FormItem label={getLabel(contestConfig.startTime.text)}>
               {
-                getFieldDecorator(contestConfig.startTime.dataIndex)(
+                getFieldDecorator(contestConfig.startTime.dataIndex, {
+                  rules: [{
+                    required: true, message: '请选择开始时间',
+                  }],
+                })(
                   <DatePicker showTime />
                 )
               }
@@ -49,7 +72,11 @@ class ContestDetailForm extends PureComponent {
           <Col span={10}>
             <FormItem label={getLabel(contestConfig.endTime.text)}>
               {
-                getFieldDecorator(contestConfig.endTime.dataIndex)(
+                getFieldDecorator(contestConfig.endTime.dataIndex, {
+                  rules: [{
+                    required: true, message: '请选择结束时间',
+                  }],
+                })(
                   <DatePicker showTime />
                 )
               }

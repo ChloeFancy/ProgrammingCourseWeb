@@ -20,6 +20,15 @@ class AnnounceEditForm extends Component {
       });
     };
 
+    checkContent = (rule, value, callback) => {
+      const content = BraftEditor.getValueString(value);
+      if (!content) {
+        callback('请输入公告内容');
+      } else {
+        callback();
+      }
+    };
+
     render() {
         const { getFieldDecorator } = this.props.form;
         return (
@@ -28,12 +37,20 @@ class AnnounceEditForm extends Component {
                     <FormItem label="标题">
                         {
                             getFieldDecorator(dataConfig.title, {
+                              rules: [{
+                                required: true, message: '请输入标题',
+                              }],
                             })(<Input />)
                         }
                     </FormItem>
                     <FormItem label="内容">
                         {
                             getFieldDecorator(dataConfig.detail, {
+                              rules: [{
+                                required: true, message: '请输入公告内容',
+                              }, {
+                                validator: this.checkContent,
+                              }],
                             })(<BraftEditor />)
                         }
                     </FormItem>

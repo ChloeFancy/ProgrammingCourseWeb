@@ -92,8 +92,9 @@ export default {
         },
       });
     },
-    *classSubmit(_, { call, put, select }) {
+    *classSubmit(_, { call, select }) {
       const { operation, info } = yield select(state => state.classList);
+
       yield call(operation ? editClass : addClass, {
         class: formatRequestFromFields({
           ...info,
