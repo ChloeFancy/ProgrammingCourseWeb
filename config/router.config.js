@@ -42,6 +42,7 @@ export default [
             path: '/student/class/list',
             name: 'studentClassList',
             component: './Class/List',
+            authority: [STUDENT, TEACHER, ADMIN],
           },
           {
             path: '/student/announce',
@@ -67,6 +68,26 @@ export default [
             component: './Student/Statistics',
             authority: [STUDENT],
             // 在这里加了auth，则菜单也没了，并且会跳转登陆
+          },
+          {
+            path: '/student/contest/list',
+            name: 'studentContest',
+            component: './Student/Contest/list',
+            authority: [STUDENT, ADMIN, TEACHER],
+          },
+          {
+            path: '/student/contest/intro/:id',
+            name: 'studentContestIntro',
+            component: './Student/Contest/intro',
+            authority: [STUDENT],
+            hideInMenu: true,
+          },
+          {
+            path: '/student/contest/exam/:id',
+            name: 'studentContestExam',
+            component: './Student/Contest/exam',
+            authority: [STUDENT],
+            hideInMenu: true,
           },
           {
             component: '404',

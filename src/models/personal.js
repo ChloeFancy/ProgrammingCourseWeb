@@ -28,7 +28,7 @@ export default {
         },
       });
     },
-    *submit(_, { call, select }) {
+    *submit({ payload }, { call, select }) {
       const { info } = yield select(state => state.personalCenter);
       const { succeed } = yield call(submitUserInfo, { users: [formatRequestFromFields(info)] });
       return succeed && succeed.length;

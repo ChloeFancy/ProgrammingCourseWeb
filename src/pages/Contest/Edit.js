@@ -77,7 +77,7 @@ class ProblemEdit extends Component {
     const { dispatch, paperInfo } = this.props;
     this.contestForm.props.form.validateFieldsAndScroll(async (err) => {
       if (!err) {
-        if (paperInfo && paperInfo.info && paperInfo.id.value) {
+        if (paperInfo && paperInfo.id && paperInfo.id.value) {
           const isSuccess = await dispatch({
             type: 'contestDetail/submitContestWithPaper',
           });

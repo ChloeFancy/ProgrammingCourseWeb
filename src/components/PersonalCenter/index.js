@@ -12,7 +12,9 @@ class PersonalCenterForm extends Component {
     e.preventDefault();
     this.props.form.validateFieldsAndScroll((err, values) => {
       if (!err) {
-        const validValues = Object.entries(values).reduce((prev, [key, val]) => {
+        const { account, name, password, email } = values;
+        const formValues = { account, name, password, email };
+        const validValues = Object.entries(formValues).reduce((prev, [key, val]) => {
           return val ? {
             ...prev,
             [key]: val,
@@ -62,14 +64,7 @@ class PersonalCenterForm extends Component {
           <Row>
             <FormItem label="新密码">
               {
-                getFieldDecorator(dataConfig.password, {
-                  rules: [
-                    // {
-                    //   required: true,
-                    //   message: "密码不能为空",
-                    // },
-                  ],
-                })(<Input placeholder="留空则保留原密码" type="password" />)
+                getFieldDecorator(dataConfig.password)(<Input placeholder="留空则保留原密码" type="password" />)
               }
             </FormItem>
           </Row>
@@ -78,10 +73,6 @@ class PersonalCenterForm extends Component {
               {
                 getFieldDecorator('repeatPassword', {
                   rules: [
-                    // {
-                    //   required: true,
-                    //   message: formatMessage({ id: 'validation.confirm-password.required' }),
-                    // },
                     {
                       validator: this.checkConfirm,
                     },

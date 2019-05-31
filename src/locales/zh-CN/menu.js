@@ -35,4 +35,8 @@ export default {
   '/student.problemDetail': '题目详情',
   '/student.rank': '排名',
   '/student.statistics': '我的学习情况',
+  '/student.studentContest': '考试列表',
+  '/student.studentContestIntro': '考试说明',
+  '/student.studentContestExam': '考试',
+
 };
