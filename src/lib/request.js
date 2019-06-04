@@ -1,15 +1,15 @@
 import axios from 'axios';
+import router from 'umi/router';
+
 import { message as Message } from 'antd';
 import protoRoot from '../../proto/proto';
 import { getAuthority } from '../utils/authority';
+import { getCookie } from './cookie';
 
 const httpService = axios.create({
-  baseURL: '/api',
+  // baseURL: '/api',
+  baseURL: 'http://47.102.117.222:8081',
   timeout: 45000,
-  headers: {
-    'X-Requested-With': 'XMLHttpRequest',
-    'Content-Type': 'application/octet-stream',
-  },
   responseType: 'arraybuffer',
   // withCredentials: true,
 });
@@ -56,6 +56,14 @@ const request = ({ url, data = null, reqProto, resProto, method = 'post', auth, 
       ...config,
       withCredentials: true,
       transformResponse: transformResponseFactory(resProto),
+      headers: {
+        'X-Requested-With': 'XMLHttpRequest',
+        'Content-Type': 'application/octet-stream',
+      },
+      params: {
+        token: getCookie('token'),
+        // 没有解决跨域cookie的问题，以上为暂时方案
+      }
     };
     const promise = method === 'post' ? httpService
     .post(url, requestBody, requestConfig) : httpService
@@ -64,8 +72,10 @@ const request = ({ url, data = null, reqProto, resProto, method = 'post', auth, 
       .then(
         ({ data, status }) => {
           // 对请求做处理
-          if (status !== 200) {
-            throw new Error('服务器异常');
+          if (data.status && data.status.code === 4) {
+            Message.error('身份过期，请重新登录', 1.5, () => {
+              router.push('/user/login');
+            });
           }
           console.log(`返回结果: `, { data, status });
           return data;
