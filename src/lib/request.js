@@ -4,14 +4,14 @@ import protoRoot from '../../proto/proto';
 import { getAuthority } from '../utils/authority';
 
 const httpService = axios.create({
-  baseURL: 'http://47.102.117.222:8081',
+  baseURL: '/api',
   timeout: 45000,
   headers: {
     'X-Requested-With': 'XMLHttpRequest',
     'Content-Type': 'application/octet-stream',
   },
   responseType: 'arraybuffer',
-  withCredentials: true,
+  // withCredentials: true,
 });
 
 const isArrayBuffer = obj => {
@@ -54,6 +54,7 @@ const request = ({ url, data = null, reqProto, resProto, method = 'post', auth, 
     console.log(`请求url: ${url}, 请求参数协议: ${reqProto}, data: `, data, '编码后: ', requestBody);
     const requestConfig = {
       ...config,
+      withCredentials: true,
       transformResponse: transformResponseFactory(resProto),
     };
     const promise = method === 'post' ? httpService

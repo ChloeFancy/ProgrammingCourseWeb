@@ -168,8 +168,9 @@ class ContestPaperDetailForm extends PureComponent {
   };
 
   showAddProblemModal = () => {
-    const { paperInfo } = this.props;
-    if (paperInfo && paperInfo.id) {
+    const { getFieldValue } = this.props.form;
+
+    if (getFieldValue('id')) {
       this.setState({
         showAddProblemModal: true,
       });

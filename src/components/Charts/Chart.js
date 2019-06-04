@@ -17,7 +17,7 @@ class Chart extends PureComponent {
     };
 
     render() {
-        return <div ref={(ref) => { this.pieChart = ref;}} style={{ width: "500px", height: "400px"}} />
+        return <div ref={(ref) => { this.pieChart = ref;}} style={{ width: "1000px", height: "500px"}} />
     }
 }
 

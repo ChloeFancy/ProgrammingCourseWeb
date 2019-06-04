@@ -153,6 +153,9 @@ export default {
           payload: mode === modeConfig.STUDENT ? problem : {
             ...formatObjectToFields({
               ...problem,
+              [config.judgeFile.dataIndex]: {
+                fileList: [{ fileId: problem[config.judgeFile.dataIndex] }],
+              },
               ...formatBraftEditorField(problem, [config.description.dataIndex, config.hint.dataIndex]),
             }),
           },

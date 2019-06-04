@@ -4,7 +4,6 @@ import { Select, DatePicker, Form, Divider } from 'antd';
 import LineChart from '../../../components/Charts/LineChart';
 import PieChart from '../../../components/Charts/PieChart';
 import { formatOptionsFromMap } from '../../../lib/common';
-import styles from './index.less';
 
 const { RangePicker } = DatePicker;
 const dateFormat = 'YYYY/MM/DD';
@@ -89,7 +88,7 @@ class Statistics extends Component {
         name: map[key],
       }));
       return (
-        <div className={styles.chartWrapper}>
+        <div>
           <LineChart xAxis={XAxis} seriesData={seriesData} />
           <PieChart data={pieData} />
         </div>

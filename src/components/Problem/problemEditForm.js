@@ -30,8 +30,16 @@ class ProblemEditForm extends PureComponent {
   //   });
   // }
 
+  // todo 下载链接
   handleDownload = () => {
-    window.open();
+    const { form: { getFieldValue } } = this.props;
+    const judgeFile = getFieldValue('judgeFile');
+    if (judgeFile.fileList.length) {
+      const judgeFileId = judgeFile.fileList[0].fileId;
+      window.open(`http://47.102.117.222:8082/download/${judgeFileId}/${judgeFileId}.zip`);
+    } else {
+      message.error('暂无测试数据，请先上传');
+    }
   };
 
   getUploadProps = () => {

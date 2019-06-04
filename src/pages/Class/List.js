@@ -1,5 +1,5 @@
 
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import { connect } from 'dva';
 import router from 'umi/router';
 import { message, Table, Form, Input, Button, Row, Col, Modal, Spin, Popconfirm } from 'antd';
@@ -48,9 +48,13 @@ const getColumns = (auth, onDetail, onMemberManage, onApply, onRequest) => {
                     <br />
                     <br />
                     <Button type="primary" onClick={onMemberManage(record)}>班级成员管理</Button>
-                    <br />
-                    <br />
-                    <Button type="primary" onClick={onRequest(record)}>查看加入班级申请</Button>
+                    {
+                      record.isCheck && <Fragment>
+                        <br />
+                        <br />
+                        <Button type="primary" onClick={onRequest(record)}>查看加入班级申请</Button>
+                      </Fragment>
+                    }
                   </div>
                 );
               },

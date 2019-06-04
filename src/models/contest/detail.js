@@ -88,6 +88,12 @@ export default {
           type: 'updateProblemList',
           payload: paper.problems,
         });
+        yield put({
+          type: 'setContestAndPaperInfo',
+          payload: {
+            paperInfo: formatObjectToFields(paper),
+          },
+        });
       }
       yield put({
         type: 'setPaperTableLoading',
