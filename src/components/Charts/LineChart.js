@@ -14,7 +14,8 @@ class LineChart extends PureComponent {
             },
             series: [{
                 data: seriesData,
-                type: 'bar'
+                type: 'bar',
+                barWidth: '60%',
             }],
         };
     };
