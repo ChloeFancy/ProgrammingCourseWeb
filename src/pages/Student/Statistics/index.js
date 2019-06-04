@@ -87,7 +87,7 @@ class Statistics extends Component {
         value: pie[key],
         name: map[key],
       }));
-      console.log(XAxis, seriesData);
+      // console.log(XAxis, seriesData);
       return (
         <div>
           <LineChart xAxis={XAxis} seriesData={seriesData} />

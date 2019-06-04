@@ -122,7 +122,7 @@ const formItemLayout = {
 @connect(({ classList }) => ({
     ...classList,
 }))
-export default class ClassList extends Component {
+class ClassList extends Component {
     async componentDidMount() {
         this.fetchList();
     }
@@ -377,3 +377,5 @@ export default class ClassList extends Component {
         );
     }
 }
+
+export default ClassList;

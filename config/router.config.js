@@ -74,19 +74,21 @@ export default [
             name: 'studentContest',
             component: './Student/Contest/list',
             authority: [STUDENT, ADMIN, TEACHER],
+            // hideInMenu: true,
+            // 2019.06.04 还没做好
           },
           {
             path: '/student/contest/intro/:id',
             name: 'studentContestIntro',
             component: './Student/Contest/intro',
-            authority: [STUDENT],
+            authority: [STUDENT, ADMIN, TEACHER],
             hideInMenu: true,
           },
           {
             path: '/student/contest/exam/:id',
             name: 'studentContestExam',
             component: './Student/Contest/exam',
-            authority: [STUDENT],
+            authority: [STUDENT, ADMIN, TEACHER],
             hideInMenu: true,
           },
           {

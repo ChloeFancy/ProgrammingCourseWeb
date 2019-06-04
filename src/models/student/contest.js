@@ -5,6 +5,7 @@ import {
 } from '@/services/manage/contest';
 import {
   getLanguageOptions,
+  getProblemById,
 } from '@/services/manage/problem';
 import { formatOptionsFromMap } from '../../lib/common';
 
@@ -45,7 +46,7 @@ export default {
         },
       });
     },
-    *getPaperInfo(_, { select, call, put }) {
+    *getPaperInfo(_, { select, call, put, all }) {
       yield put({
         type: 'setPaperInfo',
         payload: {
@@ -57,10 +58,14 @@ export default {
         return false;
       }
       const { paper } = yield call(getPaperByID, { id: paperId });
+      const problemRequests = paper.problems.map(({ id }) => {
+        return call(getProblemById, { id });
+      });
+      const problems = (yield all(problemRequests)).map(({ problem }) => problem);
       yield put({
         type: 'setPaperInfo',
         payload: {
-          paperInfo: paper,
+          paperInfo: { ...paper, problems },
           paperLoading: false,
         },
       });

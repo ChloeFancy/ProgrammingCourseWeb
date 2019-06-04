@@ -1,5 +1,6 @@
 import axios from 'axios';
 import router from 'umi/router';
+import { stringify } from 'qs';
 
 import { message as Message } from 'antd';
 import protoRoot from '../../proto/proto';
@@ -73,7 +74,12 @@ const request = ({ url, data = null, reqProto, resProto, method = 'post', auth, 
           // 对请求做处理
           if (data.status && data.status.code === 4) {
             Message.error('身份过期，请重新登录', 1.5, () => {
-              router.push('/user/login');
+              router.push({
+                pathname: '/user/login',
+                search: stringify({
+                  redirect: window.location.href,
+                }),
+              });
             });
           }
           console.log(`返回结果: `, { data, status });
