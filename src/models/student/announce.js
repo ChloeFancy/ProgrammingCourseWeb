@@ -13,7 +13,7 @@ export default {
 
     // 搜索参数
     pageSize: 10,
-    pageIndex: 1, // 初始化取前10条
+    pageIndex: 0, // 初始化取前10条
   },
 
   effects: {

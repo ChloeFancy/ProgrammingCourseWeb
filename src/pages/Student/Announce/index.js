@@ -8,11 +8,12 @@ import config from '../../../configs/announce';
   ...studentAnnounce,
 }))
 class StudentAnnounce extends Component {
+
   async componentDidMount() {
     const { dispatch } = this.props;
-    await dispatch({
-      type: 'studentAnnounce/fetchList',
-    });
+    // await dispatch({
+    //   type: 'studentAnnounce/fetchList',
+    // });
     this.observe();
   }
 
@@ -20,12 +21,12 @@ class StudentAnnounce extends Component {
     const options = {
       // 表示重叠面积占被观察者的比例，从 0 - 1 取值，
       // 1 表示完全被包含
-      threshold: 1.0,
+      threshold: [1],
     };
     const callback = (entries) => {
       entries.forEach(async (entry) => {
         const { isIntersecting } = entry;
-        if (isIntersecting) {
+        if (isIntersecting) { // 如果是在scrollDown的情况下，元素出现在viewport
           await this.loadMoreAnnouncements();
         }
       });
@@ -37,7 +38,7 @@ class StudentAnnounce extends Component {
 
   loadMoreAnnouncements = async() => {
     const { dispatch, pageIndex, pageSize, total } = this.props;
-    if (pageIndex * pageSize < total) {
+    if (!pageIndex || pageIndex * pageSize < total) {
       await dispatch({
         type: 'studentAnnounce/addPageIndex',
       });
