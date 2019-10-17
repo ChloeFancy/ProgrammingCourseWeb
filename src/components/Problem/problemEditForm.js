@@ -36,7 +36,7 @@ class ProblemEditForm extends PureComponent {
     const judgeFile = getFieldValue('judgeFile');
     if (judgeFile.fileList.length) {
       const judgeFileId = judgeFile.fileList[0].fileId;
-      window.open(`http://47.102.117.222:8082/download/${judgeFileId}/${judgeFileId}.zip`);
+      window.open(`//47.100.89.70:8082/download/${judgeFileId}/${judgeFileId}.zip`);
     } else {
       message.error('暂无测试数据，请先上传');
     }
