@@ -8,7 +8,7 @@ import { getAuthority } from '../utils/authority';
 import { getCookie } from './cookie';
 
 const httpService = axios.create({
-  baseURL: '//http://47.100.89.70:8081',
+  baseURL: '//47.100.89.70:8081',
   timeout: 45000,
   responseType: 'arraybuffer',
   // withCredentials: true,
